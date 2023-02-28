@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.hakmar.employeelivetracking.ui.theme
+package com.hakmar.employeelivetracking.common.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.ui.theme
+package com.hakmar.employeelivetracking.common.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -9,7 +9,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = Green40,
@@ -57,15 +57,15 @@ fun EmployeeLiveTrackingTheme(
         else -> LightColorScheme
     }
     val view = LocalView.current
-    val currentWindow = (view.context as? Activity)?.window
-        ?: throw Exception("Not in an activity - unable to get Window reference")
+//    val currentWindow = (view.context as? Activity)?.window
+//        ?: throw Exception("Not in an activity - unable to get Window reference")
     if (!view.isInEditMode) {
         SideEffect {
 
             (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-
-            WindowCompat.getInsetsController(currentWindow, view).isAppearanceLightStatusBars =
-                darkTheme
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            /*         WindowCompat.getInsetsController(currentWindow, view).isAppearanceLightStatusBars =
+                         darkTheme*/
         }
     }
 

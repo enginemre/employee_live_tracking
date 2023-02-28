@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.ui.theme
+package com.hakmar.employeelivetracking.common.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -19,7 +19,7 @@ val InterFontFamily = FontFamily(
         weight = FontWeight.Medium
     ),
     Font(
-        resId = R.font.inter_semibold,
+        resId = R.font.inter_semi_bold,
         weight = FontWeight.SemiBold
     ),
     Font(
