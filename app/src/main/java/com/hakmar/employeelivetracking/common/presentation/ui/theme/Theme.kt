@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -68,10 +69,15 @@ fun EmployeeLiveTrackingTheme(
                          darkTheme*/
         }
     }
+    CompositionLocalProvider(
+        LocalSpacing provides Spacing(),
+        LocalColors provides AppColors()
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = InterTypography,
+            content = content
+        )
+    }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = InterTypography,
-        content = content
-    )
 }

@@ -11,8 +11,19 @@ import androidx.compose.ui.Modifier
 
 
 @Composable
-fun PMStoreScreen() {
-
+fun PMStoreScreen(
+    /* onBackPressed : () -> Unit,
+     onAppBarConfig : (AppBarState) -> Unit*/
+) {
+/*    LaunchedEffect(key1 = true){
+        onAppBarConfig(
+            AppBarState(
+                isNavigationButton = true,
+                title = "Pazarlama Müdürleri",
+                navigationClick = onBackPressed
+            )
+        )
+    }*/
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
