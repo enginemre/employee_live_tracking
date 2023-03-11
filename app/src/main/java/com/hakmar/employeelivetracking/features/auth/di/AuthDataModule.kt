@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.features.auth.di
 
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.auth.data.repository.LoginRepositoryImpl
 import com.hakmar.employeelivetracking.features.auth.domain.repository.LoginRepository
 import dagger.Module
@@ -14,7 +15,11 @@ object AuthDataModule {
 
     @Provides
     @Singleton
-    fun provideLoginRepository(): LoginRepository {
-        return LoginRepositoryImpl()
+    fun provideLoginRepository(
+        dataStoreRepository: DataStoreRepository
+    ): LoginRepository {
+        return LoginRepositoryImpl(
+            dataStore = dataStoreRepository
+        )
     }
 }

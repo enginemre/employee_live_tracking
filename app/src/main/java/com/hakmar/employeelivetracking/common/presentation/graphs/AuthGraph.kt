@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(
@@ -42,12 +43,12 @@ private sealed interface AuthDestination {
     val base: String
     val path: String
 
-    object Login : Destination {
+    object Login : AuthDestination {
         override val base: String = "/login"
         override val path: String = base
     }
 
-    object Verification : Destination {
+    object Verification : AuthDestination {
         override val base: String = "/verification"
         override val path: String = base
     }

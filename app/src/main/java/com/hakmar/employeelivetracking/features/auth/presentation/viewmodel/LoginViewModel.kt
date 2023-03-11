@@ -1,14 +1,16 @@
 package com.hakmar.employeelivetracking.features.auth.presentation.viewmodel
 
 import androidx.compose.ui.focus.FocusState
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
-import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.AuthUseCases
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.UserValidateUseCase
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginFields
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginState
+import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authUseCases: AuthUseCases
+    private val authUseCases: AuthUseCases,
+    val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LoginEvent>() {
 
     private var _state = MutableStateFlow(LoginState())
@@ -64,6 +67,7 @@ class LoginViewModel @Inject constructor(
                             isLoading = false
                         )
                     }
+                    savedStateHandle[AppConstants.IS_LOGIN] = 1
                     _uiEvent.send(
                         UiEvent.Navigate(
                             Destination.Home.base

@@ -75,6 +75,10 @@ dependencies {
     // Datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
+
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.2")
+
     // Dagger hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"

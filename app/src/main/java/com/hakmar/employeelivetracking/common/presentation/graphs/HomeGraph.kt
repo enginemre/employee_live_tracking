@@ -15,12 +15,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hakmar.employeelivetracking.common.presentation.BsStoresScreen
+import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.PMStoreScreen
 import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
+import com.hakmar.employeelivetracking.common.service.GeneralShiftService
+import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
 
 @Composable
-fun HomeNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
+fun HomeNavGraph(
+    navController: NavHostController,
+    mainViewModel: MainViewModel,
+    generalShiftService: GeneralShiftService?
+) {
     val routerHome = RouterHome(navController)
     NavHost(
         navController = navController,
@@ -28,7 +34,9 @@ fun HomeNavGraph(navController: NavHostController, mainViewModel: MainViewModel)
         startDestination = HomeDestination.BsStores.base
     ) {
         composable(route = HomeDestination.BsStores.base) {
-            BsStoresScreen()
+            BsStoresScreen(
+                generalShiftService = generalShiftService
+            )
         }
         composable(route = HomeDestination.PmStores.base) {
             PMStoreScreen(

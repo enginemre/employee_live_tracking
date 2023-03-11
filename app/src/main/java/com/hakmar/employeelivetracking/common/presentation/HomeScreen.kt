@@ -1,13 +1,14 @@
 package com.hakmar.employeelivetracking.common.presentation
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,14 +27,14 @@ import com.hakmar.employeelivetracking.common.presentation.graphs.screens
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppTopBar
 import com.hakmar.employeelivetracking.common.presentation.ui.components.HomeTopBar
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
+import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     windowSizeClass: WindowSizeClass,
-    mainViewModel: MainViewModel = hiltViewModel()
+    mainViewModel: MainViewModel = hiltViewModel(),
+    generalShiftService: GeneralShiftService?
 ) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -44,7 +45,17 @@ fun HomeScreen(
         },
         bottomBar = { BottomBar(navController = navController) },
     ) {
-        HomeNavGraph(navController = navController, mainViewModel = mainViewModel)
+        BoxWithConstraints(
+            modifier = Modifier.padding(it),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            HomeNavGraph(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                generalShiftService = generalShiftService,
+            )
+        }
+
     }
 }
 
@@ -59,6 +70,7 @@ fun BottomBar(navController: NavHostController) {
             containerColor = Color.White,
             modifier = Modifier
                 .navigationBarsPadding()
+                .background(Color.White)
                 .clip(navShape)
                 .height(80.dp)
         ) {

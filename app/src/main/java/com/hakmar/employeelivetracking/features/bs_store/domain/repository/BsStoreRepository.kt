@@ -1,0 +1,3 @@
+package com.hakmar.employeelivetracking.features.bs_store.domain.repository
+
+interface BsStoreRepository

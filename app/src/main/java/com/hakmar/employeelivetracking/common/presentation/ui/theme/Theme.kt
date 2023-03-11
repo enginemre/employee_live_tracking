@@ -2,6 +2,8 @@ package com.hakmar.employeelivetracking.common.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -41,6 +43,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EmployeeLiveTrackingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -71,7 +74,8 @@ fun EmployeeLiveTrackingTheme(
     }
     CompositionLocalProvider(
         LocalSpacing provides Spacing(),
-        LocalColors provides AppColors()
+        LocalColors provides AppColors(),
+        LocalOverscrollConfiguration provides null,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
