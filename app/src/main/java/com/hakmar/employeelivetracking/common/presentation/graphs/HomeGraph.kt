@@ -16,10 +16,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hakmar.employeelivetracking.common.Destination
-import com.hakmar.employeelivetracking.common.presentation.PMStoreScreen
 import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
+import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
 
 @Composable
 fun HomeNavGraph(
@@ -39,7 +39,8 @@ fun HomeNavGraph(
             )
         }
         composable(route = HomeDestination.PmStores.base) {
-            PMStoreScreen(
+            PmStoreScreen(
+
                 /*onBackPressed = {
                     navController.popBackStack()
                 },

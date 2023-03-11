@@ -36,7 +36,6 @@ fun HomeScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
     generalShiftService: GeneralShiftService?
 ) {
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
@@ -70,7 +69,12 @@ fun BottomBar(navController: NavHostController) {
             containerColor = Color.White,
             modifier = Modifier
                 .navigationBarsPadding()
-                .background(Color.White)
+                .background(
+                    color = if (currentDestination?.route == HomeDestination.BsStores.path)
+                        Color.White
+                    else MaterialTheme.colors.background
+
+                )
                 .clip(navShape)
                 .height(80.dp)
         ) {

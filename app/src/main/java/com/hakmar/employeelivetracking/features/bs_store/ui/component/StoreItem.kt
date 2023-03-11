@@ -49,7 +49,7 @@ fun StoreCardItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.man),
+                painter = painterResource(id = R.drawable.shop),
                 contentDescription = "",
                 modifier = Modifier
                     .size(60.dp)
