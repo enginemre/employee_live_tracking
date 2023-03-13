@@ -13,13 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
 import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
+import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
 
 @Composable
 fun HomeNavGraph(
@@ -35,32 +38,43 @@ fun HomeNavGraph(
     ) {
         composable(route = HomeDestination.BsStores.base) {
             BsStoresScreen(
-                generalShiftService = generalShiftService
+                generalShiftService = generalShiftService,
+                onStoreClick = {
+                    routerHome.goBsStoreDetail(it)
+                }
             )
         }
         composable(route = HomeDestination.PmStores.base) {
-            PmStoreScreen(
-
-                /*onBackPressed = {
-                    navController.popBackStack()
-                },
-                onAppBarConfig = {
-                    mainViewModel.updateAppBar(it)
-                }*/
-            )
+            PmStoreScreen()
         }
         composable(route = HomeDestination.Navigation.base) {
 
         }
         composable(route = HomeDestination.Profile.base) {
+            ProfileGraph(
+                mainViewModel = mainViewModel
+            )
+        }
 
+        composable(
+            route = HomeDestination.StoreDetail.path,
+            arguments = listOf(navArgument("storeId") { type = NavType.StringType })
+        ) {
+            StoreDetailScreen(
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                onAppBarConfig = {
+                    mainViewModel.updateAppBar(it)
+                }
+            )
         }
     }
 }
 
 private class RouterHome(val navController: NavController) {
-    fun goPMStoreScreen() {
-        navController.navigate(HomeDestination.PmStores.base)
+    fun goBsStoreDetail(storeId: String) {
+        navController.navigate("${HomeDestination.StoreDetail.base}/${storeId}")
     }
 }
 
@@ -74,8 +88,10 @@ val screens = listOf(
 sealed interface HomeDestination {
     val base: String
     val path: String
-    val selectedIcon: ImageVector
-    val unSelectedIcon: ImageVector
+    val selectedIcon: ImageVector?
+        get() = null
+    val unSelectedIcon: ImageVector?
+        get() = null
 
     object BsStores : HomeDestination {
         override val base = "/stores"
@@ -103,6 +119,11 @@ sealed interface HomeDestination {
         override val path = base
         override val selectedIcon = Icons.Default.Person
         override val unSelectedIcon: ImageVector = Icons.Outlined.Person
+    }
+
+    object StoreDetail : HomeDestination {
+        override val base = "/store"
+        override val path = "$base/{storeId}"
     }
 
 

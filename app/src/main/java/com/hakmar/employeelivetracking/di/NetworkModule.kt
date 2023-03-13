@@ -27,7 +27,7 @@ object NetworkModule {
     @Singleton
     fun provideSocketRequest(): Request {
         return Request.Builder()
-            .url("wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self")
+            .url("ws://64.226.88.88:9001/ws/socket-server/")
             .build()
     }
 

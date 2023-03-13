@@ -29,6 +29,7 @@ import com.hakmar.employeelivetracking.features.bs_store.ui.model.StoreCardModel
 fun BsStoresScreen(
     viewModel: BsStoreViewModel = hiltViewModel(),
     generalShiftService: GeneralShiftService?,
+    onStoreClick: (String) -> Unit,
 ) {
     val list = listOf(
         StoreCardModel(
@@ -149,7 +150,8 @@ fun BsStoresScreen(
                         storeCode = item.code,
                         taskCount = item.taskCount,
                         passingTime = item.passedTime,
-                        completedTaskCount = item.completedTask
+                        completedTaskCount = item.completedTask,
+                        onClick = onStoreClick
                     )
                 }
             }

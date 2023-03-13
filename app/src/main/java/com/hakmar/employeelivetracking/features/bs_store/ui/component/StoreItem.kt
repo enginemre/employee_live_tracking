@@ -23,6 +23,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreCardItem(
     storeName: String,
@@ -30,12 +31,14 @@ fun StoreCardItem(
     taskCount: Int,
     completedTaskCount: Int,
     passingTime: String,
+    onClick: (String) -> Unit
 ) {
     Card(
         modifier = Modifier
             .padding(MaterialTheme.spacing.medium)
             .heightIn(min = 100.dp)
             .width(365.dp),
+        onClick = { onClick(storeCode) },
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp

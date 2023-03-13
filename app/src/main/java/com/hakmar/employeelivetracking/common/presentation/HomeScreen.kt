@@ -121,12 +121,14 @@ fun RowScope.AddItem(
             )
         ),
         icon = {
-            Icon(
-                imageVector = if (currentDestination?.hierarchy?.any {
-                        it.route == screen.path
-                    } == true) screen.selectedIcon else screen.unSelectedIcon,
-                contentDescription = "Navigation Icon"
-            )
+            (if (currentDestination?.hierarchy?.any {
+                    it.route == screen.path
+                } == true) screen.selectedIcon else screen.unSelectedIcon)?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = "Navigation Icon"
+                )
+            }
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.path

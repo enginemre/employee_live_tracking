@@ -149,11 +149,13 @@ class GeneralShiftService : Service() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             dataUpdateListener?.onConnected()
             super.onOpen(webSocket, response)
+            webSocket.send("{\"message\" : \"selam\" }")
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             super.onMessage(webSocket, text)
             dataUpdateListener?.onTick(text)
+
         }
 
     }
