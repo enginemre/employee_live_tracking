@@ -58,6 +58,12 @@ fun HomeScreen(
     }
 }
 
+val mainScreens = listOf(
+    HomeDestination.BsStores,
+    HomeDestination.PmStores,
+    HomeDestination.Navigation
+)
+
 @Composable
 fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -70,7 +76,9 @@ fun BottomBar(navController: NavHostController) {
             modifier = Modifier
                 .navigationBarsPadding()
                 .background(
-                    color = if (currentDestination?.route == HomeDestination.BsStores.path)
+                    color = if (currentDestination?.route == HomeDestination.BsStores.path ||
+                        currentDestination?.route == HomeDestination.Profile.path || currentDestination?.route == HomeDestination.Navigation.path
+                    )
                         Color.White
                     else MaterialTheme.colors.background
 
@@ -93,7 +101,7 @@ fun BottomBar(navController: NavHostController) {
 fun DrawTopBar(currentDestination: NavDestination?, mainViewModel: MainViewModel) {
     val state = mainViewModel.appBarState.collectAsState()
     val isHomeBar = currentDestination?.hierarchy?.any { mainRoute ->
-        screens.any { mainRoute.route == it.base }
+        mainScreens.any { mainRoute.route == it.base }
     } == true
     if (isHomeBar)
         HomeTopBar()

@@ -1,18 +1,13 @@
 package com.hakmar.employeelivetracking.common.presentation.graphs
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
+import com.hakmar.employeelivetracking.features.edit_profile.ui.EditProfile
 import com.hakmar.employeelivetracking.features.profile.ui.ProfileScreen
 
 
@@ -28,18 +23,22 @@ fun ProfileGraph(
         startDestination = ProfileDestination.Home.base
     ) {
         composable(route = ProfileDestination.Home.base) {
-            ProfileScreen {
-                routerProfile.goEditProfile()
-            }
+            ProfileScreen(
+                onEditProfile = { routerProfile.goEditProfile() },
+                onAppBarConfig = {
+                    mainViewModel.updateAppBar(it)
+                }
+            )
         }
         composable(route = ProfileDestination.EditProfile.base) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Edit Profile")
-            }
+            EditProfile(
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                onAppBarConfig = {
+                    mainViewModel.updateAppBar(it)
+                }
+            )
         }
     }
 }

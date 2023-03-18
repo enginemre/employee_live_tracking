@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.common.presentation.graphs
 
+import android.content.Intent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Navigation
@@ -11,12 +12,9 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
@@ -36,7 +34,19 @@ fun HomeNavGraph(
         route = Destination.Home.base,
         startDestination = HomeDestination.BsStores.base
     ) {
-        composable(route = HomeDestination.BsStores.base) {
+        composable(
+            route = HomeDestination.BsStores.base,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.baseUri + HomeDestination.BsStores.base
+                    action = Intent.ACTION_VIEW
+                },
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.insideAppUri + HomeDestination.BsStores.base
+                    action = Intent.ACTION_VIEW
+                }
+            )
+        ) {
             BsStoresScreen(
                 generalShiftService = generalShiftService,
                 onStoreClick = {

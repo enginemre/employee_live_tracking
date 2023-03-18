@@ -27,7 +27,36 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:host="ruhidibadli.pythonanywhere.com"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:host="ruhidibadli.pythonanywhere.com"
+                    android:scheme="http" />
+            </intent-filter>
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="nested_nav"
+                    android:scheme="employeelivetracking" />
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
 
             <meta-data

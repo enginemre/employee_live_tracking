@@ -5,13 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.profile.ui.component.ProfileHeader
@@ -20,8 +23,17 @@ import com.hakmar.employeelivetracking.features.profile.ui.model.ProfileItemMode
 
 @Composable
 fun ProfileScreen(
-    onEditProfile: () -> Unit
+    onEditProfile: () -> Unit,
+    onAppBarConfig: (AppBarState) -> Unit,
 ) {
+    LaunchedEffect(key1 = true) {
+        onAppBarConfig(
+            AppBarState(
+                isNavigationButton = false,
+                title = "Profile"
+            )
+        )
+    }
     val list = listOf<ProfileItemModel>(
         ProfileItemModel(
             name = "About Us",
@@ -37,46 +49,41 @@ fun ProfileScreen(
             name = "Notification",
             icon = com.hakmar.employeelivetracking.R.drawable.notification,
             onClick = { }
+        ),
+        ProfileItemModel(
+            name = "Logout",
+            icon = com.hakmar.employeelivetracking.R.drawable.logout,
+            onClick = { }
         )
     )
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(top = 64.dp)
+            .background(Color.White, shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp))
+            .padding(MaterialTheme.spacing.medium)
     ) {
-        Column(
+        Image(
             modifier = Modifier
-                .fillMaxSize(1f)
-                .padding(vertical = MaterialTheme.spacing.medium),
-            verticalArrangement = Arrangement.Top
-        ) {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 20.dp)
-            ) {
-                item {
-                    Image(
-                        modifier = Modifier
-                            .padding(
-                                start = 10.dp,
-                                end = 10.dp,
-                            )
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
-                        contentDescription = ""
-                    )
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                    ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
-                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                }
-                items(list) {
-                    ProfileItem(name = it.name, icon = it.icon) {
-                        it.onClick()
-                    }
+                .padding(
+                    start = 10.dp,
+                    end = 10.dp,
+                )
+                .fillMaxWidth()
+                .height(100.dp),
+            painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
+            contentDescription = ""
+        )
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
+        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+        LazyColumn {
+            items(list) {
+                ProfileItem(name = it.name, icon = it.icon) {
+                    it.onClick()
                 }
             }
         }
+
     }
 }
 
@@ -115,40 +122,30 @@ fun ProfileScreenPrev() {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(top = 64.dp)
+                .padding(MaterialTheme.spacing.medium)
         ) {
-            Column(
+            Image(
                 modifier = Modifier
-                    .fillMaxSize(1f)
-                    .padding(vertical = MaterialTheme.spacing.medium),
-                verticalArrangement = Arrangement.Top
-            ) {
-                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 20.dp)
-                ) {
-                    item {
-                        Image(
-                            modifier = Modifier
-                                .padding(
-                                    start = 10.dp,
-                                    end = 10.dp,
-                                )
-                                .fillMaxWidth()
-                                .height(100.dp),
-                            painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
-                            contentDescription = ""
-                        )
-                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                        ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
-                        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-                    }
-                    items(list) {
-                        ProfileItem(name = it.name, icon = it.icon) {
-                            it.onClick()
-                        }
+                    .padding(
+                        start = 10.dp,
+                        end = 10.dp,
+                    )
+                    .fillMaxWidth()
+                    .height(100.dp),
+                painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            LazyColumn {
+                items(list) {
+                    ProfileItem(name = it.name, icon = it.icon) {
+                        it.onClick()
                     }
                 }
             }
+
         }
 
     }
