@@ -38,7 +38,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <data
                     android:host="ruhidibadli.pythonanywhere.com"
-                    android:scheme="https" />
+                    android:scheme="https"
+                    android:pathPrefix="/" />
             </intent-filter>
 
             <intent-filter android:autoVerify="true">
@@ -48,7 +49,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <data
                     android:host="ruhidibadli.pythonanywhere.com"
-                    android:scheme="http" />
+                    android:scheme="http"
+                    android:pathPrefix="/" />
             </intent-filter>
 
             <intent-filter>

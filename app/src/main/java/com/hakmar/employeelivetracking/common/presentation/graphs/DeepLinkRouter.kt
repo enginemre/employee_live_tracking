@@ -4,6 +4,6 @@ object DeepLinkRouter {
 
     val insideAppUri = "employeelivetracking://nested_nav//"
 
-    val baseUri = "https://ruhidibadli.pythonanywhere.com"
+    val baseUri = "https://ruhidibadli.pythonanywhere.com//deeplink"
 
 }
