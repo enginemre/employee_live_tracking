@@ -11,14 +11,16 @@ import androidx.compose.material.icons.outlined.Navigation
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.hakmar.employeelivetracking.common.Destination
-import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
+import com.hakmar.employeelivetracking.features.navigation.ui.NavigationScreen
 import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
 import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
 
@@ -29,6 +31,13 @@ fun HomeNavGraph(
     generalShiftService: GeneralShiftService?
 ) {
     val routerHome = RouterHome(navController)
+    LaunchedEffect(Unit) {
+        val route = mainViewModel.getLastRoute()
+        println(route)
+        route?.let {
+            navController.navigate(route)
+        }
+    }
     NavHost(
         navController = navController,
         route = Destination.Home.base,
@@ -57,8 +66,22 @@ fun HomeNavGraph(
         composable(route = HomeDestination.PmStores.base) {
             PmStoreScreen()
         }
-        composable(route = HomeDestination.Navigation.base) {
-
+        composable(
+            route = HomeDestination.Navigation.base,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.insideAppUri + HomeDestination.Navigation.base
+                    action = Intent.ACTION_VIEW
+                },
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.baseUri + HomeDestination.Navigation.base
+                    action = Intent.ACTION_VIEW
+                },
+            )
+        ) {
+            NavigationScreen(
+                mainViewModel = mainViewModel
+            )
         }
         composable(route = HomeDestination.Profile.base) {
             ProfileGraph(

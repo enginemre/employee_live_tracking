@@ -49,6 +49,8 @@ fun EmployeeLiveTrackingAppBone(
     )
     LaunchedEffect(key1 = true) {
         launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        launcher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(

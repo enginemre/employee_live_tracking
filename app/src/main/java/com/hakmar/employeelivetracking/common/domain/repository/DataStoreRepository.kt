@@ -10,5 +10,9 @@ interface DataStoreRepository {
 
     suspend fun intPutKey(key: String, value: Int)
 
+    suspend fun doublePutKey(key: String, value: Double)
+
+    suspend fun doubleReadKey(key: String): Double?
+
     suspend fun clearDataStore(key: String)
 }

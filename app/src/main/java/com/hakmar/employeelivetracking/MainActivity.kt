@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
 import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.EmployeeLiveTrackingAppBone
-import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import dagger.hilt.android.AndroidEntryPoint

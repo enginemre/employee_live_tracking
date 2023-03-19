@@ -20,10 +20,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeNavGraph
 import com.hakmar.employeelivetracking.common.presentation.graphs.screens
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppTopBar
 import com.hakmar.employeelivetracking.common.presentation.ui.components.HomeTopBar
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
@@ -38,6 +38,7 @@ fun HomeScreen(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
     Scaffold(
         topBar = {
             DrawTopBar(currentDestination = currentDestination, mainViewModel = mainViewModel)

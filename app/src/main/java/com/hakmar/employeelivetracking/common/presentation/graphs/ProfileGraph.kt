@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hakmar.employeelivetracking.common.presentation.base.MainViewModel
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.features.edit_profile.ui.EditProfile
 import com.hakmar.employeelivetracking.features.profile.ui.ProfileScreen
 
