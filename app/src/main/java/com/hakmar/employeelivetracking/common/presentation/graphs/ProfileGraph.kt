@@ -14,6 +14,7 @@ import com.hakmar.employeelivetracking.features.profile.ui.ProfileScreen
 @Composable
 fun ProfileGraph(
     navController: NavHostController = rememberNavController(),
+    onNotificationClick: () -> Unit,
     mainViewModel: MainViewModel,
 ) {
     val routerProfile = RouterProfile(navController)
@@ -27,7 +28,8 @@ fun ProfileGraph(
                 onEditProfile = { routerProfile.goEditProfile() },
                 onAppBarConfig = {
                     mainViewModel.updateAppBar(it)
-                }
+                },
+                onNotification = { onNotificationClick() }
             )
         }
         composable(route = ProfileDestination.EditProfile.base) {
@@ -43,7 +45,9 @@ fun ProfileGraph(
     }
 }
 
-private class RouterProfile(val navController: NavController) {
+private class RouterProfile(
+    val navController: NavController
+) {
     fun goEditProfile() {
         navController.navigate(ProfileDestination.EditProfile.path)
     }

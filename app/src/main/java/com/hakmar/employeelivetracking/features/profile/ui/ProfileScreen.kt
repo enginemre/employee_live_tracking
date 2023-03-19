@@ -24,6 +24,7 @@ import com.hakmar.employeelivetracking.features.profile.ui.model.ProfileItemMode
 @Composable
 fun ProfileScreen(
     onEditProfile: () -> Unit,
+    onNotification: () -> Unit,
     onAppBarConfig: (AppBarState) -> Unit,
 ) {
     LaunchedEffect(key1 = true) {
@@ -36,9 +37,14 @@ fun ProfileScreen(
     }
     val list = listOf<ProfileItemModel>(
         ProfileItemModel(
+            name = "Edit Profile",
+            icon = com.hakmar.employeelivetracking.R.drawable.profile_icon,
+            onClick = onEditProfile
+        ),
+        ProfileItemModel(
             name = "About Us",
             icon = com.hakmar.employeelivetracking.R.drawable.info,
-            onClick = onEditProfile
+            onClick = {}
         ),
         ProfileItemModel(
             name = "Private Policy",
@@ -48,7 +54,7 @@ fun ProfileScreen(
         ProfileItemModel(
             name = "Notification",
             icon = com.hakmar.employeelivetracking.R.drawable.notification,
-            onClick = { }
+            onClick = onNotification
         ),
         ProfileItemModel(
             name = "Logout",

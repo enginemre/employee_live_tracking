@@ -18,7 +18,9 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopBar() {
+fun HomeTopBar(
+    onNotificonClick: () -> Unit
+) {
     TopAppBar(
         navigationIcon = {
             Image(
@@ -51,7 +53,7 @@ fun HomeTopBar() {
                 imageVector = Icons.Outlined.Notifications,
                 description = "Bildirimler"
             ) {
-
+                onNotificonClick()
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

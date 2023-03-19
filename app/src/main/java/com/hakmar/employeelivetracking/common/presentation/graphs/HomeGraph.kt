@@ -2,14 +2,8 @@ package com.hakmar.employeelivetracking.common.presentation.graphs
 
 import android.content.Intent
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Navigation
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Store
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Navigation
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Store
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,6 +15,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationScreen
+import com.hakmar.employeelivetracking.features.notification.ui.NotificationScreen
 import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
 import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
 
@@ -85,7 +80,10 @@ fun HomeNavGraph(
         }
         composable(route = HomeDestination.Profile.base) {
             ProfileGraph(
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
+                onNotificationClick = {
+                    routerHome.goNotification()
+                }
             )
         }
 
@@ -102,6 +100,24 @@ fun HomeNavGraph(
                 }
             )
         }
+        composable(
+            route = HomeDestination.Notification.base,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.insideAppUri + HomeDestination.Notification.base
+                    action = Intent.ACTION_VIEW
+                },
+                navDeepLink {
+                    uriPattern = DeepLinkRouter.baseUri + HomeDestination.Notification.base
+                    action = Intent.ACTION_VIEW
+                },
+            )
+        ) {
+            NotificationScreen(
+                onAppBarConfig = { mainViewModel.updateAppBar(it) },
+                onBackPressed = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -109,10 +125,15 @@ private class RouterHome(val navController: NavController) {
     fun goBsStoreDetail(storeId: String) {
         navController.navigate("${HomeDestination.StoreDetail.base}/${storeId}")
     }
+
+    fun goNotification() {
+        navController.navigate(HomeDestination.Notification.base)
+    }
 }
 
 val screens = listOf(
     HomeDestination.PmStores,
+    HomeDestination.Tasks,
     HomeDestination.BsStores,
     HomeDestination.Navigation,
     HomeDestination.Profile,
@@ -159,5 +180,16 @@ sealed interface HomeDestination {
         override val path = "$base/{storeId}"
     }
 
+    object Notification : HomeDestination {
+        override val base = "/notification"
+        override val path = base
+    }
+
+    object Tasks : HomeDestination {
+        override val base = "/tasks"
+        override val path = "${base}/{taskId}"
+        override val selectedIcon = Icons.Default.Task
+        override val unSelectedIcon: ImageVector = Icons.Outlined.Task
+    }
 
 }
