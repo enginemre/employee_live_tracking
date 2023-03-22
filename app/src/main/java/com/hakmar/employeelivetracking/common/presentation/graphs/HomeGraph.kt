@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
+import com.hakmar.employeelivetracking.common.service.StoreShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationScreen
 import com.hakmar.employeelivetracking.features.notification.ui.NotificationScreen
@@ -23,7 +24,8 @@ import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScree
 fun HomeNavGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    generalShiftService: GeneralShiftService?
+    generalShiftService: GeneralShiftService?,
+    storeShiftService: StoreShiftService?,
 ) {
     val routerHome = RouterHome(navController)
     LaunchedEffect(Unit) {
@@ -97,7 +99,8 @@ fun HomeNavGraph(
                 },
                 onAppBarConfig = {
                     mainViewModel.updateAppBar(it)
-                }
+                },
+                storeShiftService = storeShiftService
             )
         }
         composable(
@@ -118,6 +121,12 @@ fun HomeNavGraph(
                 onBackPressed = { navController.popBackStack() }
             )
         }
+        composable(
+            route = HomeDestination.Tasks.base,
+        ) {
+            TasksGraph(mainViewModel = mainViewModel)
+        }
+
     }
 }
 
@@ -168,6 +177,13 @@ sealed interface HomeDestination {
         override val unSelectedIcon: ImageVector = Icons.Outlined.Navigation
     }
 
+    object Tasks : HomeDestination {
+        override val base = "/tasks"
+        override val path = "${base}/{taskId}"
+        override val selectedIcon = Icons.Default.Task
+        override val unSelectedIcon: ImageVector = Icons.Outlined.Task
+    }
+
     object Profile : HomeDestination {
         override val base = "/profile"
         override val path = base
@@ -185,11 +201,5 @@ sealed interface HomeDestination {
         override val path = base
     }
 
-    object Tasks : HomeDestination {
-        override val base = "/tasks"
-        override val path = "${base}/{taskId}"
-        override val selectedIcon = Icons.Default.Task
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Task
-    }
 
 }

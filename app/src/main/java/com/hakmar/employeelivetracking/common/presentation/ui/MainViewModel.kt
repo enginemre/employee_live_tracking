@@ -1,10 +1,13 @@
 package com.hakmar.employeelivetracking.common.presentation.ui
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
+import com.hakmar.employeelivetracking.common.presentation.ui.components.FabState
 import com.hakmar.employeelivetracking.util.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +25,9 @@ class MainViewModel @Inject constructor(
     private val _appBarState = MutableStateFlow(AppBarState())
     val appBarState = _appBarState.asStateFlow()
 
+    private val _fabState = MutableStateFlow(FabState(icon = Icons.Default.Add))
+    val fabState = _fabState.asStateFlow()
+
     private val _userState = MutableStateFlow(UserState())
     val userState = _userState.asStateFlow()
 
@@ -36,6 +42,10 @@ class MainViewModel @Inject constructor(
 
     fun updateAppBar(appBarState: AppBarState) {
         _appBarState.value = appBarState
+    }
+
+    fun updateFabState(fabState: FabState) {
+        _fabState.value = fabState
     }
 
     fun getUserLocation(
@@ -85,6 +95,5 @@ class MainViewModel @Inject constructor(
         } else {
             null
         }
-
     }
 }

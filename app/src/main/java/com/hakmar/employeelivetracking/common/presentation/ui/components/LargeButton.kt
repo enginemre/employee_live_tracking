@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
@@ -19,7 +20,9 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural100
 fun LargeButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textColor: Color = Natural100,
+    containerColor: Color = Green40
 ) {
 
     Button(
@@ -27,8 +30,8 @@ fun LargeButton(
             .height(50.dp),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Green40,
-            contentColor = Natural100
+            containerColor = containerColor,
+            contentColor = textColor
         )
     ) {
         Text(

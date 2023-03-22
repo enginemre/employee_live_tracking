@@ -3,6 +3,8 @@ package com.hakmar.employeelivetracking.features.bs_store.ui
 import androidx.lifecycle.ViewModel
 import com.hakmar.employeelivetracking.common.service.GeneralShiftServiceManager
 import com.hakmar.employeelivetracking.util.AppConstants
+import com.hakmar.employeelivetracking.util.TimerState
+import com.hakmar.employeelivetracking.util.convertStringToDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,46 +20,66 @@ class BsStoreViewModel @Inject constructor(
     private var _state = MutableStateFlow(BsStoreState())
     val state = _state.asStateFlow()
 
-    private var _generalShiftTimeState = MutableStateFlow(GeneralShiftTimeState())
-    val generalShiftTimeState = _generalShiftTimeState.asStateFlow()
-
-
-    fun start() {
+    private fun start() {
         _state.update {
             it.copy(
-                buttonName = "Durdur"
+                isPlaying = TimerState.Started
             )
         }
-        generalShiftServiceManager.triggerForegroundService(AppConstants.ACTION_GENERAL_SHIFT_TIME_START)
+        val pausedTime =
+            convertStringToDuration(state.value.seconds, state.value.minutes, state.value.hours)
+        if (state.value.isPlaying == TimerState.Idle) {
+            pausedTime?.let {
+                generalShiftServiceManager.triggerForegroundService(
+                    AppConstants.ACTION_GENERAL_SHIFT_TIME_START,
+                    it.toString()
+                )
+            } ?: kotlin.run {
+                generalShiftServiceManager.triggerForegroundService(
+                    AppConstants.ACTION_GENERAL_SHIFT_TIME_START
+                )
+            }
+        } else {
+            pausedTime?.let {
+                generalShiftServiceManager.triggerForegroundService(
+                    AppConstants.ACTION_GENERAL_SHIFT_TIME_START,
+                    it.toString()
+                )
+            } ?: kotlin.run {
+                generalShiftServiceManager.triggerForegroundService(
+                    AppConstants.ACTION_GENERAL_SHIFT_TIME_START
+                )
+            }
+        }
     }
 
-
-    fun pause() {
+    private fun pause() {
         _state.update {
             it.copy(
-                buttonName = "Başla"
+                isPlaying = TimerState.Stoped
             )
         }
+        generalShiftServiceManager.triggerForegroundService(AppConstants.ACTION_GENERAL_SHIFT_TIME_STOP)
     }
 
     fun generalShiftButtonClick() {
-        if (state.value.buttonName == "Başla") {
+        if (state.value.isPlaying == TimerState.Idle || state.value.isPlaying == TimerState.Stoped) {
             start()
-        } else if (state.value.buttonName == "Durdur") {
-            pause()
         } else {
-            resume()
+            pause()
         }
     }
 
-
-    fun resume() {
+    fun onTick(h: String, m: String, s: String) {
         _state.update {
             it.copy(
-                buttonName = "Durdur"
+                seconds = s,
+                minutes = m,
+                hours = h,
+                isPlaying = TimerState.Started,
+                initialTime = convertStringToDuration(s, m, h)?.inWholeSeconds?.toInt() ?: 1
             )
         }
     }
-
 
 }

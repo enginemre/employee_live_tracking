@@ -1,0 +1,180 @@
+package com.hakmar.employeelivetracking.features.tasks.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
+import com.hakmar.employeelivetracking.common.presentation.ui.components.FabState
+import com.hakmar.employeelivetracking.common.presentation.ui.components.TransparentHintTextField
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
+import com.hakmar.employeelivetracking.features.tasks.ui.viewmodel.TaskDetailViewModel
+
+@Composable
+fun TaskDetailScreen(
+    viewModel: TaskDetailViewModel = hiltViewModel(),
+    onAppBarConfig: (AppBarState) -> Unit,
+    onBackPressed: () -> Unit,
+    onFabState: (FabState) -> Unit,
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = Unit) {
+        onAppBarConfig(
+            AppBarState(
+                isNavigationButton = true,
+                navigationClick = onBackPressed,
+                title = "Görev Detay",
+            )
+        )
+        onFabState(
+            FabState(
+                onClick = {
+                    viewModel.onEvent(TaskDetailEvent.OnSaveTask)
+                },
+                icon = Icons.Default.Save
+            )
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White, shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp))
+            .padding(16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+        TransparentHintTextField(
+            text = state.value.title,
+            hint = stringResource(id = R.string.title_hint),
+            onValueChange = {
+                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Title))
+            },
+            isHintVisible = state.value.title.isEmpty(),
+            singleLine = true,
+            textStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W400,
+                lineHeight = 24.sp
+            ),
+            onFocusChange = {}
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TransparentHintTextField(
+            text = state.value.code,
+            hint = stringResource(id = R.string.code_hint),
+            onValueChange = {
+                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Code))
+            },
+            onFocusChange = {},
+            isHintVisible = state.value.code.isEmpty(),
+            textStyle = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W400,
+                lineHeight = 24.sp
+            ),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TransparentHintTextField(
+            text = state.value.description,
+            hint = stringResource(id = R.string.description_hint),
+            onValueChange = {
+                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Description))
+            },
+            onFocusChange = {},
+            isHintVisible = state.value.description.isEmpty(),
+            textStyle = MaterialTheme.typography.titleLarge.copy(
+                color = Natural80,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W400,
+                lineHeight = 24.sp
+            ),
+            modifier = Modifier.fillMaxHeight()
+        )
+
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun TaskDetailScreenPrev() {
+    EmployeeLiveTrackingTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = "Bu bir başlık",
+                hint = "",
+                onValueChange = {
+
+                },
+                onFocusChange = {
+
+                },
+                isHintVisible = true,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 24.sp
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TransparentHintTextField(
+                text = "5004",
+                hint = "",
+                onValueChange = {
+
+                },
+                onFocusChange = {
+
+                },
+                isHintVisible = true,
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 24.sp
+                ),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue.",
+                hint = "",
+                onValueChange = {
+
+                },
+                onFocusChange = {
+
+                },
+                isHintVisible = true,
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    color = Natural80,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W200,
+                    lineHeight = 24.sp
+                ),
+                modifier = Modifier.fillMaxHeight()
+            )
+
+        }
+    }
+}

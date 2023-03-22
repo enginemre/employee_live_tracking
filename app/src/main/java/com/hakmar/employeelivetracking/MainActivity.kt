@@ -21,6 +21,7 @@ import com.hakmar.employeelivetracking.common.EmployeeLiveTrackingAppBone
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
+import com.hakmar.employeelivetracking.common.service.StoreShiftService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,17 +30,28 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
 
-    private var isBound by mutableStateOf(false)
+    private var isBoundGeneral by mutableStateOf(false)
     private var generalShiftService: GeneralShiftService? = null
-    private val connection: ServiceConnection = object : ServiceConnection {
+    private var storeShiftService: StoreShiftService? = null
+    private val storeShiftConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as GeneralShiftService.GeneralShiftServiceBinder
-            generalShiftService = binder.getService()
-            isBound = true
+            val binder = service as StoreShiftService.StoreShiftServiceBinder
+            storeShiftService = binder.getService()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            isBound = false
+        }
+
+    }
+    private val generalShiftConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as GeneralShiftService.GeneralShiftServiceBinder
+            generalShiftService = binder.getService()
+            isBoundGeneral = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBoundGeneral = false
         }
 
     }
@@ -55,8 +67,9 @@ class MainActivity : ComponentActivity() {
                     navController = rememberNavController(),
                     startDestination = startDestination,
                     windowSizeClass = calculateWindowSizeClass(activity = this),
-                    bounded = isBound,
-                    generalShiftService = generalShiftService
+                    bounded = isBoundGeneral,
+                    generalShiftService = generalShiftService,
+                    storeShiftService = storeShiftService,
                 )
             }
         }
@@ -65,13 +78,17 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         Intent(this, GeneralShiftService::class.java).also {
-            bindService(it, connection, BIND_AUTO_CREATE)
+            bindService(it, generalShiftConnection, BIND_AUTO_CREATE)
+        }
+        Intent(this, StoreShiftService::class.java).also {
+            bindService(it, storeShiftConnection, BIND_AUTO_CREATE)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        unbindService(connection)
-        isBound = false
+        unbindService(generalShiftConnection)
+        unbindService(storeShiftConnection)
+        isBoundGeneral = false
     }
 }

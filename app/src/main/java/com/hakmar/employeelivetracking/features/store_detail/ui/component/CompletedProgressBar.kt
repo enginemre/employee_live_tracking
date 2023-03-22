@@ -35,7 +35,7 @@ fun CompletedStatusProgressBar(
         targetValue = if (animationPlayed) percentage else 0f,
         animationSpec = tween(
             durationMillis = 1000,
-            delayMillis = 1000,
+            delayMillis = 500,
         )
     )
     LaunchedEffect(key1 = true) {

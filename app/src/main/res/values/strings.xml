@@ -8,4 +8,8 @@
     <string name="user_code_empty">Kullanıcı kodu boş olamaz</string>
     <string name="password_empty">Şifre boş olamaz</string>
     <string name="start">Başla</string>
+    <string name="title_hint">Başlık</string>
+    <string name="code_hint">Mağaza Kodu</string>
+    <string name="description_hint">Açıklama</string>
+    <string name="task_detail_task">Görev Detay</string>
 </resources>

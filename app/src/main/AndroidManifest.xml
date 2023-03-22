@@ -26,6 +26,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.EmployeeLiveTracking"
+            android:launchMode="singleTop"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -68,10 +69,16 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <service
             android:name=".common.service.GeneralShiftService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".common.service.StoreShiftService"
+            android:enabled="true"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCxXlkCRXnt4sz5H07mKU3NbblAck5wskk" />

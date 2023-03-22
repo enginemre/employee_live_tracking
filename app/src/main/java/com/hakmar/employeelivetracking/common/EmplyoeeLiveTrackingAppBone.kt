@@ -19,6 +19,7 @@ import com.hakmar.employeelivetracking.common.presentation.HomeScreen
 import com.hakmar.employeelivetracking.common.presentation.graphs.authNavGraph
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackBar
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
+import com.hakmar.employeelivetracking.common.service.StoreShiftService
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,6 +30,7 @@ fun EmployeeLiveTrackingAppBone(
     startDestination: String,
     bounded: Boolean,
     generalShiftService: GeneralShiftService?,
+    storeShiftService: StoreShiftService?,
 ) {
     val context = LocalContext.current
     var hasNotificationPermission by remember {
@@ -72,7 +74,8 @@ fun EmployeeLiveTrackingAppBone(
                 if (bounded)
                     HomeScreen(
                         windowSizeClass = windowSizeClass,
-                        generalShiftService = generalShiftService
+                        generalShiftService = generalShiftService,
+                        storeShiftService = storeShiftService,
                     )
             }
         }
@@ -97,6 +100,16 @@ sealed interface Destination {
 
     object Home : Destination {
         override val base: String = "/home"
+        override val path: String = base
+    }
+
+    object Task : Destination {
+        override val base: String = "/task"
+        override val path: String = base
+    }
+
+    object Profile : Destination {
+        override val base: String = "/profile"
         override val path: String = base
     }
 }

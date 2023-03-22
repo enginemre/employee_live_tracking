@@ -1,6 +1,5 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,13 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LargeButton
-import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
-import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
-import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.*
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.features.bs_store.ui.component.CircleIndicator
 import com.hakmar.employeelivetracking.features.bs_store.ui.component.StoreCardItem
 import com.hakmar.employeelivetracking.features.bs_store.ui.model.StoreCardModel
+import com.hakmar.employeelivetracking.util.TimerState
 
 @Composable
 fun BsStoresScreen(
@@ -83,31 +81,14 @@ fun BsStoresScreen(
         ),
     )
     LaunchedEffect(key1 = true) {
-        val updateListener = object : GeneralShiftService.GeneralShiftServiceListener {
-            override fun onTick(text: String) {
-                Log.d("Service", "OnTick :  $text")
+        generalShiftService?.dataUpdateListener =
+            object : GeneralShiftService.GeneralShiftServiceListener {
+                override fun onTick(h: String, m: String, s: String) {
+                    viewModel.onTick(h, m, s)
+                }
             }
-
-            override fun onConnected() {
-                Log.d("Service", "onConnected")
-            }
-
-            override fun onClose() {
-                Log.d("Service", "onClose")
-            }
-
-            override fun onStop() {
-                Log.d("Service", "onStop")
-            }
-
-            override fun onStart() {
-                Log.d("Service", "onStart")
-            }
-        }
-        generalShiftService?.dataUpdateListener = updateListener
     }
     val state = viewModel.state.collectAsState()
-    val shiftState = viewModel.generalShiftTimeState.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,12 +99,18 @@ fun BsStoresScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircleIndicator(
-                indicatorValue = shiftState.value.initialTime,
-                hour = shiftState.value.hours,
-                minitue = shiftState.value.minutes,
-                second = shiftState.value.seconds
+                indicatorValue = state.value.initialTime,
+                maxIndicatorValue = state.value.maxValueOfTime,
+                hour = state.value.hours,
+                minitue = state.value.minutes,
+                second = state.value.seconds
             )
-            LargeButton(text = state.value.buttonName, onClick = viewModel::generalShiftButtonClick)
+            LargeButton(
+                text = if (state.value.isPlaying == TimerState.Started) "Durdur" else "Start",
+                onClick = viewModel::generalShiftButtonClick,
+                containerColor = if (state.value.isPlaying == TimerState.Started) Color.Red else Green40,
+                textColor = if (state.value.isPlaying == TimerState.Started) Color.White else Natural110
+            )
         }
         Box(
             modifier = Modifier

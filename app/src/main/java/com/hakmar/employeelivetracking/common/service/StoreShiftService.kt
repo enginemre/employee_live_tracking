@@ -9,38 +9,27 @@ import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.hakmar.employeelivetracking.util.AppConstants
-import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_CANCEL
-import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_START
-import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_STOP
-import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT
-import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_NAME_GENERAL
-import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_ID_GENERAL
 import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.formatTime
 import com.hakmar.employeelivetracking.util.pad
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
-class GeneralShiftService : Service() {
+class StoreShiftService : Service() {
 
     var isServiceRunning: Boolean = false
 
-    var dataUpdateListener: GeneralShiftServiceListener? = null
+    var dataUpdateListener: StoreShiftServiceListener? = null
 
-    @Inject
-    lateinit var notificationManager: NotificationManager
+    private val binder = StoreShiftServiceBinder()
 
-    @Inject
-    lateinit var notificationBuilder: NotificationCompat.Builder
-
-    @Inject
-    lateinit var generalShiftServiceManager: GeneralShiftServiceManager
-
+    override fun onBind(intent: Intent?) = binder
 
     var seconds = mutableStateOf("00")
         private set
@@ -51,14 +40,16 @@ class GeneralShiftService : Service() {
     var currentState = mutableStateOf(TimerState.Idle)
         private set
 
-
-    private val binder = GeneralShiftServiceBinder()
-
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
 
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
-    override fun onBind(intent: Intent?) = binder
+    @Inject
+    @Named("store")
+    lateinit var notificationBuilder: NotificationCompat.Builder
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         isServiceRunning = true
@@ -68,8 +59,10 @@ class GeneralShiftService : Service() {
         }
         intent?.action.let {
             when (it) {
-                ACTION_GENERAL_SHIFT_TIME_START -> {
-                    startForegroundService()
+                AppConstants.ACTION_STORE_SHIFT_TIME_START -> {
+                    startForegroundService(
+                        intent?.getStringExtra(AppConstants.STORE_INFO) ?: "****"
+                    )
                     startTimer(pausedTime = lastTime,
                         onTick = { hours, minutes, seconds ->
                             updateNotification(hours = hours, minutes = minutes, seconds = seconds)
@@ -77,10 +70,10 @@ class GeneralShiftService : Service() {
                         }
                     )
                 }
-                ACTION_GENERAL_SHIFT_TIME_STOP -> {
+                AppConstants.ACTION_STORE_SHIFT_TIME_STOP -> {
                     stopTimer()
                 }
-                ACTION_GENERAL_SHIFT_TIME_CANCEL -> {
+                AppConstants.ACTION_STORE_SHIFT_TIME_CANCEL -> {
                     stopForegroundService()
                 }
                 else -> {}
@@ -89,36 +82,22 @@ class GeneralShiftService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun createNotificationChannel() {
+
+    private fun createNotificationChannel(storeCode: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT,
-                NOTIFICATION_CHANNEL_NAME_GENERAL,
+                AppConstants.NOTIFICATION_CHANNEL_ID_STORE_SHIFT,
+                AppConstants.NOTIFICATION_CHANNEL_NAME_STORE,
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel)
+            notificationBuilder.setContentTitle(storeCode + "mesai devam ediyor")
         }
-    }
-
-
-    private fun startForegroundService() {
-        createNotificationChannel()
-        startForeground(NOTIFICATION_ID_GENERAL, notificationBuilder.build())
-    }
-
-    private fun stopForegroundService() {
-        notificationManager.cancel(NOTIFICATION_ID_GENERAL)
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
-    }
-
-    inner class GeneralShiftServiceBinder : Binder() {
-        fun getService() = this@GeneralShiftService
     }
 
     private fun updateNotification(hours: String, minutes: String, seconds: String) {
         notificationManager.notify(
-            NOTIFICATION_ID_GENERAL,
+            AppConstants.NOTIFICATION_ID_STORE,
             notificationBuilder.setContentText(
                 formatTime(
                     hours = hours,
@@ -127,6 +106,26 @@ class GeneralShiftService : Service() {
                 )
             ).build()
         )
+    }
+
+    private fun updateTimeState() {
+        time.toComponents { hours, minutes, seconds, _ ->
+            this@StoreShiftService.hours.value = hours.toInt().pad()
+            this@StoreShiftService.minutes.value = minutes.pad()
+            this@StoreShiftService.seconds.value = seconds.pad()
+        }
+
+    }
+
+    private fun startForegroundService(storeCode: String) {
+        createNotificationChannel(storeCode)
+        startForeground(AppConstants.NOTIFICATION_ID_STORE, notificationBuilder.build())
+    }
+
+    private fun stopForegroundService() {
+        notificationManager.cancel(AppConstants.NOTIFICATION_ID_STORE)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun startTimer(
@@ -152,23 +151,17 @@ class GeneralShiftService : Service() {
         currentState.value = TimerState.Stoped
     }
 
-    private fun updateTimeState() {
-        time.toComponents { hours, minutes, seconds, _ ->
-            this@GeneralShiftService.hours.value = hours.toInt().pad()
-            this@GeneralShiftService.minutes.value = minutes.pad()
-            this@GeneralShiftService.seconds.value = seconds.pad()
-        }
-
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         isServiceRunning = false
     }
 
 
-    interface GeneralShiftServiceListener {
-        fun onTick(h: String, m: String, s: String)
+    inner class StoreShiftServiceBinder : Binder() {
+        fun getService() = this@StoreShiftService
     }
 
+    interface StoreShiftServiceListener {
+        fun onTick(h: String, m: String, s: String)
+    }
 }

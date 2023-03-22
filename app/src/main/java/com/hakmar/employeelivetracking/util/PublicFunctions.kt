@@ -5,6 +5,10 @@ import android.graphics.Bitmap
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 fun bitmapDescriptor(
     context: Context,
@@ -25,3 +29,13 @@ fun bitmapDescriptor(
     return BitmapDescriptorFactory.fromBitmap(bm)
 }
 
+fun convertStringToDuration(seconds: String, minutes: String, hours: String): Duration? {
+    return if (seconds == "00" && minutes == "00" && hours == "00") {
+        null
+    } else {
+        val second = seconds.toInt().seconds
+        val minute = minutes.toInt().minutes
+        val hour = hours.toInt().hours
+        return second + minute + hour
+    }
+}

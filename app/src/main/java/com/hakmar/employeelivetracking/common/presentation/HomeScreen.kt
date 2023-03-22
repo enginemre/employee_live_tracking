@@ -25,25 +25,41 @@ import com.hakmar.employeelivetracking.common.presentation.graphs.HomeNavGraph
 import com.hakmar.employeelivetracking.common.presentation.graphs.screens
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppTopBar
+import com.hakmar.employeelivetracking.common.presentation.ui.components.DrawFloatAction
 import com.hakmar.employeelivetracking.common.presentation.ui.components.HomeTopBar
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
+import com.hakmar.employeelivetracking.common.service.StoreShiftService
 
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     windowSizeClass: WindowSizeClass,
     mainViewModel: MainViewModel = hiltViewModel(),
-    generalShiftService: GeneralShiftService?
+    generalShiftService: GeneralShiftService?,
+    storeShiftService: StoreShiftService?
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
+    val state = mainViewModel.fabState.collectAsState()
     Scaffold(
         topBar = {
-            DrawTopBar(currentDestination = currentDestination, mainViewModel = mainViewModel)
+            DrawTopBar(
+                currentDestination = currentDestination,
+                mainViewModel = mainViewModel,
+                onNotificationClick = {
+                    navController.navigate(HomeDestination.Notification.path)
+                })
         },
         bottomBar = { BottomBar(navController = navController) },
+        floatingActionButton = {
+            if (currentDestination?.hierarchy?.any { mainRoute ->
+                    mainRoute.route!!.contains(HomeDestination.Tasks.base)
+                } == true)
+                DrawFloatAction(icon = state.value.icon, onFabClick = {
+                    state.value.onClick?.invoke()
+                })
+        }
     ) {
         BoxWithConstraints(
             modifier = Modifier.padding(it),
@@ -53,6 +69,7 @@ fun HomeScreen(
                 navController = navController,
                 mainViewModel = mainViewModel,
                 generalShiftService = generalShiftService,
+                storeShiftService = storeShiftService
             )
         }
 
@@ -62,7 +79,8 @@ fun HomeScreen(
 val mainScreens = listOf(
     HomeDestination.BsStores,
     HomeDestination.PmStores,
-    HomeDestination.Navigation
+    HomeDestination.Navigation,
+    HomeDestination.Tasks
 )
 
 @Composable
@@ -70,7 +88,11 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val navShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
-    val bottomBarDestination = screens.any { it.path == currentDestination?.route }
+    val bottomBarDestination = screens.any { homeDes ->
+        currentDestination?.route?.let {
+            homeDes.path.contains(it)
+        } ?: false
+    }
     if (bottomBarDestination) {
         NavigationBar(
             containerColor = Color.White,
@@ -78,7 +100,8 @@ fun BottomBar(navController: NavHostController) {
                 .navigationBarsPadding()
                 .background(
                     color = if (currentDestination?.route == HomeDestination.BsStores.path ||
-                        currentDestination?.route == HomeDestination.Profile.path || currentDestination?.route == HomeDestination.Navigation.path
+                        currentDestination?.route == HomeDestination.Profile.path ||
+                        currentDestination?.route == HomeDestination.Tasks.base
                     )
                         Color.White
                     else MaterialTheme.colors.background
@@ -98,14 +121,28 @@ fun BottomBar(navController: NavHostController) {
     }
 }
 
+interface OnFabListener {
+    fun onFabClick()
+}
+
 @Composable
-fun DrawTopBar(currentDestination: NavDestination?, mainViewModel: MainViewModel) {
+fun DrawTopBar(
+    currentDestination: NavDestination?,
+    mainViewModel: MainViewModel,
+    onNotificationClick: () -> Unit
+) {
     val state = mainViewModel.appBarState.collectAsState()
     val isHomeBar = currentDestination?.hierarchy?.any { mainRoute ->
-        mainScreens.any { mainRoute.route == it.base }
+        HomeDestination.BsStores.base == mainRoute.route ||
+                HomeDestination.PmStores.base == mainRoute.route ||
+                HomeDestination.Navigation.base == mainRoute.route
     } == true
     if (isHomeBar)
-        HomeTopBar()
+        HomeTopBar(
+            onNotificonClick = {
+                onNotificationClick()
+            }
+        )
     else
         AppTopBar(
             title = state.value.title,
@@ -140,13 +177,17 @@ fun RowScope.AddItem(
             }
         },
         selected = currentDestination?.hierarchy?.any {
-            it.route == screen.path
+            it.route == screen.base
         } == true,
         alwaysShowLabel = false,
         onClick = {
-            navController.navigate(screen.path) {
-                popUpTo(navController.graph.findStartDestination().id)
+            navController.navigate(screen.base) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
                 launchSingleTop = true
+                restoreState = true
+
             }
         }
     )

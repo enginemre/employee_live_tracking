@@ -4,38 +4,48 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
+import com.hakmar.employeelivetracking.common.service.StoreShiftService
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
-import com.hakmar.employeelivetracking.features.store_detail.ui.component.CompletedStatusProgressBar
-import com.hakmar.employeelivetracking.features.store_detail.ui.component.LayoutTitle
-import com.hakmar.employeelivetracking.features.store_detail.ui.component.StoreInfoCard
-import com.hakmar.employeelivetracking.features.store_detail.ui.component.TaskCard
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.*
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailViewModel
+import com.hakmar.employeelivetracking.util.TimerState
+import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StoreDetailScreen(
     viewModel: StoreDetailViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
-    onAppBarConfig: (AppBarState) -> Unit
+    onAppBarConfig: (AppBarState) -> Unit,
+    storeShiftService: StoreShiftService?,
 ) {
     val list = listOf<TaskModel>(
         TaskModel(
@@ -63,6 +73,18 @@ fun StoreDetailScreen(
             infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
         ),
     )
+    val pageState = rememberPagerState(
+        initialPageOffsetFraction = 0.1f
+    )
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = Unit) {
+        storeShiftService?.dataUpdateListener =
+            object : StoreShiftService.StoreShiftServiceListener {
+                override fun onTick(h: String, m: String, s: String) {
+                    viewModel.onTick(h, m, s)
+                }
+            }
+    }
     LaunchedEffect(key1 = true) {
         onAppBarConfig(
             AppBarState(
@@ -78,60 +100,81 @@ fun StoreDetailScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        StoreInfoCard(
-            storeName = "Pendik Fatih Esenyalı",
-            storeCode = "5004",
-            bsName = "Ahmet Kaya",
-            pmName = "İbrahim Şakar",
-            address = "Çınardere mah gençlik cad no 16 daire 15 pendik İsitanbul"
+        StoreShiftCard(
+            hour = state.value.hours,
+            minutue = state.value.minutes,
+            second = state.value.seconds,
+            indicatorValue = state.value.initialTime,
+            maxIndicValue = state.value.maxValueOfTime,
+            positiveIcon = if (state.value.isPlaying == TimerState.Started) Icons.Default.Pause else Icons.Default.PlayArrow,
+            isStopIconVisible = state.value.isPlaying != TimerState.Idle,
+            onStopClick = { viewModel.stopButtonClick() },
+            onPositiveClick = { viewModel.actionButtonClick() }
         )
-        Card(
-            Modifier
-                .widthIn(max = 400.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(
-                    top = MaterialTheme.spacing.large,
-                    start = MaterialTheme.spacing.large,
-                    end = MaterialTheme.spacing.large
-                ),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 12.dp
-            )
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = MaterialTheme.spacing.medium),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                CompletedStatusProgressBar(
-                    modifier = Modifier.padding(top = MaterialTheme.spacing.small),
-                    percentage = 12 / 25f,
-                    taskCount = 25,
-                    size = 100.dp
+        HorizontalPager(
+            pageCount = 2,
+            state = pageState
+        ) { page ->
+            if (page == 0) {
+                StoreInfoCard(
+                    storeName = "Pendik Fatih Esenyalı",
+                    storeCode = "5004",
+                    bsName = "Ahmet Kaya",
+                    pmName = "İbrahim Şakar",
+                    address = "Çınardere mah gençlik cad no 16 daire 15 pendik İsitanbul"
                 )
-            }
-            Box(
-                modifier = Modifier
-                    .padding(12.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Text(
-                    text = "Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Natural80,
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight.W500
+            } else {
+                Card(
+                    Modifier
+                        .widthIn(max = 400.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(
+                            top = MaterialTheme.spacing.large,
+                            start = MaterialTheme.spacing.large,
+                            end = MaterialTheme.spacing.large
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 12.dp
                     )
-                )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = MaterialTheme.spacing.medium),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CompletedStatusProgressBar(
+                            modifier = Modifier.padding(top = MaterialTheme.spacing.small),
+                            percentage = 12 / 25f,
+                            taskCount = 25,
+                            size = 100.dp
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Text(
+                            text = "Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = Natural80,
+                                fontSize = 14.sp,
+                                lineHeight = 20.sp,
+                                fontWeight = FontWeight.W500
+                            )
+                        )
+                    }
+                }
             }
         }
+
+
         LayoutTitle(title = "Görevler", link = "Tümünü Gör")
         TaskList(list)
 
@@ -193,7 +236,138 @@ fun StoreDetailScreenPrev(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val pageState = rememberPagerState(
+                initialPageOffsetFraction = 0.1f
+            )
+            HorizontalPager(
+                pageCount = 2,
+                state = pageState,
+            ) { page ->
+                if (page == 0) {
+                    Card(
+                        Modifier
+                            .widthIn(max = 400.dp)
+                            .graphicsLayer {
+                                val pageOffset = (
+                                        (pageState.currentPage - page) + pageState
+                                            .currentPageOffsetFraction
+                                        ).absoluteValue
 
+                                // We animate the alpha, between 50% and 100%
+                                alpha = lerp(
+                                    start = 0.5f,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                )
+                            }
+                            .height(225.dp)
+                            .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 12.dp
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+
+                        }
+
+
+                    }
+                } else {
+
+                    Card(
+                        Modifier
+                            .widthIn(max = 400.dp)
+                            .graphicsLayer {
+                                val pageOffset = (
+                                        (pageState.currentPage - page) + pageState
+                                            .currentPageOffsetFraction
+                                        ).absoluteValue
+
+                                // We animate the alpha, between 50% and 100%
+                                alpha = lerp(
+                                    start = 0.5f,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                )
+                            }
+                            .height(225.dp)
+                            .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 12.dp
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Pendik Fatih Esenyalı",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Kod : 5004",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 14.sp,
+                                    color = Natural80,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Bölge Sorumlusu : Ahmet Kaya",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 14.sp,
+                                    color = Natural80,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Pazarlama Müdürü : İbrahim Şakar",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 14.sp,
+                                    color = Natural80,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Adres : Çınardere Mah gençlik cad no 134 daire 16 kat 5 mer pendik istanbul ",
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontSize = 14.sp,
+                                    color = Natural80,
+                                    fontWeight = FontWeight.W500,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                        }
+
+
+                    }
+                }
+            }
             Card(
                 Modifier
                     .widthIn(max = 400.dp)
