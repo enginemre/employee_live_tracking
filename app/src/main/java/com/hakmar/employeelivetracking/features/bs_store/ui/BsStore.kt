@@ -1,5 +1,7 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
+import android.content.Context
+import android.nfc.NfcManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,12 +26,14 @@ import com.hakmar.employeelivetracking.features.bs_store.ui.component.StoreCardI
 import com.hakmar.employeelivetracking.features.bs_store.ui.model.StoreCardModel
 import com.hakmar.employeelivetracking.util.TimerState
 
+
 @Composable
 fun BsStoresScreen(
     viewModel: BsStoreViewModel = hiltViewModel(),
     generalShiftService: GeneralShiftService?,
     onStoreClick: (String) -> Unit,
 ) {
+    val context = LocalContext.current
     val list = listOf(
         StoreCardModel(
             name = "Fatih Esenyalı",
@@ -138,7 +143,18 @@ fun BsStoresScreen(
                         taskCount = item.taskCount,
                         passingTime = item.passedTime,
                         completedTaskCount = item.completedTask,
-                        onClick = onStoreClick
+                        onClick = {
+                            val adapter =
+                                (context.getSystemService(Context.NFC_SERVICE) as NfcManager).defaultAdapter
+                            if (adapter != null && adapter.isEnabled) {
+                                //Yes NFC available
+                            } else if (adapter != null && !adapter.isEnabled) {
+                                //NFC is not enabled.Need to enable by the user.
+                            } else {
+                                //NFC is not supported
+                            }
+                            onStoreClick(it)
+                        }
                     )
                 }
             }

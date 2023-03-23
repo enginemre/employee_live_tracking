@@ -18,6 +18,7 @@ import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationScreen
 import com.hakmar.employeelivetracking.features.notification.ui.NotificationScreen
 import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
+import com.hakmar.employeelivetracking.features.qr_analyze.ui.QRScreen
 import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
 
 @Composable
@@ -56,7 +57,7 @@ fun HomeNavGraph(
             BsStoresScreen(
                 generalShiftService = generalShiftService,
                 onStoreClick = {
-                    routerHome.goBsStoreDetail(it)
+                    routerHome.goQRScreen()
                 }
             )
         }
@@ -87,6 +88,10 @@ fun HomeNavGraph(
                     routerHome.goNotification()
                 }
             )
+        }
+
+        composable(HomeDestination.QRScreen.base) {
+            QRScreen()
         }
 
         composable(
@@ -137,6 +142,10 @@ private class RouterHome(val navController: NavController) {
 
     fun goNotification() {
         navController.navigate(HomeDestination.Notification.base)
+    }
+
+    fun goQRScreen() {
+        navController.navigate(HomeDestination.QRScreen.base)
     }
 }
 
@@ -194,6 +203,11 @@ sealed interface HomeDestination {
     object StoreDetail : HomeDestination {
         override val base = "/store"
         override val path = "$base/{storeId}"
+    }
+
+    object QRScreen : HomeDestination {
+        override val base = "/qr_check"
+        override val path = base
     }
 
     object Notification : HomeDestination {

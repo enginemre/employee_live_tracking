@@ -82,6 +82,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCxXlkCRXnt4sz5H07mKU3NbblAck5wskk" />
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
     </application>
 
 </manifest>
