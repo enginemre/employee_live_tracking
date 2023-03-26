@@ -70,6 +70,7 @@ class BsStoreViewModel @Inject constructor(
         }
     }
 
+
     fun onTick(h: String, m: String, s: String) {
         _state.update {
             it.copy(

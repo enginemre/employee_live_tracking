@@ -2,22 +2,27 @@
 
 package com.hakmar.employeelivetracking
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.navigation.compose.rememberNavController
-import com.hakmar.employeelivetracking.common.Destination
-import com.hakmar.employeelivetracking.common.EmployeeLiveTrackingAppBone
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import com.hakmar.employeelivetracking.common.presentation.DeepLink
+import com.hakmar.employeelivetracking.common.presentation.DeepLinkController
+import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
@@ -29,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
 
-
+    private val deepLinkNavigation: MutableState<DeepLink> = mutableStateOf(DeepLink())
     private var isBoundGeneral by mutableStateOf(false)
     private var generalShiftService: GeneralShiftService? = null
     private var storeShiftService: StoreShiftService? = null
@@ -58,19 +63,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isLogin = mainViewModel.loginStatus()
-        val startDestination =
-            if (isLogin == 1) Destination.Home.base else Destination.Auth.base
+
         setContent {
             EmployeeLiveTrackingTheme {
-                EmployeeLiveTrackingAppBone(
-                    navController = rememberNavController(),
-                    startDestination = startDestination,
-                    windowSizeClass = calculateWindowSizeClass(activity = this),
-                    bounded = isBoundGeneral,
-                    generalShiftService = generalShiftService,
-                    storeShiftService = storeShiftService,
-                )
+                RootScreen()
             }
         }
     }
@@ -90,5 +86,57 @@ class MainActivity : ComponentActivity() {
         unbindService(generalShiftConnection)
         unbindService(storeShiftConnection)
         isBoundGeneral = false
+    }
+
+    @Composable
+    fun RootScreen() {
+        val context = LocalContext.current
+        var hasNotificationPermission by remember {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mutableStateOf(
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+                )
+            } else mutableStateOf(true)
+        }
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                hasNotificationPermission = isGranted
+            }
+        )
+        LaunchedEffect(key1 = true) {
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        LaunchedEffect(key1 = Unit ){
+            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            launcher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+        val isLogin = mainViewModel.loginStatus()
+        val startDestination =
+            if (isLogin == 1) Destination.Home.base else Destination.Auth.base
+        val snackbarHostState = remember { SnackbarHostState() }
+        DeepLinkController.HandleDeepLink(
+            deepLinkNavigation = deepLinkNavigation.value,
+            startDestination = startDestination,
+            snackbarHostState = snackbarHostState
+        )
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        handleIntent(intent, null)
+    }
+    private fun handleIntent(intent: Intent?, savedInstanceState: Bundle?) {
+        if(intent?.action == Intent.ACTION_VIEW){
+            val uri = intent.data
+            val list = uri.toString().split("/")
+            val data = list[list.lastIndex]
+            val route = list[list.lastIndex-1]
+            this.deepLinkNavigation.value = DeepLink(route = route,data, isEmpty = false)
+        }
     }
 }

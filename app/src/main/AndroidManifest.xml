@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -11,65 +16,87 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
+        android:name=".EmployeeLiveTrackingApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:name=".EmployeeLiveTrackingApp"
         android:theme="@style/Theme.EmployeeLiveTracking"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".features.nfc_reader.ui.NFCActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_nfcactivity"
+            tools:ignore="LockedOrientationActivity"
+            android:theme="@style/Theme.EmployeeLiveTracking">
+            <!-- NFC TAG FILTER -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.EmployeeLiveTracking"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EmployeeLiveTracking"
+            android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.VIEW" />
-                <data
-                    android:host="ruhidibadli.pythonanywhere.com"
-                    android:scheme="https"
-                    android:pathPrefix="/" />
-            </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.VIEW" />
-                <data
-                    android:host="ruhidibadli.pythonanywhere.com"
-                    android:scheme="http"
-                    android:pathPrefix="/" />
-            </intent-filter>
-
+            <!-- Deeplink  from AppSide -->
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="nested_nav"
                     android:scheme="employeelivetracking" />
+
                 <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <!-- Deeplink  from URL -->
+            <intent-filter android:autoVerify="true">
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data
+                    android:host="ruhidibadli.pythonanywhere.com"
+                    android:pathPrefix="/"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data
+                    android:host="ruhidibadli.pythonanywhere.com"
+                    android:pathPrefix="/"
+                    android:scheme="http" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
+        <!-- Initialize servcies -->
         <service
             android:name=".common.service.GeneralShiftService"
             android:enabled="true"
@@ -77,15 +104,16 @@
         <service
             android:name=".common.service.StoreShiftService"
             android:enabled="true"
-            android:exported="false" />
-
+            android:exported="false" /> <!-- Maps and barcode initialize -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCxXlkCRXnt4sz5H07mKU3NbblAck5wskk" />
-
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode" />
+        <meta-data
+            android:name="android.nfc.action.TECH_DISCOVERED"
+            android:resource="@xml/nfc_tech_filter" />
     </application>
 
 </manifest>

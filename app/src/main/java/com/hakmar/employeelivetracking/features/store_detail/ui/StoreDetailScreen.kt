@@ -1,5 +1,12 @@
 package com.hakmar.employeelivetracking.features.store_detail.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.nfc.NfcManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,159 +34,210 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
-import com.hakmar.employeelivetracking.common.service.StoreShiftService
+import com.hakmar.employeelivetracking.features.nfc_reader.ui.NFCActivity
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
 import com.hakmar.employeelivetracking.features.store_detail.ui.component.*
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailViewModel
-import com.hakmar.employeelivetracking.util.TimerState
+import com.hakmar.employeelivetracking.util.*
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun StoreDetailScreen(
-    viewModel: StoreDetailViewModel = hiltViewModel(),
-    onBackPressed: () -> Unit,
-    onAppBarConfig: (AppBarState) -> Unit,
-    storeShiftService: StoreShiftService?,
-) {
-    val list = listOf<TaskModel>(
-        TaskModel(
-            name = "Çelik Kasa Sayım",
-            isCompleted = true,
-            imageUrl = "https://cdn-icons-png.flaticon.com/512/2676/2676632.png",
-            infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle kasanın yanına git"
-        ),
-        TaskModel(
-            name = "Mağaza Önü Kontrol",
-            isCompleted = false,
-            imageUrl = "https://cdn-icons-png.flaticon.com/512/609/609752.png",
-            infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
-        ),
-        TaskModel(
-            name = "Mağaza İçi Kontrol",
-            isCompleted = false,
-            imageUrl = "https://cdn-icons-png.flaticon.com/512/3306/3306049.png",
-            infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
-        ),
-        TaskModel(
-            name = "Z Raporları Kontrol",
-            isCompleted = false,
-            imageUrl = "https://cdn-icons-png.flaticon.com/512/9342/9342023.png",
-            infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
-        ),
-    )
-    val pageState = rememberPagerState(
-        initialPageOffsetFraction = 0.1f
-    )
-    val state = viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit) {
-        storeShiftService?.dataUpdateListener =
-            object : StoreShiftService.StoreShiftServiceListener {
-                override fun onTick(h: String, m: String, s: String) {
-                    viewModel.onTick(h, m, s)
-                }
+class StoreDetailScreen : Screen {
+
+    override val key: ScreenKey
+        get() = HomeDestination.StoreDetail.base
+
+
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    override fun Content() {
+        val list = listOf<TaskModel>(
+            TaskModel(
+                name = "Çelik Kasa Sayım",
+                isCompleted = true,
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/2676/2676632.png",
+                infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle kasanın yanına git"
+            ),
+            TaskModel(
+                name = "Mağaza Önü Kontrol",
+                isCompleted = false,
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/609/609752.png",
+                infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
+            ),
+            TaskModel(
+                name = "Mağaza İçi Kontrol",
+                isCompleted = false,
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/3306/3306049.png",
+                infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
+            ),
+            TaskModel(
+                name = "Z Raporları Kontrol",
+                isCompleted = false,
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/9342/9342023.png",
+                infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git"
+            ),
+        )
+        val pageState = rememberPagerState()
+        val mainViewModel = getViewModel<MainViewModel>()
+        val viewModel = getViewModel<StoreDetailViewModel>()
+        val context = LocalContext.current
+        val snackbarHostState = LocalSnackbarHostState.current
+        val launcher =
+            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == Activity.RESULT_OK)
+                    viewModel.getNFCData(it.data?.getStringExtra(AppConstants.NFC_DATA))
             }
-    }
-    LaunchedEffect(key1 = true) {
-        onAppBarConfig(
-            AppBarState(
-                title = "Mağaza Detay",
-                isNavigationButton = true,
-                navigationClick = onBackPressed
-            )
-        )
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        StoreShiftCard(
-            hour = state.value.hours,
-            minutue = state.value.minutes,
-            second = state.value.seconds,
-            indicatorValue = state.value.initialTime,
-            maxIndicValue = state.value.maxValueOfTime,
-            positiveIcon = if (state.value.isPlaying == TimerState.Started) Icons.Default.Pause else Icons.Default.PlayArrow,
-            isStopIconVisible = state.value.isPlaying != TimerState.Idle,
-            onStopClick = { viewModel.stopButtonClick() },
-            onPositiveClick = { viewModel.actionButtonClick() }
-        )
-        HorizontalPager(
-            pageCount = 2,
-            state = pageState
-        ) { page ->
-            if (page == 0) {
-                StoreInfoCard(
-                    storeName = "Pendik Fatih Esenyalı",
-                    storeCode = "5004",
-                    bsName = "Ahmet Kaya",
-                    pmName = "İbrahim Şakar",
-                    address = "Çınardere mah gençlik cad no 16 daire 15 pendik İsitanbul"
+        SystemReciver(action = AppConstants.ACTION_OBSERVE_STORE_SHIFT) {
+            if (it?.action == AppConstants.ACTION_OBSERVE_STORE_SHIFT) {
+                val string = it.getStringExtra(AppConstants.TIME_ELAPSED)
+                val result = string!!.split(":")
+                viewModel.onTick(result[0], result[1], result[2])
+            }
+        }
+        val navigator = LocalNavigator.currentOrThrow
+        val state = viewModel.state.collectAsStateWithLifecycle()
+        LaunchedEffect(key1 = true) {
+            mainViewModel.updateAppBar(
+                AppBarState(
+                    title = "Mağaza Detay",
+                    isNavigationButton = true,
+                    navigationClick = { navigator.pop() }
                 )
-            } else {
-                Card(
-                    Modifier
-                        .widthIn(max = 400.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .padding(
-                            top = MaterialTheme.spacing.large,
-                            start = MaterialTheme.spacing.large,
-                            end = MaterialTheme.spacing.large
-                        ),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 12.dp
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = MaterialTheme.spacing.medium),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CompletedStatusProgressBar(
-                            modifier = Modifier.padding(top = MaterialTheme.spacing.small),
-                            percentage = 12 / 25f,
-                            taskCount = 25,
-                            size = 100.dp
+            )
+        }
+        LaunchedEffect(key1 = Unit) {
+            viewModel.uiEvent.collect { event ->
+                when (event) {
+                    is UiEvent.QrScnaned -> {
+                        val result =  decodeJwt(event.data)
+                          snackbarHostState.showSnackbar(
+                            message = UiText.DynamicString("QR Okundu : $result ")
+                                .asString(context)
+                        )
+                        Log.e("QR Process",result.toString())
+                    }
+                    is UiEvent.ShowSnackBar -> {
+                        snackbarHostState.showSnackbar(
+                            message = event.message.asString(context)
                         )
                     }
-                    Box(
-                        modifier = Modifier
-                            .padding(12.dp),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Text(
-                            text = "Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = Natural80,
-                                fontSize = 14.sp,
-                                lineHeight = 20.sp,
-                                fontWeight = FontWeight.W500
-                            )
-                        )
-                    }
+                    else -> {}
                 }
             }
         }
 
+        LaunchedEffect(key1 = Unit) {
+            val adapter =
+                (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
+            if (adapter != null && adapter.isEnabled) {
+                //Yes NFC available
+                launcher.launch(Intent(context, NFCActivity::class.java))
+            } else if (adapter != null && !adapter.isEnabled) {
+                //NFC is not enabled.Need to enable by the user.
+                viewModel.nfcShouldBeOpen()
+            } else {
+                //NFC is not supported
+                viewModel.startScanning()
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            StoreShiftCard(
+                hour = state.value.hours,
+                minutue = state.value.minutes,
+                second = state.value.seconds,
+                indicatorValue = state.value.initialTime,
+                maxIndicValue = state.value.maxValueOfTime,
+                positiveIcon = if (state.value.isPlaying == TimerState.Started) Icons.Default.Pause else Icons.Default.PlayArrow,
+                isStopIconVisible = state.value.isPlaying != TimerState.Idle,
+                onStopClick = { viewModel.stopButtonClick() },
+                onPositiveClick = { viewModel.actionButtonClick() }
+            )
+            HorizontalPager(
+                pageCount = 2,
+                state = pageState
+            ) { page ->
+                if (page == 0) {
+                    StoreInfoCard(
+                        storeName = "Pendik Fatih Esenyalı",
+                        storeCode = "5004",
+                        bsName = "Ahmet Kaya",
+                        pmName = "İbrahim Şakar",
+                        address = "Çınardere mah gençlik cad no 16 daire 15 pendik İsitanbul"
+                    )
+                } else {
+                    Card(
+                        Modifier
+                            .widthIn(max = 400.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .padding(
+                                top = MaterialTheme.spacing.large,
+                                start = MaterialTheme.spacing.large,
+                                end = MaterialTheme.spacing.large
+                            ),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 12.dp
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = MaterialTheme.spacing.medium),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CompletedStatusProgressBar(
+                                modifier = Modifier.padding(top = MaterialTheme.spacing.small),
+                                percentage = 12 / 25f,
+                                taskCount = 25,
+                                size = 100.dp
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(12.dp),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            Text(
+                                text = "Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = Natural80,
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp,
+                                    fontWeight = FontWeight.W500
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            LayoutTitle(title = "Görevler", link = "Tümünü Gör")
+            TaskList(list)
 
-        LayoutTitle(title = "Görevler", link = "Tümünü Gör")
-        TaskList(list)
-
+        }
     }
+
 }
 
 @Composable

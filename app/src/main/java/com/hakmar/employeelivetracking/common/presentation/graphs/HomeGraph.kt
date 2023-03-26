@@ -1,27 +1,7 @@
 package com.hakmar.employeelivetracking.common.presentation.graphs
 
-import android.content.Intent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.*
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.hakmar.employeelivetracking.common.Destination
-import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
-import com.hakmar.employeelivetracking.common.service.GeneralShiftService
-import com.hakmar.employeelivetracking.common.service.StoreShiftService
-import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoresScreen
-import com.hakmar.employeelivetracking.features.navigation.ui.NavigationScreen
-import com.hakmar.employeelivetracking.features.notification.ui.NotificationScreen
-import com.hakmar.employeelivetracking.features.pm_store.ui.PmStoreScreen
-import com.hakmar.employeelivetracking.features.qr_analyze.ui.QRScreen
-import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
 
-@Composable
+/*@Composable
 fun HomeNavGraph(
     navController: NavHostController,
     mainViewModel: MainViewModel,
@@ -147,73 +127,12 @@ private class RouterHome(val navController: NavController) {
     fun goQRScreen() {
         navController.navigate(HomeDestination.QRScreen.base)
     }
-}
+}*/
 
-val screens = listOf(
+/*val screens = listOf(
     HomeDestination.PmStores,
     HomeDestination.Tasks,
     HomeDestination.BsStores,
     HomeDestination.Navigation,
     HomeDestination.Profile,
-)
-
-sealed interface HomeDestination {
-    val base: String
-    val path: String
-    val selectedIcon: ImageVector?
-        get() = null
-    val unSelectedIcon: ImageVector?
-        get() = null
-
-    object BsStores : HomeDestination {
-        override val base = "/stores"
-        override val path = base
-        override val selectedIcon = Icons.Filled.Home
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Home
-    }
-
-    object PmStores : HomeDestination {
-        override val base = "/pm_stores"
-        override val path = base
-        override val selectedIcon = Icons.Filled.Store
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Store
-    }
-
-    object Navigation : HomeDestination {
-        override val base = "/navigation"
-        override val path = base
-        override val selectedIcon = Icons.Filled.Navigation
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Navigation
-    }
-
-    object Tasks : HomeDestination {
-        override val base = "/tasks"
-        override val path = "${base}/{taskId}"
-        override val selectedIcon = Icons.Default.Task
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Task
-    }
-
-    object Profile : HomeDestination {
-        override val base = "/profile"
-        override val path = base
-        override val selectedIcon = Icons.Default.Person
-        override val unSelectedIcon: ImageVector = Icons.Outlined.Person
-    }
-
-    object StoreDetail : HomeDestination {
-        override val base = "/store"
-        override val path = "$base/{storeId}"
-    }
-
-    object QRScreen : HomeDestination {
-        override val base = "/qr_check"
-        override val path = base
-    }
-
-    object Notification : HomeDestination {
-        override val base = "/notification"
-        override val path = base
-    }
-
-
-}
+)*/

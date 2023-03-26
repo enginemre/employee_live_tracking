@@ -57,6 +57,10 @@ class GeneralShiftService : Service() {
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
 
+    private var tickIntent = Intent(
+        AppConstants.ACTION_OBSERVE_GENERAL_SHIFT
+    )
+
 
     override fun onBind(intent: Intent?) = binder
 
@@ -74,6 +78,8 @@ class GeneralShiftService : Service() {
                         onTick = { hours, minutes, seconds ->
                             updateNotification(hours = hours, minutes = minutes, seconds = seconds)
                             dataUpdateListener?.onTick(hours, minutes, seconds)
+                            tickIntent.putExtra(AppConstants.TIME_ELAPSED, formatTime(seconds, minutes, hours))
+                            sendBroadcast(tickIntent)
                         }
                     )
                 }
@@ -141,6 +147,7 @@ class GeneralShiftService : Service() {
         timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
             time = time.plus(1.seconds)
             updateTimeState()
+
             onTick(hours.value, minutes.value, seconds.value)
         }
     }

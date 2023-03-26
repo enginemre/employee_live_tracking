@@ -50,6 +50,9 @@ class StoreShiftService : Service() {
     @Named("store")
     lateinit var notificationBuilder: NotificationCompat.Builder
 
+    private var tickIntent = Intent(
+        AppConstants.ACTION_OBSERVE_STORE_SHIFT
+    )
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         isServiceRunning = true
@@ -67,6 +70,8 @@ class StoreShiftService : Service() {
                         onTick = { hours, minutes, seconds ->
                             updateNotification(hours = hours, minutes = minutes, seconds = seconds)
                             dataUpdateListener?.onTick(hours, minutes, seconds)
+                            tickIntent.putExtra(AppConstants.TIME_ELAPSED, formatTime(seconds, minutes, hours))
+                            sendBroadcast(tickIntent)
                         }
                     )
                 }

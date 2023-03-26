@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.auth.presentation.component
+package com.hakmar.employeelivetracking.features.auth.presentation.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

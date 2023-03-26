@@ -10,66 +10,78 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.pm_store.ui.component.PmStoreCard
 import com.hakmar.employeelivetracking.features.pm_store.ui.model.PmStoreModel
 
-@Composable
-fun PmStoreScreen() {
-    val list = listOf<PmStoreModel>(
-        PmStoreModel(
-            storeCode = "5004",
-            storeName = "Fatih Esenyalı"
-        ),
-        PmStoreModel(
-            storeCode = "5024",
-            storeName = "GüzelYalı Pendil"
-        ),
-        PmStoreModel(
-            storeCode = "5004",
-            storeName = "Fatih Esenyalı"
-        ),
-        PmStoreModel(
-            storeCode = "5024",
-            storeName = "GüzelYalı Pendil"
-        ),
-        PmStoreModel(
-            storeCode = "5004",
-            storeName = "Fatih Esenyalı"
-        ),
-        PmStoreModel(
-            storeCode = "5024",
-            storeName = "GüzelYalı Pendil"
-        ),
-        PmStoreModel(
-            storeCode = "5004",
-            storeName = "Fatih Esenyalı"
-        )
-    )
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LazyVerticalGrid(
 
-            horizontalArrangement = Arrangement.Center,
+class PMStoreScreen : Screen {
+
+    override val key: ScreenKey
+        get() = HomeDestination.PmStores.base
+
+
+    @Composable
+    override fun Content() {
+        val list = listOf<PmStoreModel>(
+            PmStoreModel(
+                storeCode = "5004",
+                storeName = "Fatih Esenyalı"
+            ),
+            PmStoreModel(
+                storeCode = "5024",
+                storeName = "GüzelYalı Pendil"
+            ),
+            PmStoreModel(
+                storeCode = "5004",
+                storeName = "Fatih Esenyalı"
+            ),
+            PmStoreModel(
+                storeCode = "5024",
+                storeName = "GüzelYalı Pendil"
+            ),
+            PmStoreModel(
+                storeCode = "5004",
+                storeName = "Fatih Esenyalı"
+            ),
+            PmStoreModel(
+                storeCode = "5024",
+                storeName = "GüzelYalı Pendil"
+            ),
+            PmStoreModel(
+                storeCode = "5004",
+                storeName = "Fatih Esenyalı"
+            )
+        )
+        Column(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.large),
-            columns = GridCells.Fixed(2),
-            content = {
-                items(list) { item ->
-                    Box(
-                        modifier = Modifier
-                            .padding(MaterialTheme.spacing.small)
-                    ) {
-                        PmStoreCard(item.storeCode, item.storeName)
-                    }
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyVerticalGrid(
 
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.large),
+                columns = GridCells.Fixed(2),
+                content = {
+                    items(list) { item ->
+                        Box(
+                            modifier = Modifier
+                                .padding(MaterialTheme.spacing.small)
+                        ) {
+                            PmStoreCard(item.storeCode, item.storeName)
+                        }
+
+                    }
                 }
-            }
-        )
+            )
+        }
     }
+
 }
 
 

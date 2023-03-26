@@ -1,10 +1,10 @@
-package com.hakmar.employeelivetracking.features.auth.presentation.viewmodel
+package com.hakmar.employeelivetracking.features.auth.presentation.ui.viewmodel
 
 import androidx.compose.ui.focus.FocusState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.hakmar.employeelivetracking.common.Destination
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
+import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.AuthUseCases
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.UserValidateUseCase
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent

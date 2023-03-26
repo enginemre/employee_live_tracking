@@ -12,4 +12,11 @@
     <string name="code_hint">Mağaza Kodu</string>
     <string name="description_hint">Açıklama</string>
     <string name="task_detail_task">Görev Detay</string>
+    <string name="title_activity_qr_scan">QrScanActivity</string>
+    <string name="qr_scanned_error">QR kod okunamadı</string>
+    <string name="nfc_should_be_open">NFC özelliğini açınız</string>
+    <string name="title_activity_nfcactivity">NFCActivity</string>
+    <string name="nfc_message_not_found">Mesaj okunamadı</string>
+    <string name="nfc_description">Lütfen telefonunuzu mağazada bulunan okutma cihazına yaklaştırınız</string>
+    <string name="nfc_success_message">Okutma başarılı</string>
 </resources>

@@ -14,83 +14,99 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
+import com.hakmar.employeelivetracking.features.notification.ui.NotificationScreen
 import com.hakmar.employeelivetracking.features.profile.ui.component.ProfileHeader
 import com.hakmar.employeelivetracking.features.profile.ui.component.ProfileItem
 import com.hakmar.employeelivetracking.features.profile.ui.model.ProfileItemModel
 
-@Composable
-fun ProfileScreen(
-    onEditProfile: () -> Unit,
-    onNotification: () -> Unit,
-    onAppBarConfig: (AppBarState) -> Unit,
-) {
-    LaunchedEffect(key1 = true) {
-        onAppBarConfig(
-            AppBarState(
-                isNavigationButton = false,
-                title = "Profile"
+class ProfileScreen : Screen {
+
+    override val key: ScreenKey
+        get() = HomeDestination.Profile.base
+
+    @Composable
+    override fun Content() {
+        val mainViewModel = getViewModel<MainViewModel>()
+        LaunchedEffect(key1 = Unit){
+            mainViewModel.updateAppBar(
+                AppBarState(
+                    isNavigationButton = false,
+                    title = "Profile"
+                )
+            )
+        }
+        val navigator = LocalNavigator.currentOrThrow
+        val list = listOf<ProfileItemModel>(
+            ProfileItemModel(
+                name = "Edit Profile",
+                icon = com.hakmar.employeelivetracking.R.drawable.profile_icon,
+                onClick = {}
+            ),
+            ProfileItemModel(
+                name = "About Us",
+                icon = com.hakmar.employeelivetracking.R.drawable.info,
+                onClick = {}
+            ),
+            ProfileItemModel(
+                name = "Private Policy",
+                icon = com.hakmar.employeelivetracking.R.drawable.private_policy,
+                onClick = { }
+            ),
+            ProfileItemModel(
+                name = "Notification",
+                icon = com.hakmar.employeelivetracking.R.drawable.notification,
+                onClick = { navigator.push(NotificationScreen()) }
+            ),
+            ProfileItemModel(
+                name = "Logout",
+                icon = com.hakmar.employeelivetracking.R.drawable.logout,
+                onClick = { }
             )
         )
-    }
-    val list = listOf<ProfileItemModel>(
-        ProfileItemModel(
-            name = "Edit Profile",
-            icon = com.hakmar.employeelivetracking.R.drawable.profile_icon,
-            onClick = onEditProfile
-        ),
-        ProfileItemModel(
-            name = "About Us",
-            icon = com.hakmar.employeelivetracking.R.drawable.info,
-            onClick = {}
-        ),
-        ProfileItemModel(
-            name = "Private Policy",
-            icon = com.hakmar.employeelivetracking.R.drawable.private_policy,
-            onClick = { }
-        ),
-        ProfileItemModel(
-            name = "Notification",
-            icon = com.hakmar.employeelivetracking.R.drawable.notification,
-            onClick = onNotification
-        ),
-        ProfileItemModel(
-            name = "Logout",
-            icon = com.hakmar.employeelivetracking.R.drawable.logout,
-            onClick = { }
-        )
-    )
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White, shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp))
-            .padding(MaterialTheme.spacing.medium)
-    ) {
-        Image(
+        Column(
             modifier = Modifier
-                .padding(
-                    start = 10.dp,
-                    end = 10.dp,
+                .fillMaxSize()
+                .background(
+                    Color.White,
+                    shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp)
                 )
-                .fillMaxWidth()
-                .height(100.dp),
-            painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
-            contentDescription = ""
-        )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-        ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-        LazyColumn {
-            items(list) {
-                ProfileItem(name = it.name, icon = it.icon) {
-                    it.onClick()
+                .padding(MaterialTheme.spacing.medium)
+        ) {
+            Image(
+                modifier = Modifier
+                    .padding(
+                        start = 10.dp,
+                        end = 10.dp,
+                    )
+                    .fillMaxWidth()
+                    .height(100.dp),
+                painter = painterResource(id = com.hakmar.employeelivetracking.R.drawable.man),
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+            LazyColumn {
+                items(list) {
+                    ProfileItem(name = it.name, icon = it.icon) {
+                        it.onClick()
+                    }
                 }
             }
-        }
 
+        }
     }
+
 }
 
 @Preview(showSystemUi = true)

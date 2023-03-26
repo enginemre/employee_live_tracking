@@ -15,9 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.FabState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.TransparentHintTextField
@@ -25,88 +30,93 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.features.tasks.ui.viewmodel.TaskDetailViewModel
 
-@Composable
-fun TaskDetailScreen(
-    viewModel: TaskDetailViewModel = hiltViewModel(),
-    onAppBarConfig: (AppBarState) -> Unit,
-    onBackPressed: () -> Unit,
-    onFabState: (FabState) -> Unit,
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit) {
-        onAppBarConfig(
-            AppBarState(
-                isNavigationButton = true,
-                navigationClick = onBackPressed,
-                title = "Görev Detay",
+
+class TaskDetailScreen : Screen {
+
+    override val key: ScreenKey
+        get() =  "Task_Detail"
+
+    @Composable
+    override fun Content() {
+        val mainViewModel = getViewModel<MainViewModel>()
+        val viewModel = getViewModel<TaskDetailViewModel>()
+        val state = viewModel.state.collectAsStateWithLifecycle()
+        val navigator = LocalNavigator.currentOrThrow
+        LaunchedEffect(key1 = Unit) {
+            mainViewModel.updateAppBar(
+                AppBarState(
+                    isNavigationButton = false,
+                    title = "Görev Detay"
+                )
             )
-        )
-        onFabState(
-            FabState(
-                onClick = {
-                    viewModel.onEvent(TaskDetailEvent.OnSaveTask)
+            mainViewModel.updateFabState(
+                FabState(
+                    onClick = { },
+                    icon = Icons.Default.Save
+                )
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Color.White,
+                    shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp)
+                )
+                .padding(16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = state.value.title,
+                hint = stringResource(id = R.string.title_hint),
+                onValueChange = {
+                    viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Title))
                 },
-                icon = Icons.Default.Save
+                isHintVisible = state.value.title.isEmpty(),
+                singleLine = true,
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 24.sp
+                ),
+                onFocusChange = {}
             )
-        )
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = state.value.code,
+                hint = stringResource(id = R.string.code_hint),
+                onValueChange = {
+                    viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Code))
+                },
+                onFocusChange = {},
+                isHintVisible = state.value.code.isEmpty(),
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 24.sp
+                ),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(
+                text = state.value.description,
+                hint = stringResource(id = R.string.description_hint),
+                onValueChange = {
+                    viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Description))
+                },
+                onFocusChange = {},
+                isHintVisible = state.value.description.isEmpty(),
+                textStyle = MaterialTheme.typography.titleLarge.copy(
+                    color = Natural80,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W400,
+                    lineHeight = 24.sp
+                ),
+                modifier = Modifier.fillMaxHeight()
+            )
+
+        }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White, shape = RoundedCornerShape(topStart = 55.dp, topEnd = 55.dp))
-            .padding(16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        TransparentHintTextField(
-            text = state.value.title,
-            hint = stringResource(id = R.string.title_hint),
-            onValueChange = {
-                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Title))
-            },
-            isHintVisible = state.value.title.isEmpty(),
-            singleLine = true,
-            textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W400,
-                lineHeight = 24.sp
-            ),
-            onFocusChange = {}
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TransparentHintTextField(
-            text = state.value.code,
-            hint = stringResource(id = R.string.code_hint),
-            onValueChange = {
-                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Code))
-            },
-            onFocusChange = {},
-            isHintVisible = state.value.code.isEmpty(),
-            textStyle = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W400,
-                lineHeight = 24.sp
-            ),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TransparentHintTextField(
-            text = state.value.description,
-            hint = stringResource(id = R.string.description_hint),
-            onValueChange = {
-                viewModel.onEvent(TaskDetailEvent.OnTextChange(it, TaskDetailFields.Description))
-            },
-            onFocusChange = {},
-            isHintVisible = state.value.description.isEmpty(),
-            textStyle = MaterialTheme.typography.titleLarge.copy(
-                color = Natural80,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.W400,
-                lineHeight = 24.sp
-            ),
-            modifier = Modifier.fillMaxHeight()
-        )
-
-    }
 }
 
 @Preview(showSystemUi = true)

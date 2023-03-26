@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
@@ -25,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -59,6 +60,7 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.1.0-alpha07'
     implementation "androidx.compose.ui:ui-util:$compose_version"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -91,6 +93,17 @@ dependencies {
     //Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
 
+    //Voyager for Navigation
+    implementation("cafe.adriel.voyager:voyager-hilt:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-androidx:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+    implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
+
+    //Lottie
+    implementation ("com.airbnb.android:lottie-compose:$lottieVersion")
+
     // Dagger hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
@@ -103,6 +116,9 @@ dependencies {
     implementation 'com.google.maps.android:maps-compose-utils:2.11.2'
     implementation 'com.google.maps.android:maps-compose-widgets:2.11.2'
 
+    // JsonSerialize
+    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation 'com.auth0.android:jwtdecode:2.0.2'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
 
