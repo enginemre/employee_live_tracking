@@ -1,6 +1,7 @@
 package com.hakmar.employeelivetracking.features.auth.data.repository
 
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
+import com.hakmar.employeelivetracking.features.auth.data.remote.LoginApi
 import com.hakmar.employeelivetracking.features.auth.domain.repository.LoginRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
-    val dataStore: DataStoreRepository
+    val dataStore: DataStoreRepository,
+    val loginApi: LoginApi
 ) : LoginRepository {
     override fun login(userCode: String, password: String): Flow<Resource<Boolean>> {
         return flow {
