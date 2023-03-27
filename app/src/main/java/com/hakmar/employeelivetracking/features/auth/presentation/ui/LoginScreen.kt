@@ -10,6 +10,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -41,9 +42,7 @@ import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.U
 import com.hakmar.employeelivetracking.features.auth.presentation.ui.viewmodel.LoginViewModel
 import com.hakmar.employeelivetracking.util.UiEvent
 
-class LoginScreen(
-    private val snackbarHostState: SnackbarHostState,
-) : Screen {
+class LoginScreen : Screen {
 
     override val key: ScreenKey
         get() = Destination.Auth.base
@@ -55,6 +54,7 @@ class LoginScreen(
         val navigator = LocalNavigator.currentOrThrow
         val keyboardController = LocalSoftwareKeyboardController.current
         val context = LocalContext.current
+        val snackbarHostState = remember { SnackbarHostState() }
         val state = viewModel.state.collectAsState()
         LaunchedEffect(key1 = true) {
             viewModel.uiEvent.collect { event ->

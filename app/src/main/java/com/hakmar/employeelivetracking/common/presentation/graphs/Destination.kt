@@ -78,8 +78,13 @@ sealed interface Destination {
         override val path: String = base
     }
 
-    object NFCScreen : Destination{
+    object NFCScreen : Destination {
         override val base: String = "/read_nfc"
+        override val path: String = base
+    }
+
+    object OnBoarding : Destination {
+        override val base: String = "/onboarding"
         override val path: String = base
     }
 }
