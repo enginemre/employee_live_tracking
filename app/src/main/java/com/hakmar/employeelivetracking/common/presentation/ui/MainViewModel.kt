@@ -48,6 +48,16 @@ class MainViewModel @Inject constructor(
         _fabState.value = fabState
     }
 
+    fun isFirst(): Int {
+        return runBlocking { dataStoreRepository.intReadKey(AppConstants.IS_FIRST) ?: 0 }
+    }
+
+    fun setIsFirst() {
+        runBlocking {
+            dataStoreRepository.intPutKey(AppConstants.IS_FIRST, 1)
+        }
+    }
+
     fun getUserLocation(
         fusedLocationProviderClient: FusedLocationProviderClient
     ) {
@@ -64,36 +74,6 @@ class MainViewModel @Inject constructor(
             }
         } catch (e: SecurityException) {
 
-        }
-    }
-
-    fun saveLastRoute(route: String) {
-        runBlocking {
-            dataStoreRepository.stringPutKey(AppConstants.LAST_ROUTE, route)
-            dataStoreRepository.intPutKey(AppConstants.IS_ON_PAUSED, 1)
-        }
-    }
-
-    fun resetLastRoute() {
-        runBlocking {
-            dataStoreRepository.intPutKey(AppConstants.IS_ON_PAUSED, 0)
-        }
-    }
-
-    fun getLastRoute(): String? {
-        val isOnPaused: Int =
-            runBlocking { dataStoreRepository.intReadKey(AppConstants.IS_ON_PAUSED) ?: 0 }
-        return if (isOnPaused != 0) {
-            resetLastRoute()
-            runBlocking {
-                val route =
-                    dataStoreRepository.stringReadKey(AppConstants.LAST_ROUTE)
-                route
-            }
-
-
-        } else {
-            null
         }
     }
 }

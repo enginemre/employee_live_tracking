@@ -19,4 +19,5 @@
     <string name="nfc_message_not_found">Mesaj okunamadı</string>
     <string name="nfc_description">Lütfen telefonunuzu mağazada bulunan okutma cihazına yaklaştırınız</string>
     <string name="nfc_success_message">Okutma başarılı</string>
+    <string name="default_notification_channel_id">notification_channel_id_app</string>
 </resources>

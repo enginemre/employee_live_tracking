@@ -8,6 +8,7 @@ import com.hakmar.employeelivetracking.common.service.GeneralShiftServiceManager
 import com.hakmar.employeelivetracking.common.service.StoreShiftServiceManager
 import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT
 import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_ID_STORE_SHIFT
+import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_NAME_APP
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,6 +47,17 @@ object NotificationModule {
             .setOngoing(true)
             .setContentIntent(storeShiftServiceManager.clickPendingIntent())
     }
+
+    @ServiceScoped
+    @Named("general")
+    @Provides
+    fun provideAppNotificationBuilder(
+        @ApplicationContext context: Context,
+    ): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_NAME_APP)
+            .setSmallIcon(R.drawable.notification)
+    }
+
 
     @ServiceScoped
     @Provides
