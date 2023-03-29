@@ -6,7 +6,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginScreen
+import com.hakmar.employeelivetracking.features.auth.ui.LoginScreen
 import com.hakmar.employeelivetracking.features.onboarding.ui.OnBoardingScreen
 
 object DeepLinkController {

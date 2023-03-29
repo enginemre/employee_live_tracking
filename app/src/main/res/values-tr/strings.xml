@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EmployeeLiveTracking</string>
+    <string name="welcome_label">Hoşgeldiniz</string>
+    <string name="welcome_header">Hemen giriş yapın ve görevlerinizi tamamlamaya başlayın</string>
+    <string name="login">Giriş</string>
+    <string name="password">Şifre</string>
+    <string name="user_name">Kullanıcı Adı</string>
+    <string name="user_code_empty">Kullanıcı adı boş olamaz</string>
+    <string name="password_empty">Şifre boş olamaz</string>
+    <string name="start">Başla</string>
+    <string name="title_hint">Başlık</string>
+    <string name="code_hint">Mağaza Kodu</string>
+    <string name="description_hint">Açıklama</string>
+    <string name="task_detail_task">Görev detay</string>
+    <string name="title_activity_qr_scan">Qr Scan</string>
+    <string name="qr_scanned_error">Qr okuma işlemi başarısız</string>
+    <string name="nfc_should_be_open">Lütfen NFC özelliğini açınız </string>
+    <string name="error_login">"Hata oluştu "</string>
+    <string name="error_internet">İnternet bağlantısını kontrol ediniz</string>
+    <string name="error_timeout">Bağlantı zaman aşımana uğradı tekrar deneyin</string>
+    <string name="title_activity_nfcactivity">NFC</string>
+    <string name="nfc_message_not_found">Message okunamadı</string>
+    <string name="nfc_description">Lütfen cihazı mağazada bulunan cihaza yaklaştırınız</string>
+    <string name="nfc_success_message">İşlem başarılı</string>
+    <string name="default_notification_channel_id">notification_channel_id_app</string>
+    <string name="error_shift_not_started">Mesai başlatılamadı</string>
+    <string name="error_shift_not_paused">Mesai durdurulamadı</string>
+    <string name="error_store_list_not_fetched">Stores can not fetched</string>
+    <string name="pause">Durdur</string>
+</resources>

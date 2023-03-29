@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.auth.presentation.ui.viewmodel
+package com.hakmar.employeelivetracking.features.auth.ui.viewmodel
 
 import androidx.compose.ui.focus.FocusState
 import androidx.lifecycle.SavedStateHandle
@@ -9,9 +9,10 @@ import com.hakmar.employeelivetracking.features.auth.domain.usecase.AuthUseCases
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.UserValidateUseCase
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginFields
-import com.hakmar.employeelivetracking.features.auth.presentation.LoginState
+import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginState
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
+import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LoginEvent>() {
 
     private var _state = MutableStateFlow(LoginState())
@@ -54,6 +55,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
             }
+            else -> {}
         }
     }
 
@@ -70,7 +72,8 @@ class LoginViewModel @Inject constructor(
                     savedStateHandle[AppConstants.IS_LOGIN] = 1
                     _uiEvent.send(
                         UiEvent.Navigate(
-                            Destination.Home.base
+                            Destination.Home.base,
+                            data = null
                         )
                     )
                 }
@@ -89,7 +92,8 @@ class LoginViewModel @Inject constructor(
                     }
                     _uiEvent.send(
                         UiEvent.ShowSnackBar(
-                            message = resource.message
+                            message = resource.message,
+                            type = SnackBarType.ERROR
                         )
                     )
                 }
@@ -103,7 +107,8 @@ class LoginViewModel @Inject constructor(
             is UserValidateUseCase.LoginValidationResult.Error -> {
                 _uiEvent.trySend(
                     UiEvent.ShowSnackBar(
-                        validate.message
+                        validate.message,
+                        SnackBarType.WARNING
                     )
                 )
             }

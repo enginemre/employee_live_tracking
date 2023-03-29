@@ -3,6 +3,7 @@ package com.hakmar.employeelivetracking.util
 object AppConstants {
 
 
+    val DEBUG_TAG = "Fenerbahce"
     const val BASE_URL = "https://ruhidibadli.pythonanywhere.com"
     const val TIMEOUT_SHORT = 5L
     const val TIMEOUT_LONG = 30L
@@ -24,6 +25,7 @@ object AppConstants {
 
     const val IS_LOGIN = "is_login"
     const val IS_FIRST = "is_first"
+    const val USER_ID = "user_id"
     const val LAST_KNOWN_LOCATION_LAT = "last_known_location_lat"
     const val LAST_KNOWN_LOCATION_LON = "last_known_locaiton_lon"
     const val FIREBASE_TOKEN = "fcm_token"
@@ -40,7 +42,4 @@ object AppConstants {
 
     const val GENERAL_SHIFT_CLICK_REQUEST_CODE = 100
     const val STORE_SHIFT_CLICK_REQUEST_CODE = 101
-
-    const val LAST_ROUTE = "last_route"
-    const val IS_ON_PAUSED = ""
 }

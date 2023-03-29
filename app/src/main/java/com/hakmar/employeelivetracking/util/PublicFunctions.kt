@@ -2,10 +2,15 @@ package com.hakmar.employeelivetracking.util
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import com.auth0.android.jwt.JWT
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Warning
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.White
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -49,4 +54,23 @@ fun decodeJwt(token: String): String? {
     val storeCode = jwt.getClaim("nameid").asString()
     val isExpired = jwt.isExpired(3)
     return if (!isExpired) user else null
+}
+
+
+fun getContainerColor(type: SnackBarType) = when (type) {
+    SnackBarType.WARNING -> Warning
+    SnackBarType.SUCCESS -> Green40
+    SnackBarType.ERROR -> Color.Red
+}
+
+fun getContentColor(type: SnackBarType) = when (type) {
+    SnackBarType.WARNING -> White
+    SnackBarType.SUCCESS -> Natural110
+    SnackBarType.ERROR -> White
+}
+
+enum class SnackBarType {
+    WARNING,
+    SUCCESS,
+    ERROR
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository
 ) {
-    operator fun invoke(userCode: String, password: String): Flow<Resource<Boolean>> {
+    operator fun invoke(userCode: String, password: String): Flow<Resource<Unit>> {
         return loginRepository.login(userCode, password)
     }
 }
