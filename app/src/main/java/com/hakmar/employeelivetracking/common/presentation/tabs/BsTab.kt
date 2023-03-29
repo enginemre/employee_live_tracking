@@ -1,10 +1,7 @@
 package com.hakmar.employeelivetracking.common.presentation.tabs
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -15,10 +12,6 @@ import com.hakmar.employeelivetracking.common.presentation.ui.components.TabCont
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsStoreScreen
 
 class BsTab(private val innerScreens: List<Screen> = listOf(BsStoreScreen())) : Tab {
-
-    companion object{
-        val selectedIcon :ImageVector = Icons.Filled.Home
-    }
 
     override val key: ScreenKey
         get() = HomeDestination.BsStores.base

@@ -1,9 +1,9 @@
-package com.hakmar.employeelivetracking.features.auth.di
+package com.hakmar.employeelivetracking.features.bs_store.di
 
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
-import com.hakmar.employeelivetracking.features.auth.data.remote.LoginApi
-import com.hakmar.employeelivetracking.features.auth.data.repository.LoginRepositoryImpl
-import com.hakmar.employeelivetracking.features.auth.domain.repository.LoginRepository
+import com.hakmar.employeelivetracking.features.bs_store.data.remote.BsStoreApi
+import com.hakmar.employeelivetracking.features.bs_store.data.repository.BsStoreRepositoryImpl
+import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import dagger.Module
 import dagger.Provides
@@ -15,26 +15,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import javax.inject.Singleton
 
+
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthDataModule {
+object BsStoreDataModule {
 
     @Provides
     @Singleton
-    fun provideLoginRepository(
-        dataStoreRepository: DataStoreRepository,
-        loginApi: LoginApi
-    ): LoginRepository {
-        return LoginRepositoryImpl(
-            dataStore = dataStoreRepository,
-            loginApi = loginApi
-        )
+    fun provideBsStoreRepository(
+        bsStoreApi: BsStoreApi,
+        dataStoreRepository: DataStoreRepository
+    ): BsStoreRepository {
+        return BsStoreRepositoryImpl(bsStoreApi, dataStoreRepository)
     }
 
 
     @Provides
     @Singleton
-    fun provideLoginApi(client: OkHttpClient): LoginApi {
+    fun provideBsStoreApi(client: OkHttpClient): BsStoreApi {
         return Retrofit.Builder()
             .baseUrl(AppConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

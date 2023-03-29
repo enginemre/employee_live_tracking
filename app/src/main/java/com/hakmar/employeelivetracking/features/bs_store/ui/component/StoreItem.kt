@@ -14,10 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.presentation.ui.components.DevicePreviews
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
@@ -37,7 +37,7 @@ fun StoreCardItem(
         modifier = Modifier
             .padding(MaterialTheme.spacing.medium)
             .heightIn(min = 100.dp)
-            .width(365.dp),
+            .widthIn(min = 365.dp),
         onClick = { onClick(storeCode) },
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(
@@ -172,7 +172,7 @@ fun StoreStatus(
     }
 }
 
-@Preview(showSystemUi = true)
+@DevicePreviews
 @Composable
 fun StoreCardItemPrev() {
     EmployeeLiveTrackingTheme {
@@ -180,9 +180,9 @@ fun StoreCardItemPrev() {
             items(5) {
                 Card(
                     modifier = Modifier
-                        .padding(MaterialTheme.spacing.medium)
+                        .padding(MaterialTheme.spacing.small)
                         .heightIn(min = 100.dp)
-                        .width(365.dp),
+                        .widthIn(min = 356.dp),
                     shape = RoundedCornerShape(10.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.White
@@ -194,7 +194,7 @@ fun StoreCardItemPrev() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.man),
+                            painter = painterResource(id = R.drawable.shop),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(60.dp)

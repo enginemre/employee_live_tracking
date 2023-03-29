@@ -39,6 +39,7 @@ class HomeScreen(
 
     @Composable
     override fun Content() {
+
         val mainViewModel = getViewModel<MainViewModel>()
         val state = mainViewModel.fabState.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }

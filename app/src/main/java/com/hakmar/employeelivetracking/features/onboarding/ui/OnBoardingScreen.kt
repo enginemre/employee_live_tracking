@@ -24,7 +24,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginScreen
+import com.hakmar.employeelivetracking.features.auth.ui.LoginScreen
 import com.hakmar.employeelivetracking.features.onboarding.domain.model.PermissionPagerModel
 import com.hakmar.employeelivetracking.features.onboarding.ui.component.PageContent
 import kotlinx.coroutines.launch
@@ -40,8 +40,7 @@ class OnBoardingScreen : Screen {
             ),
             PermissionPagerModel(
                 title = "Konum Bilgisi",
-                description = "Uygulama çevrenizdeki en yakın mağazaların gösterilmesi ve " +
-                        "operasyonların gerçekleştirilmesi adına konum bilgisine ihtiyaç duymaktadır ",
+                description = "Uygulama çevrenizdeki en yakın mağazaların gösterecek bu yüzden konum bilgisine ihtiyaç duymaktadır ",
                 rawRes = R.raw.map_pin_location
             )
         )

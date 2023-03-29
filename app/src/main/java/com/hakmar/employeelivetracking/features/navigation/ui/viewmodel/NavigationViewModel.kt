@@ -9,6 +9,7 @@ import com.hakmar.employeelivetracking.features.navigation.domain.model.Navigati
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationEvent
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationState
 import com.hakmar.employeelivetracking.util.AppConstants
+import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,7 +79,8 @@ class NavigationViewModel @Inject constructor(
         } catch (e: SecurityException) {
             _uiEvent.trySend(
                 UiEvent.ShowSnackBar(
-                    UiText.DynamicString(e.localizedMessage ?: "Konum Alınamadı")
+                    UiText.DynamicString(e.localizedMessage ?: "Konum Alınamadı"),
+                    SnackBarType.WARNING
                 )
             )
         }

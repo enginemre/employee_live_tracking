@@ -4,6 +4,7 @@ import android.nfc.NdefMessage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
 import kotlinx.coroutines.channels.Channel
@@ -34,7 +35,10 @@ class NFCViewModel : ViewModel() {
         if (messages.isEmpty())
             viewModelScope.launch {
                 _uiEvent.send(
-                    UiEvent.ShowSnackBar(UiText.StringResorce(R.string.nfc_message_not_found))
+                    UiEvent.ShowSnackBar(
+                        UiText.StringResorce(R.string.nfc_message_not_found),
+                        SnackBarType.WARNING
+                    )
                 )
             }
 
@@ -68,7 +72,8 @@ class NFCViewModel : ViewModel() {
         } catch (e: UnsupportedEncodingException) {
             viewModelScope.launch {
                 _uiEvent.send(
-                    UiEvent.ShowSnackBar(UiText.StringResorce(R.string.nfc_message_not_found))
+                    UiEvent.ShowSnackBar(UiText.StringResorce(R.string.nfc_message_not_found),
+                    SnackBarType.ERROR)
                 )
             }
         }

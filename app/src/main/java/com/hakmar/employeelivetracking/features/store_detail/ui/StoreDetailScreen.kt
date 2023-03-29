@@ -54,7 +54,9 @@ import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreD
 import com.hakmar.employeelivetracking.util.*
 import kotlin.math.absoluteValue
 
-class StoreDetailScreen : Screen {
+class StoreDetailScreen(
+    private val storeCode : String
+) : Screen {
 
     override val key: ScreenKey
         get() = HomeDestination.StoreDetail.base

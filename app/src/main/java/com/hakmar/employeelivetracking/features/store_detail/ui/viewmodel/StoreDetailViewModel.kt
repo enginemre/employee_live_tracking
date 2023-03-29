@@ -43,7 +43,8 @@ class StoreDetailViewModel @Inject constructor(
     private fun shouldOpenDetail(){
         viewModelScope.launch {
             _uiEvent.send(UiEvent.Navigate(
-                HomeDestination.QRScreen.base
+                HomeDestination.QRScreen.base,
+                data = null
             ))
         }
 
@@ -53,7 +54,8 @@ class StoreDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _uiEvent.send(
                 UiEvent.ShowSnackBar(
-                    message = UiText.DynamicString("CODE alındı : $NFCCode")
+                    message = UiText.DynamicString("CODE alındı : $NFCCode"),
+                    SnackBarType.SUCCESS
                 )
             )
         }
@@ -71,7 +73,8 @@ class StoreDetailViewModel @Inject constructor(
                 }else {
                     _uiEvent.send(
                         UiEvent.ShowSnackBar(
-                            message = UiText.StringResorce(R.string.qr_scanned_error)
+                            message = UiText.StringResorce(R.string.qr_scanned_error),
+                            SnackBarType.ERROR
                         )
                     )
                 }
@@ -148,7 +151,8 @@ class StoreDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _uiEvent.send(
                 UiEvent.ShowSnackBar(
-                    message = UiText.StringResorce(R.string.nfc_should_be_open)
+                    message = UiText.StringResorce(R.string.nfc_should_be_open),
+                    SnackBarType.WARNING
                 )
             )
         }

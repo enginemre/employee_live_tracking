@@ -1,12 +1,13 @@
 package com.hakmar.employeelivetracking.di
 
+import com.hakmar.employeelivetracking.util.AppConstants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import javax.inject.Named
+import okhttp3.logging.HttpLoggingInterceptor
+import java.time.Duration
 import javax.inject.Singleton
 
 @Module
@@ -14,20 +15,23 @@ import javax.inject.Singleton
 object NetworkModule {
 
 
-    @Named("socket")
+
     @Provides
     @Singleton
-    fun provideSocketClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .build()
+    fun provideHttpLogger(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
     }
 
-
     @Provides
     @Singleton
-    fun provideSocketRequest(): Request {
-        return Request.Builder()
-            .url("ws://64.226.88.88:9001/ws/socket-server/")
+    fun provideHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient {
+        return OkHttpClient.Builder().addNetworkInterceptor(loggingInterceptor)
+            .connectTimeout(Duration.ofSeconds(AppConstants.TIMEOUT_SHORT))
+            .readTimeout(Duration.ofSeconds(AppConstants.TIMEOUT_LONG))
             .build()
     }
 

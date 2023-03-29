@@ -8,6 +8,7 @@ import android.os.Binder
 import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.StopGeneralShiftUseCase
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_CANCEL
 import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_START
@@ -19,6 +20,10 @@ import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.formatTime
 import com.hakmar.employeelivetracking.util.pad
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
@@ -41,6 +46,8 @@ class GeneralShiftService : Service() {
     @Inject
     lateinit var generalShiftServiceManager: GeneralShiftServiceManager
 
+    @Inject
+    lateinit var stopGeneralShiftUseCase: StopGeneralShiftUseCase
 
     var seconds = mutableStateOf("00")
         private set
@@ -53,7 +60,7 @@ class GeneralShiftService : Service() {
 
 
     private val binder = GeneralShiftServiceBinder()
-
+    private var exitShiftJob: Job? = null
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
 
@@ -78,7 +85,10 @@ class GeneralShiftService : Service() {
                         onTick = { hours, minutes, seconds ->
                             updateNotification(hours = hours, minutes = minutes, seconds = seconds)
                             dataUpdateListener?.onTick(hours, minutes, seconds)
-                            tickIntent.putExtra(AppConstants.TIME_ELAPSED, formatTime(seconds, minutes, hours))
+                            tickIntent.putExtra(
+                                AppConstants.TIME_ELAPSED,
+                                formatTime(seconds, minutes, hours)
+                            )
                             sendBroadcast(tickIntent)
                         }
                     )
@@ -166,6 +176,17 @@ class GeneralShiftService : Service() {
             this@GeneralShiftService.seconds.value = seconds.pad()
         }
 
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        exitService()
+    }
+
+    private fun exitService() {
+        exitShiftJob?.cancel()
+        exitShiftJob = stopGeneralShiftUseCase(StopGeneralShiftUseCase.PauseType.Exit)
+            .launchIn(CoroutineScope(Dispatchers.IO))
     }
 
     override fun onDestroy() {
