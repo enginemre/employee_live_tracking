@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -35,7 +34,6 @@ import com.hakmar.employeelivetracking.features.notification.ui.NotificationScre
 import com.hakmar.employeelivetracking.features.profile.ui.component.ProfileHeader
 import com.hakmar.employeelivetracking.features.profile.ui.component.ProfileItem
 import com.hakmar.employeelivetracking.features.profile.ui.events.ProfileEvent
-import com.hakmar.employeelivetracking.features.profile.ui.model.ProfileItemModel
 import com.hakmar.employeelivetracking.features.profile.ui.viewmodel.ProfileViewModel
 import com.hakmar.employeelivetracking.util.UiEvent
 
@@ -68,7 +66,7 @@ class ProfileScreen : Screen {
                                 navigator.push(NotificationScreen())
                             }
                             ProfileDestination.EditProfile.base -> {
-                                navigator.push(EditProfileScreen())
+                                navigator.push(EditProfileScreen(state.value.email))
                             }
                             ProfileDestination.PrivatePolicy.base -> {
                                 navigator.push(PrivatePolicyScreen())
@@ -111,17 +109,15 @@ class ProfileScreen : Screen {
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             ProfileHeader(
-                name = state.value.name
+                name = state.value.nameSurname
                     ?: stringResource(id = com.hakmar.employeelivetracking.R.string.default_name),
                 mail = state.value.email
                     ?: stringResource(id = com.hakmar.employeelivetracking.R.string.default_email)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            LazyColumn {
-                items(state.value.menuList) {
-                    ProfileItem(name = it.name, icon = it.icon) {
-                        viewModel.onEvent(ProfileEvent.OnProfileItemClick(it.destination))
-                    }
+            state.value.menuList.forEach {
+                ProfileItem(name = stringResource(id = it.name), icon = it.icon) {
+                    viewModel.onEvent(ProfileEvent.OnProfileItemClick(it.destination))
                 }
             }
 
@@ -133,33 +129,6 @@ class ProfileScreen : Screen {
 @DevicePreviews
 @Composable
 fun ProfileScreenPrev() {
-    val list = listOf<ProfileItemModel>(
-        ProfileItemModel(
-            name = "Edit Profile",
-            icon = com.hakmar.employeelivetracking.R.drawable.profile_icon,
-            destination = ProfileDestination.EditProfile.base
-        ),
-        ProfileItemModel(
-            name = "About Us",
-            icon = com.hakmar.employeelivetracking.R.drawable.info,
-            destination = ProfileDestination.AboutUs.base
-        ),
-        ProfileItemModel(
-            name = "Private Policy",
-            icon = com.hakmar.employeelivetracking.R.drawable.private_policy,
-            destination = ProfileDestination.PrivatePolicy.base
-        ),
-        ProfileItemModel(
-            name = "Notification",
-            icon = com.hakmar.employeelivetracking.R.drawable.notification,
-            destination = HomeDestination.Notification.base
-        ),
-        ProfileItemModel(
-            name = "Logout",
-            icon = com.hakmar.employeelivetracking.R.drawable.logout,
-            destination = ProfileDestination.Logout.base
-        )
-    )
     EmployeeLiveTrackingTheme {
         Column(
             modifier = Modifier
@@ -182,11 +151,7 @@ fun ProfileScreenPrev() {
             ProfileHeader(name = "Emre Muhammet Engin", mail = "emrengin@yaani.com")
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             LazyColumn {
-                items(list) {
-                    ProfileItem(name = it.name, icon = it.icon) {
 
-                    }
-                }
             }
 
         }

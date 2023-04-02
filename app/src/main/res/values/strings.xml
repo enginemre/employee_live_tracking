@@ -50,4 +50,11 @@
         for food sovereignty.</string>
     <string name="private_policy">Private Policy</string>
     <string name="about_us">About Us</string>
+    <string name="notification">Notification</string>
+    <string name="logout">Logout</string>
+    <string name="update_info_success">Profil updated successfuly</string>
+    <string name="error_old_password_empty">Old password can not be empty</string>
+    <string name="error_new_password_empty">New password can not be empty</string>
+    <string name="error_email_empty">Email can not be empty</string>
+    <string name="error_user_info">User info can not fetched</string>
 </resources>

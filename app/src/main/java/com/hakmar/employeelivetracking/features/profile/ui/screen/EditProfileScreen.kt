@@ -43,7 +43,9 @@ import com.hakmar.employeelivetracking.util.getContainerColor
 import com.hakmar.employeelivetracking.util.getContentColor
 import kotlinx.coroutines.launch
 
-class EditProfileScreen : Screen {
+class EditProfileScreen(
+    val email: String? = null,
+) : Screen {
 
     override val key: ScreenKey
         get() = ProfileDestination.EditProfile.base
@@ -68,6 +70,14 @@ class EditProfileScreen : Screen {
                     navigationClick = {
                         navigator.pop()
                     }
+                )
+            )
+        }
+        LaunchedEffect(key1 = Unit) {
+            viewModel.onEvent(
+                EditProfileEvent.OnTextChange(
+                    email ?: "",
+                    EditProfileFields.Email
                 )
             )
         }
