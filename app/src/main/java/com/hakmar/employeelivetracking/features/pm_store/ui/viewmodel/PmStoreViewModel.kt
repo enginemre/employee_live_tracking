@@ -47,7 +47,7 @@ class PmStoreViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            pmStoresList = resource.data
+                            pmStoresList = resource.data!!
                         )
                     }
                 }

@@ -8,15 +8,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.hilt.getViewModel
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
+import com.hakmar.employeelivetracking.common.presentation.ui.components.DevicePreviews
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.pm_store.ui.component.PmStoreCard
 import com.hakmar.employeelivetracking.features.pm_store.ui.model.PmStoreModel
+import com.hakmar.employeelivetracking.features.pm_store.ui.viewmodel.PmStoreViewModel
 
 
 class PMStoreScreen : Screen {
@@ -27,48 +31,21 @@ class PMStoreScreen : Screen {
 
     @Composable
     override fun Content() {
-        val list = listOf<PmStoreModel>(
-            PmStoreModel(
-                storeCode = "5004",
-                storeName = "Fatih Esenyalı"
-            ),
-            PmStoreModel(
-                storeCode = "5024",
-                storeName = "GüzelYalı Pendil"
-            ),
-            PmStoreModel(
-                storeCode = "5004",
-                storeName = "Fatih Esenyalı"
-            ),
-            PmStoreModel(
-                storeCode = "5024",
-                storeName = "GüzelYalı Pendil"
-            ),
-            PmStoreModel(
-                storeCode = "5004",
-                storeName = "Fatih Esenyalı"
-            ),
-            PmStoreModel(
-                storeCode = "5024",
-                storeName = "GüzelYalı Pendil"
-            ),
-            PmStoreModel(
-                storeCode = "5004",
-                storeName = "Fatih Esenyalı"
-            )
-        )
+        val viewModel = getViewModel<PmStoreViewModel>()
+        val state = viewModel.state.collectAsStateWithLifecycle()
+        if (state.value.isLoading)
+            LoadingDialog(stateLoading = state.value.isLoading)
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyVerticalGrid(
-
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = MaterialTheme.spacing.large),
-                columns = GridCells.Fixed(2),
+                columns = GridCells.Adaptive(150.dp),
                 content = {
-                    items(list) { item ->
+                    items(state.value.pmStoresList) { item ->
                         Box(
                             modifier = Modifier
                                 .padding(MaterialTheme.spacing.small)
@@ -85,7 +62,7 @@ class PMStoreScreen : Screen {
 }
 
 
-@Preview(showSystemUi = true)
+@DevicePreviews
 @Composable
 fun PmScreenPrev() {
     val list = listOf<PmStoreModel>(
