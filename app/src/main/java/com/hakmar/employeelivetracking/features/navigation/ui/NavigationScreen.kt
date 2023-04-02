@@ -4,17 +4,19 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.hilt.getViewModel
@@ -23,12 +25,17 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.navigation.ui.component.NavigationStoreCard
 import com.hakmar.employeelivetracking.features.navigation.ui.viewmodel.NavigationViewModel
 import com.hakmar.employeelivetracking.util.UiEvent
+import com.hakmar.employeelivetracking.util.getContainerColor
+import com.hakmar.employeelivetracking.util.getContentColor
 
 class NavigationScreen : Screen {
 
@@ -41,16 +48,17 @@ class NavigationScreen : Screen {
         val viewModel = getViewModel<NavigationViewModel>()
         val mapLauncher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
-        val state = viewModel.state.collectAsState()
-        val mapProp = MapProperties(
-            isMyLocationEnabled = state.value.lastLocation != null,
-        )
+        val state = viewModel.state.collectAsStateWithLifecycle()
+        val mapProp = MapProperties(isMyLocationEnabled = state.value.lastLocation != null)
         val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-
+        val snackbarhost = LocalSnackbarHostState.current
         val cameraPosition = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(viewModel.getCameraPosition(), 15f)
+            position = CameraPosition.fromLatLngZoom(state.value.cameraPosition, 15f)
         }
-        LaunchedEffect(key1 = true) {
+        LaunchedEffect(key1 = Unit) {
+            viewModel.onEvent(NavigationEvent.GetLocaiton(fusedLocationProviderClient))
+        }
+        LaunchedEffect(key1 = Unit) {
             viewModel.uiEvent.collect { event ->
                 when (event) {
                     is UiEvent.Intent<*> -> {
@@ -60,43 +68,57 @@ class NavigationScreen : Screen {
                         )
                         mapLauncher.launch(intent)
                     }
-                    else -> Unit
+                    is UiEvent.ShowSnackBar -> {
+                        snackbarhost.showSnackbar(
+                            CustomSnackbarVisuals(
+                                message = event.message.asString(context),
+                                containerColor = getContainerColor(event.type),
+                                contentColor = getContentColor(event.type)
+                            )
+                        )
+                    }
+                    is UiEvent.Navigate<*> -> {
+                        cameraPosition.position =
+                            CameraPosition.fromLatLngZoom(event.data as LatLng, 15f)
+                    }
+                    else -> {}
                 }
             }
         }
-        LaunchedEffect(key1 = true) {
-            viewModel.getCurrentLocation(fusedLocationProviderClient)
-        }
-        Column {
-            GoogleMap(
-                properties = mapProp,
-                modifier = Modifier.height(250.dp),
-                cameraPositionState = cameraPosition
-            ) {
-                state.value.lastLocation?.let {
-                    Circle(
-                        center = LatLng(it.latitude, it.longitude),
-                        clickable = false,
-                        radius = 200.0,
-                        strokeColor = MaterialTheme.colors.primary,
-                        fillColor = MaterialTheme.colors.primary.copy(alpha = 0.6f)
-                    )
-                }
-                state.value.storeList?.forEach {
-                    Marker(
-                        state = MarkerState(position = LatLng(it.lat, it.lon)),
-                        title = it.storeName,
-                        snippet = it.storeCode
-                    )
+        if (state.value.isLoading)
+            LoadingDialog(stateLoading = state.value.isLoading)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        ) {
+            item(key = "2") {
+                GoogleMap(
+                    properties = mapProp,
+                    modifier = Modifier.height(250.dp),
+                    cameraPositionState = cameraPosition
+                ) {
+                    state.value.lastLocation?.let {
+                        Circle(
+                            center = LatLng(it.latitude, it.longitude),
+                            clickable = false,
+                            radius = 200.0,
+                            strokeColor = MaterialTheme.colors.primary,
+                            fillColor = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+                        )
+                    }
+                    state.value.storeList.forEach {
+                        Marker(
+                            state = MarkerState(position = LatLng(it.lat, it.lon)),
+                            title = it.storeName,
+                            snippet = it.storeCode
+                        )
+                    }
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = MaterialTheme.spacing.medium),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-            ) {
-                items(state.value.storeList!!) {
+            items(state.value.storeList) {
+                Box(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.medium)) {
                     NavigationStoreCard(
                         storeCode = it.storeCode,
                         storeName = it.storeName
@@ -104,11 +126,13 @@ class NavigationScreen : Screen {
                         viewModel.onEvent(NavigationEvent.OnStoreClick(it))
                     }
                 }
+
             }
         }
     }
 
 }
+
 @Preview(showSystemUi = true)
 @Composable
 fun NavigationScreenPrev() {
