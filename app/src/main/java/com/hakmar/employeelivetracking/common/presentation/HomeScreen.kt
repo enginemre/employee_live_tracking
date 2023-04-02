@@ -65,7 +65,9 @@ class HomeScreen(
                                 .background(
                                     color = if (navigator.current.key == HomeDestination.BsStores.base ||
                                         navigator.current.key == HomeDestination.Profile.base ||
-                                        navigator.current.key == HomeDestination.Tasks.base
+                                        navigator.current.key == HomeDestination.Tasks.base ||
+                                        navigator.current.key == HomeDestination.Navigation.base ||
+                                        navigator.current.key == HomeDestination.PmStores.base
                                     )
                                         Color.White
                                     else MaterialTheme.colors.background

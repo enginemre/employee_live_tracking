@@ -84,3 +84,28 @@ sealed interface Destination {
     }
 }
 
+sealed interface ProfileDestination {
+    val base: String
+    val path: String
+
+    object EditProfile : ProfileDestination {
+        override val base = "/edit_profile"
+        override val path = base
+    }
+
+    object AboutUs : ProfileDestination {
+        override val base = "/about_us"
+        override val path = base
+    }
+
+    object PrivatePolicy : ProfileDestination {
+        override val base = "/private_policy"
+        override val path = base
+    }
+
+    object Logout : ProfileDestination {
+        override val base = "/log_out"
+        override val path = base
+    }
+}
+

@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -89,6 +90,13 @@ class MainViewModel @Inject constructor(
             }
         } catch (e: SecurityException) {
 
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            dataStoreRepository.intPutKey(AppConstants.IS_LOGIN, 0)
+            dataStoreRepository.clearDataStore(AppConstants.USER_ID)
         }
     }
 }

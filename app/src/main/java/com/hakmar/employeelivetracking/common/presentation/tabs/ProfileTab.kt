@@ -9,7 +9,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.components.TabContent
-import com.hakmar.employeelivetracking.features.profile.ui.ProfileScreen
+import com.hakmar.employeelivetracking.features.profile.ui.screen.ProfileScreen
 
 class ProfileTab(private val innerScreens: List<Screen> = listOf(ProfileScreen())) : Tab {
 
