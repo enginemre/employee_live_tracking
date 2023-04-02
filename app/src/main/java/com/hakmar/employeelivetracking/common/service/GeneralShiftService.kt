@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import java.util.*
 import javax.inject.Inject
@@ -58,7 +59,7 @@ class GeneralShiftService : Service() {
     var currentState = mutableStateOf(TimerState.Idle)
         private set
 
-
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val binder = GeneralShiftServiceBinder()
     private var exitShiftJob: Job? = null
     private var time: Duration = Duration.ZERO
@@ -186,7 +187,7 @@ class GeneralShiftService : Service() {
     private fun exitService() {
         exitShiftJob?.cancel()
         exitShiftJob = stopGeneralShiftUseCase(StopGeneralShiftUseCase.PauseType.Exit)
-            .launchIn(CoroutineScope(Dispatchers.IO))
+            .launchIn(serviceScope)
     }
 
     override fun onDestroy() {

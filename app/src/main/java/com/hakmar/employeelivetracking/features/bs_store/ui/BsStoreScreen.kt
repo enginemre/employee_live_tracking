@@ -20,13 +20,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.components.*
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
-import com.hakmar.employeelivetracking.features.bs_store.domain.model.BsStore
 import com.hakmar.employeelivetracking.features.bs_store.ui.component.CircleIndicator
 import com.hakmar.employeelivetracking.features.bs_store.ui.component.StoreCardItem
 import com.hakmar.employeelivetracking.features.store_detail.ui.StoreDetailScreen
@@ -124,7 +124,7 @@ class BsStoreScreen : Screen {
 @Composable
 fun BsStoreScreenPrev() {
     val list = listOf(
-        BsStore(
+        Store(
             name = "Fatih Esenyalı",
             code = "5004",
             passedTime = "2 saat 12 dk",
@@ -135,7 +135,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Güzelyalı",
             code = "5024",
             passedTime = "1 saat 12 dk",
@@ -146,7 +146,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Gözdağı Pendik",
             code = "5054",
             passedTime = "12 dk",
@@ -157,7 +157,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Gülsuyu Maltepe",
             code = "5014",
             passedTime = "2 saat 12 dk",
@@ -168,7 +168,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Güzelyalı",
             code = "5024",
             passedTime = "1 saat 12 dk",
@@ -179,7 +179,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Gözdağı Pendik",
             code = "5054",
             passedTime = "12 dk",
@@ -190,7 +190,7 @@ fun BsStoreScreenPrev() {
             longtitude = 43.5,
             areaCode = "001"
         ),
-        BsStore(
+        Store(
             name = "Gülsuyu Maltepe",
             code = "5014",
             passedTime = "2 saat 12 dk",
@@ -235,7 +235,7 @@ fun BsStoreScreenPrev() {
     }
 }
 
-fun LazyListScope.storeList(list: List<BsStore>) {
+fun LazyListScope.storeList(list: List<Store>) {
     items(list) { item ->
         StoreCardItem(
             storeName = item.name,

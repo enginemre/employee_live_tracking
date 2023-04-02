@@ -1,11 +1,11 @@
 package com.hakmar.employeelivetracking.features.bs_store.data.repository
 
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.bs_store.data.mapper.toTimer
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.BsStoreApi
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerBodyDto
-import com.hakmar.employeelivetracking.features.bs_store.domain.model.BsStore
 import com.hakmar.employeelivetracking.features.bs_store.domain.model.Timer
 import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
 import com.hakmar.employeelivetracking.util.AppConstants
@@ -159,13 +159,13 @@ class BsStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getStores(): Flow<Resource<List<BsStore>>> {
+    override fun getStores(): Flow<Resource<List<Store>>> {
         return flow {
             emit(Resource.Loading())
             val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
             userId?.let {
                 val list = listOf(
-                    BsStore(
+                    Store(
                         name = "Fatih Esenyalı",
                         code = "5004",
                         passedTime = "2 saat 12 dk",
@@ -176,7 +176,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Güzelyalı",
                         code = "5024",
                         passedTime = "1 saat 12 dk",
@@ -187,7 +187,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Gözdağı Pendik",
                         code = "5054",
                         passedTime = "12 dk",
@@ -198,7 +198,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Gülsuyu Maltepe",
                         code = "5014",
                         passedTime = "2 saat 12 dk",
@@ -209,7 +209,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Güzelyalı",
                         code = "5024",
                         passedTime = "1 saat 12 dk",
@@ -220,7 +220,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Gözdağı Pendik",
                         code = "5054",
                         passedTime = "12 dk",
@@ -231,7 +231,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                         longtitude = 43.5,
                         areaCode = "001"
                     ),
-                    BsStore(
+                    Store(
                         name = "Gülsuyu Maltepe",
                         code = "5014",
                         passedTime = "2 saat 12 dk",
