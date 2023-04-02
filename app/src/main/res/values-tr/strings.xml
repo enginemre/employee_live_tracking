@@ -26,6 +26,19 @@
     <string name="default_notification_channel_id">notification_channel_id_app</string>
     <string name="error_shift_not_started">Mesai başlatılamadı</string>
     <string name="error_shift_not_paused">Mesai durdurulamadı</string>
-    <string name="error_store_list_not_fetched">Stores can not fetched</string>
+    <string name="error_store_list_not_fetched">Mağazalar alınamadı</string>
     <string name="pause">Durdur</string>
+    <string name="profile">Profil</string>
+    <string name="default_name">İsim</string>
+    <string name="default_email">blabla@gmail.com</string>
+    <string name="email_label">E posta</string>
+    <string name="old_password_label">Eski Şifre</string>
+    <string name="new_password_label">Yeni Şifre</string>
+    <string name="edit_profile">Prfoil Düzenle</string>
+    <string name="save">Kaydet</string>
+    <string name="private_policy_text">e</string>
+    <string name="our_history">Hakkımızda</string>
+    <string name="our_history_content">Food First envisions a world in which all people have access to healthy, ecologically produced, and culturally appropriate food. After 40 years of analysis of the global food system, we know that making this vision a reality involves more than tech nical solutions—it requires political tran sformation. That’s why Food First supports activists, social movements, alliances, and coalitions working for systemic change. Our work—including action-oriented rese arch, publications, and projects—gives you the tools to understand the global food system, build your local food movement, and engage with the global movement for food sovereignty.</string>
+    <string name="private_policy">Gizlilik Sözleşmesi</string>
+    <string name="about_us">Hakkımızda</string>
 </resources>
