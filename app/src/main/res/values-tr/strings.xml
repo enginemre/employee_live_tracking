@@ -48,4 +48,7 @@
     <string name="error_new_password_empty">Yeni şifre boş olamaz</string>
     <string name="error_email_empty">Eposta boş olamaz</string>
     <string name="error_user_info">Kullanıcı bilgileri alınamadı</string>
+    <string name="tasks">Tasks</string>
+    <string name="task_detail_title">Task Detail</string>
+    <string name="delete">Delete</string>
 </resources>

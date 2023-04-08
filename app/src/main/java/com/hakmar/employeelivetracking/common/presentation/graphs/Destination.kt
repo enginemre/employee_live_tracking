@@ -84,6 +84,16 @@ sealed interface Destination {
     }
 }
 
+sealed interface TaskDestination {
+    val base: String
+    val path: String
+
+    object TaskDetail : TaskDestination {
+        override val base: String = "/task_detail"
+        override val path: String = "$base/{taskId}"
+    }
+}
+
 sealed interface ProfileDestination {
     val base: String
     val path: String

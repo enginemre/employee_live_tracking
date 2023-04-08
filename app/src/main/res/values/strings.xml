@@ -57,4 +57,7 @@
     <string name="error_new_password_empty">New password can not be empty</string>
     <string name="error_email_empty">Email can not be empty</string>
     <string name="error_user_info">User info can not fetched</string>
+    <string name="tasks">Tasks</string>
+    <string name="task_detail_title">Task Detail</string>
+    <string name="delete">Delete</string>
 </resources>

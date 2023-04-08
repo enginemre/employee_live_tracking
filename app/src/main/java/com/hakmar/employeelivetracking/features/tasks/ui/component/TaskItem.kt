@@ -3,10 +3,7 @@ package com.hakmar.employeelivetracking.features.tasks.ui.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,19 +14,22 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskItem(
     color: Color,
     storeCode: String,
     title: String,
     description: String,
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.wrapContentHeight(),
         shape = RoundedCornerShape(MaterialTheme.spacing.medium),
         colors = CardDefaults.cardColors(
             containerColor = color
-        )
+        ),
+        onClick = onClick
     ) {
         Column(modifier = Modifier.padding(MaterialTheme.spacing.small)) {
             Row(
