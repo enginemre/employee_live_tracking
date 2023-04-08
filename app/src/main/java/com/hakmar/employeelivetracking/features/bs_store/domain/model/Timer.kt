@@ -4,5 +4,5 @@ data class Timer(
     val hour : String,
     val minute : String,
     val second : String,
-    val progress : Int
+    var progress: Int
 )

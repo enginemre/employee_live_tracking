@@ -13,12 +13,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
@@ -85,7 +85,7 @@ class BsStoreScreen : Screen {
                 bottom = MaterialTheme.spacing.small
             )
         ) {
-            item(key = "1") {
+            item {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -100,18 +100,15 @@ class BsStoreScreen : Screen {
                         second = state.value.seconds
                     )
                     LargeButton(
-                        text = if (state.value.isPlaying == TimerState.Started)
-                            stringResource(id = com.hakmar.employeelivetracking.R.string.pause)
-                        else
-                            stringResource(id = com.hakmar.employeelivetracking.R.string.start),
+                        text = stringResource(id = state.value.buttonText),
                         onClick = { viewModel.onEvent(BsStoreEvent.OnGeneralShiftClick) },
-                        containerColor = if (state.value.isPlaying == TimerState.Started) Color.Red else Green40,
-                        textColor = if (state.value.isPlaying == TimerState.Started) Color.White else Natural110
+                        containerColor = state.value.containerColor,
+                        textColor = state.value.buttonTextColor
                     )
                 }
             }
             state.value.storeList?.let {
-                storeList(it)
+                storeList(it, navigator = navigator)
             }
 
         }
@@ -229,13 +226,13 @@ fun BsStoreScreenPrev() {
                     )
                 }
             }
-            storeList(list)
+            storeList(list, null)
 
         }
     }
 }
 
-fun LazyListScope.storeList(list: List<Store>) {
+fun LazyListScope.storeList(list: List<Store>, navigator: Navigator?) {
     items(list) { item ->
         StoreCardItem(
             storeName = item.name,
@@ -243,7 +240,9 @@ fun LazyListScope.storeList(list: List<Store>) {
             taskCount = item.taskCount,
             passingTime = item.passedTime,
             completedTaskCount = item.completedTask,
-            onClick = {}
+            onClick = {
+                navigator?.push(StoreDetailScreen(it))
+            }
         )
     }
 }

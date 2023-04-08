@@ -73,18 +73,19 @@ class BsStoreRepositoryImpl @Inject constructor(
                 userId?.let {
                     val result = bsStoreApi.stopGeneralShift(
                         TimerBodyDto(
-                            commmand = "pause",
-                            id = userId
+                            command = "Pause",
+                            id = it
                         )
                     )
-                    /*if(result.success){
-                        emit(Resource.Success(apiresultResult.data.toTimer()))
-                    }else{
-                        emit(Resource.Error(
-                            message = UiText.StringResorce(R.string.error_login)
-                        ))
-                    }*/
-                    emit(Resource.Success(Unit))
+                    if (result.response.success) {
+                        emit(Resource.Success(Unit))
+                    } else {
+                        emit(
+                            Resource.Error(
+                                message = UiText.DynamicString(result.response.message)
+                            )
+                        )
+                    }
                 } ?: kotlin.run {
                     emit(
                         Resource.Error(
@@ -120,18 +121,19 @@ class BsStoreRepositoryImpl @Inject constructor(
                 userId?.let {
                     val result = bsStoreApi.stopGeneralShift(
                         TimerBodyDto(
-                            commmand = "exit",
+                            command = "Exit",
                             id = userId
                         )
                     )
-                    emit(Resource.Success(Unit))
-                    /*if(apiResult.success){
-                        emit(Resource.Success(apiResult.data.toTimer()))
-                    }else{
-                        emit(Resource.Error(
-                            message = UiText.StringResorce(R.string.error_shift_not_started)
-                        ))
-                    }*/
+                    if (result.response.success) {
+                        emit(Resource.Success(Unit))
+                    } else {
+                        emit(
+                            Resource.Error(
+                                message = UiText.DynamicString(result.response.message)
+                            )
+                        )
+                    }
                 } ?: kotlin.run {
                     emit(
                         Resource.Error(
@@ -139,7 +141,6 @@ class BsStoreRepositoryImpl @Inject constructor(
                         )
                     )
                 }
-
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
@@ -244,14 +245,18 @@ class BsStoreRepositoryImpl @Inject constructor(
                     ),
                 )
                 delay(2000)
+                val result = bsStoreApi.getAllStores()
                 emit(Resource.Success(list))
-                /*if(apiResult.success){
-                    emit(Resource.Success(apiResult.data.toTimer()))
-                }else{
-                    emit(Resource.Error(
-                        message = UiText.StringResorce(R.string.error_shift_not_started)
-                    ))
-                }*/
+                if (result.response.success) {
+//                    emit(Resource.Success(result.data.map { it.toStore() }))
+                    emit(Resource.Success(list))
+                } else {
+                    emit(
+                        Resource.Error(
+                            message = UiText.StringResorce(R.string.error_shift_not_started)
+                        )
+                    )
+                }
             } ?: kotlin.run {
                 emit(
                     Resource.Error(

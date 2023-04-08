@@ -1,8 +1,11 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.service.GeneralShiftServiceManager
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.BsStoreUseCases
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.StopGeneralShiftUseCase
@@ -12,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.hours
 
 @HiltViewModel
 class BsStoreViewModel @Inject constructor(
@@ -26,7 +30,7 @@ class BsStoreViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
-        getStores()
+        initInfo()
     }
 
     private var startShiftJob: Job? = null
@@ -34,22 +38,25 @@ class BsStoreViewModel @Inject constructor(
     private var getStoresJob: Job? = null
 
     private fun startGeneralShift() {
-        startShiftService()
         startShiftJob?.cancel()
         startShiftJob = bsStoreUseCases.startGeneralShiftUseCase().onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    startShiftService()
                     _state.update {
                         it.copy(
                             isLoading = false,
                             isPlaying = TimerState.Started,
                             seconds = resource.data?.second ?: "00",
                             minutes = resource.data?.minute ?: "00",
-                            hours = resource.data?.hour ?: "00"
+                            hours = resource.data?.hour ?: "00",
+                            buttonText = R.string.pause,
+                            containerColor = Color.Red,
+                            buttonTextColor = Color.White,
+                            initialTime = resource.data?.progress ?: 1,
+                            maxValueOfTime = 10.hours.inWholeMinutes.toInt()
                         )
                     }
-
+                    startShiftService()
                 }
                 is Resource.Loading -> {
                     _state.update {
@@ -120,7 +127,10 @@ class BsStoreViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    isPlaying = TimerState.Stoped
+                                    isPlaying = TimerState.Stoped,
+                                    buttonText = R.string.start,
+                                    containerColor = Green40,
+                                    buttonTextColor = Natural110
                                 )
                             }
                             generalShiftServiceManager.triggerForegroundService(AppConstants.ACTION_GENERAL_SHIFT_TIME_STOP)
@@ -146,9 +156,7 @@ class BsStoreViewModel @Inject constructor(
                             )
                         }
                     }
-                }
-                .handleErrors()
-                .launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
     }
 
 
@@ -158,6 +166,11 @@ class BsStoreViewModel @Inject constructor(
         else
             pauseGeneralShift()
 
+    }
+
+    private fun initInfo() {
+        getStores()
+        startGeneralShift()
     }
 
     private fun pauseGeneralShift() {
@@ -193,7 +206,6 @@ class BsStoreViewModel @Inject constructor(
                     }
                 }
             }
-            .handleErrors()
             .launchIn(viewModelScope)
     }
 
@@ -203,7 +215,6 @@ class BsStoreViewModel @Inject constructor(
                 seconds = s,
                 minutes = m,
                 hours = h,
-                isPlaying = TimerState.Started,
                 initialTime = convertStringToDuration(s, m, h)?.inWholeSeconds?.toInt() ?: 1
             )
         }
