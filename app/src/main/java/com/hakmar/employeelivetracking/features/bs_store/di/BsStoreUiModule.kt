@@ -3,8 +3,10 @@ package com.hakmar.employeelivetracking.features.bs_store.di
 import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.BsStoreUseCases
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.GetBsStoresUseCase
+import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.GetGeneralShiftStatusUseCase
+import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.PauseGeneralShiftUseCase
+import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.ResumeGeneralShiftUseCase
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.StartGeneralShiftUseCase
-import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.StopGeneralShiftUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +21,9 @@ object BsStoreUiModule {
        bsStoreRepository: BsStoreRepository
    ) = BsStoreUseCases(
        startGeneralShiftUseCase = StartGeneralShiftUseCase(bsStoreRepository),
-       stopGeneralShiftUseCase = StopGeneralShiftUseCase(bsStoreRepository),
-       getBsStoresUseCase = GetBsStoresUseCase(bsStoreRepository)
+       pauseGeneralShiftUseCase = PauseGeneralShiftUseCase(bsStoreRepository),
+       resumeGeneralShiftUseCase = ResumeGeneralShiftUseCase(bsStoreRepository),
+       getBsStoresUseCase = GetBsStoresUseCase(bsStoreRepository),
+       getGeneralShiftStatusUseCase = GetGeneralShiftStatusUseCase(bsStoreRepository)
    )
 }

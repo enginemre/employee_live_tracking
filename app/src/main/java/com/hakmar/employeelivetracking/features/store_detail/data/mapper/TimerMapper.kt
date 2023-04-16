@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.bs_store.data.mapper
+package com.hakmar.employeelivetracking.features.store_detail.data.mapper
 
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerDto
 import com.hakmar.employeelivetracking.features.bs_store.domain.model.Timer

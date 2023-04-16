@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.bs_store.data.repository
+package com.hakmar.employeelivetracking.features.store_detail.data.repository
 
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.data.mapper.toStore
@@ -7,9 +7,9 @@ import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.domain.model.TimerStatus
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.bs_store.data.mapper.toTimer
-import com.hakmar.employeelivetracking.features.bs_store.data.remote.BsStoreApi
 import com.hakmar.employeelivetracking.features.bs_store.domain.model.Timer
-import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
+import com.hakmar.employeelivetracking.features.store_detail.data.remote.StoreDetailApi
+import com.hakmar.employeelivetracking.features.store_detail.domain.repository.StoreDetailRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.UiText
@@ -19,74 +19,23 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-class BsStoreRepositoryImpl @Inject constructor(
-    private val bsStoreApi: BsStoreApi,
+class StoreDetailRepositoryImpl @Inject constructor(
+    private val storeDetailApi: StoreDetailApi,
     private val dataStoreRepository: DataStoreRepository
-) : BsStoreRepository {
-    override fun startGeneralShift(): Flow<Resource<Timer>> {
+) : StoreDetailRepository {
+    override fun getStoreDetail(storeCode: String): Flow<Resource<Store>> {
         return flow {
             try {
                 emit(Resource.Loading())
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let {
-                    val apiResult = bsStoreApi.startGeneralShift(userId)
-                    if (apiResult.response.success) {
-                        emit(Resource.Success(apiResult.data.toTimer()))
-                    } else {
-                        emit(
-                            Resource.Error(
-                                message = UiText.DynamicString(apiResult.response.message)
-                            )
-                        )
-                    }
-                } ?: kotlin.run {
-                    emit(
-                        Resource.Error(
-                            message = UiText.StringResorce(R.string.error_shift_not_started)
-                        )
-                    )
-                }
-            } catch (e: SocketTimeoutException) {
-                e.printStackTrace()
-                emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error(UiText.StringResorce(R.string.error_internet)))
-            } catch (e: Exception) {
-                e.printStackTrace()
-                emit(
-                    Resource.Error(
-                        UiText.DynamicString(
-                            e.localizedMessage ?: "Unexceptred error"
-                        )
-                    )
-                )
-            }
-        }
-    }
-
-    override fun pauseGeneralShift(): Flow<Resource<Unit>> {
-        return flow {
-            try {
-                emit(Resource.Loading())
-                val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
-                userId?.let { id ->
-                    val result = bsStoreApi.pauseGeneralShift(id)
+                    val result = storeDetailApi.getStoreDetail(storeCode, it)
                     if (result.response.success) {
-                        emit(Resource.Success(Unit))
-                    } else {
-                        emit(
-                            Resource.Error(
-                                message = UiText.DynamicString(result.response.message)
-                            )
-                        )
-                    }
+                        emit(Resource.Success(result.data.toStore()))
+                    } else
+                        emit(Resource.Error(UiText.DynamicString(result.response.message)))
                 } ?: kotlin.run {
-                    emit(
-                        Resource.Error(
-                            message = UiText.StringResorce(R.string.error_shift_not_started)
-                        )
-                    )
+                    emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
                 }
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
@@ -107,29 +56,21 @@ class BsStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun resumeGeneralShift(): Flow<Resource<Timer>> {
+    override fun startStoreShift(storeCode: String): Flow<Resource<Timer>> {
         return flow {
             try {
-                emit(Resource.Loading())
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
-                userId?.let { id ->
-                    val result = bsStoreApi.resumeGeneralShift(id)
+                userId?.let {
+                    emit(Resource.Loading())
+                    val result = storeDetailApi.startStoreShift(storeCode, it)
                     if (result.response.success) {
                         emit(Resource.Success(result.data.toTimer()))
-                    } else {
-                        emit(
-                            Resource.Error(
-                                message = UiText.DynamicString(result.response.message)
-                            )
-                        )
-                    }
+                    } else
+                        emit(Resource.Error(UiText.DynamicString(result.response.message)))
                 } ?: kotlin.run {
-                    emit(
-                        Resource.Error(
-                            message = UiText.StringResorce(R.string.error_shift_not_started)
-                        )
-                    )
+                    emit(Resource.Error(UiText.StringResorce(R.string.error_relogin)))
                 }
+
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
@@ -149,29 +90,21 @@ class BsStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getStores(): Flow<Resource<List<Store>>> {
+    override fun pauseStoreShift(storeCode: String): Flow<Resource<Unit>> {
         return flow {
             try {
-                emit(Resource.Loading())
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let { id ->
-                    val result = bsStoreApi.getAllStores(userId = id)
+                    emit(Resource.Loading())
+                    val result = storeDetailApi.pauseStoreShift(storeCode, id)
                     if (result.response.success) {
-                        emit(Resource.Success(result.data.map { it.toStore() }))
-                    } else {
-                        emit(
-                            Resource.Error(
-                                message = UiText.StringResorce(R.string.error_shift_not_started)
-                            )
-                        )
-                    }
+                        emit(Resource.Success(Unit))
+                    } else
+                        emit(Resource.Error(UiText.DynamicString(result.response.message)))
                 } ?: kotlin.run {
-                    emit(
-                        Resource.Error(
-                            message = UiText.StringResorce(R.string.error_store_list_not_fetched)
-                        )
-                    )
+                    emit(Resource.Error(UiText.StringResorce(R.string.error_relogin)))
                 }
+
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
@@ -191,18 +124,84 @@ class BsStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun initGeneralShift(): Flow<Resource<TimerStatus>> {
+    override fun resumeStoreShift(storeCode: String): Flow<Resource<Timer>> {
         return flow {
             try {
-                emit(Resource.Loading())
+                val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
+                userId?.let { id ->
+                    emit(Resource.Loading())
+                    val result = storeDetailApi.resumeStoreShift(storeCode, id)
+                    if (result.response.success) {
+                        emit(Resource.Success(result.data.toTimer()))
+                    } else
+                        emit(Resource.Error(UiText.DynamicString(result.response.message)))
+                } ?: kotlin.run {
+                    emit(Resource.Error(UiText.StringResorce(R.string.error_relogin)))
+                }
+
+            } catch (e: SocketTimeoutException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_internet)))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(
+                    Resource.Error(
+                        UiText.DynamicString(
+                            e.localizedMessage ?: "Unexceptred error"
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    override fun cancelStoreShift(storeCode: String): Flow<Resource<Unit>> {
+        return flow {
+            try {
+                val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
+                userId?.let { id ->
+                    emit(Resource.Loading())
+                    val result = storeDetailApi.cancelStoreShift(storeCode, id)
+                    if (result.response.success) {
+                        emit(Resource.Success(Unit))
+                    } else
+                        emit(Resource.Error(UiText.DynamicString(result.response.message)))
+                } ?: kotlin.run {
+                    emit(Resource.Error(UiText.StringResorce(R.string.error_relogin)))
+                }
+            } catch (e: SocketTimeoutException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_internet)))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(
+                    Resource.Error(
+                        UiText.DynamicString(
+                            e.localizedMessage ?: "Unexceptred error"
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    override fun initStoreShift(storeCode: String): Flow<Resource<TimerStatus>> {
+        return flow {
+            try {
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let {
-                    val result = bsStoreApi.initGeneralShift(it)
+                    emit(Resource.Loading())
+                    val result = storeDetailApi.initStoreShift(storeCode = storeCode, userId = it)
                     if (result.response.success) {
                         emit(Resource.Success(result.data.toTimerStatus()))
-                    } else {
+                    } else
                         emit(Resource.Error(UiText.DynamicString(result.response.message)))
-                    }
                 } ?: kotlin.run {
                     emit(
                         Resource.Error(
@@ -228,5 +227,4 @@ class BsStoreRepositoryImpl @Inject constructor(
             }
         }
     }
-
 }
