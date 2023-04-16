@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -27,7 +32,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 fun CircleIndicator(
     canvasSize: Dp = 200.dp,
     indicatorValue: Int = 1,
-    maxIndicatorValue: Int = 100,
+    maxIndicatorValue: Int = 36000,
     backgroundIndicatorColor: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
     backgroundIndicatorStrokeWidth: Float = 100f,
     foregroundIndicatorColor: Color = MaterialTheme.colors.primary,

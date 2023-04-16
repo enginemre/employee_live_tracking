@@ -6,7 +6,6 @@ sealed class UiEvent {
     data class FocusTextField(val type: String? = null) : UiEvent()
     data class Navigate<T>(val route: String, val data: T? = null) : UiEvent()
     data class Intent<T>(val data: T) : UiEvent()
-    data class QrScnaned(val data : String) : UiEvent()
     data class NfcReaded(val data: String) : UiEvent()
     object ShowBottomSheet : UiEvent()
     object HideKeyboard : UiEvent()

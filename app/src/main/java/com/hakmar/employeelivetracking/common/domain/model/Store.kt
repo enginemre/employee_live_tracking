@@ -10,4 +10,9 @@ data class Store(
     val longtitude: Double,
     val lattitude: Double,
     val areaCode: String,
+    val marketingManager: MarketingManager,
+    val distirctManager: DistirctManager,
+    val regionalManager: RegionalManager,
+    var isStoreShiftEnable: Boolean,
+    val address: String?
 )

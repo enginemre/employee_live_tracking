@@ -60,4 +60,16 @@
     <string name="tasks">Tasks</string>
     <string name="task_detail_title">Task Detail</string>
     <string name="delete">Delete</string>
+    <string name="store_detail">Store Detail</string>
+    <string name="qr_scanned_success">QR read successfully</string>
+    <string name="motivation_for_task">\"Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın\"</string>
+    <string name="task_section_title">Tasks</string>
+    <string name="see_all">See All</string>
+    <string name="nfc_error_read">NFC data not read</string>
+    <string name="title_activity_qr">QrActivity</string>
+    <string name="qr_validate_error">QR code can not validate</string>
+    <string name="qr_error_read">QR data not read</string>
+    <string name="error_relogin">Please login again</string>
+    <string name="store_shift_successfully_completed">Store shift completed</string>
+    <string name="error_shift_completed">Store shift has already been completed\n</string>
 </resources>

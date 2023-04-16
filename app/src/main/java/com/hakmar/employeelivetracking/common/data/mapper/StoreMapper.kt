@@ -14,5 +14,10 @@ fun StoreDto.toStore(): Store {
         longtitude = storeLongitude.toDouble(),
         lattitude = storeLatitude.toDouble(),
         areaCode = areaCode,
+        marketingManager = marketingManager.toMarketingManager(),
+        distirctManager = districtManager.toDistirctManager(),
+        regionalManager = regionalDirector.toRegionalManager(),
+        isStoreShiftEnable = isStoreShiftDisable,
+        address = address
     )
 }

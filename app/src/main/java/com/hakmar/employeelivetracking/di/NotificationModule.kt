@@ -43,7 +43,7 @@ object NotificationModule {
         storeShiftServiceManager: StoreShiftServiceManager
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID_STORE_SHIFT)
-            .setSmallIcon(R.drawable.shop)
+            .setSmallIcon(R.drawable.ic_store_notification)
             .setOngoing(true)
             .setContentIntent(storeShiftServiceManager.clickPendingIntent())
     }

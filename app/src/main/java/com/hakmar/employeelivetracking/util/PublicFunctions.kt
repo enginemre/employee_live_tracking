@@ -48,12 +48,17 @@ fun convertStringToDuration(seconds: String, minutes: String, hours: String): Du
 }
 
 fun decodeJwt(token: String): String? {
-    val jwt = JWT(token)
-    val user = jwt.getClaim("user").asString()
-    val uuui = jwt.getClaim("user_uuid").asString()
-    val storeCode = jwt.getClaim("nameid").asString()
-    val isExpired = jwt.isExpired(3)
-    return if (!isExpired) user else null
+    return try {
+        val jwt = JWT(token)
+        val user = jwt.getClaim("user").asString()
+        val uuui = jwt.getClaim("user_uuid").asString()
+        val storeCode = jwt.getClaim("nameid").asString()
+        val isExpired = jwt.isExpired(3)
+        if (!isExpired) user else null
+    } catch (e: Exception) {
+        null
+    }
+
 }
 
 

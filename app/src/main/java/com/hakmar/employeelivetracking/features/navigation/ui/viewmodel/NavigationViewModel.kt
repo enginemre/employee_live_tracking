@@ -10,11 +10,20 @@ import com.hakmar.employeelivetracking.features.navigation.data.mapper.toNavigat
 import com.hakmar.employeelivetracking.features.navigation.domain.model.NavigationStore
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationEvent
 import com.hakmar.employeelivetracking.features.navigation.ui.NavigationState
-import com.hakmar.employeelivetracking.util.*
+import com.hakmar.employeelivetracking.util.AppConstants
+import com.hakmar.employeelivetracking.util.Resource
+import com.hakmar.employeelivetracking.util.SnackBarType
+import com.hakmar.employeelivetracking.util.UiEvent
+import com.hakmar.employeelivetracking.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -117,21 +126,38 @@ class NavigationViewModel @Inject constructor(
                         }
                     }
                 }
-                _state.update {
-                    it.copy(
-                        lastLocation = task.result,
-                        isLoading = false,
-                        cameraPosition = LatLng(task.result.latitude, task.result.longitude)
-                    )
+                val lat = runBlocking {
+                    dataStoreRepository.doubleReadKey(AppConstants.LAST_KNOWN_LOCATION_LAT)
                 }
-                viewModelScope.launch {
-                    _uiEvent.send(
-                        UiEvent.Navigate(
-                            "",
-                            LatLng(task.result.latitude, task.result.longitude)
+                val lon = runBlocking {
+                    dataStoreRepository.doubleReadKey(AppConstants.LAST_KNOWN_LOCATION_LON)
+                }
+                lat?.let {
+                    val latLng = LatLng(lat, lon!!)
+                    _state.update {
+                        it.copy(
+                            lastLocation = task.result,
+                            isLoading = false,
+                            cameraPosition = latLng
                         )
-                    )
+                    }
+                    viewModelScope.launch {
+                        _uiEvent.send(
+                            UiEvent.Navigate(
+                                "",
+                                latLng
+                            )
+                        )
+                    }
+                } ?: kotlin.run {
+                    _state.update {
+                        it.copy(
+                            lastLocation = task.result,
+                            isLoading = false,
+                        )
+                    }
                 }
+
 
             }
         } catch (e: SecurityException) {

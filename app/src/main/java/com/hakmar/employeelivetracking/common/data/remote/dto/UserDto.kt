@@ -1,9 +1,10 @@
-package com.hakmar.employeelivetracking.features.profile.data.remote.dto
+package com.hakmar.employeelivetracking.common.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
 
 data class UserDto(
+    @SerializedName("email")
     val email: String,
     @SerializedName("first_name")
     val firstName: String,

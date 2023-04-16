@@ -2,7 +2,6 @@ package com.hakmar.employeelivetracking.features.store_detail.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,11 +16,11 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 @Composable
 fun LayoutTitle(
     title: String,
-    link: String
+    link: String,
+    modifier: Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .padding(
                 start = MaterialTheme.spacing.large,
                 end = MaterialTheme.spacing.large,

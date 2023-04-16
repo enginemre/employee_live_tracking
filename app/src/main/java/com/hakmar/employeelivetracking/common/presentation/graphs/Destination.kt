@@ -1,8 +1,16 @@
 package com.hakmar.employeelivetracking.common.presentation.graphs
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.Task
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Navigation
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Store
+import androidx.compose.material.icons.outlined.Task
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed interface HomeDestination {
@@ -53,13 +61,13 @@ sealed interface HomeDestination {
         override val path = "$base/{storeId}"
     }
 
-    object QRScreen : HomeDestination {
-        override val base = "/qr_check"
+    object Notification : HomeDestination {
+        override val base = "/notification"
         override val path = base
     }
 
-    object Notification : HomeDestination {
-        override val base = "/notification"
+    object QRScreen : HomeDestination {
+        override val base = "/qr_screen"
         override val path = base
     }
 }
@@ -119,3 +127,27 @@ sealed interface ProfileDestination {
     }
 }
 
+sealed interface StoreDetailDestination {
+    val base: String
+    val path: String
+
+    object SteelCaseAmounts : StoreDetailDestination {
+        override val base = HomeDestination.StoreDetail.base + "/steel_case_amaunt"
+        override val path = base
+    }
+
+    object StoreOutside : StoreDetailDestination {
+        override val base = HomeDestination.StoreDetail.base + "/store_out_control"
+        override val path = base
+    }
+
+    object StoreInside : StoreDetailDestination {
+        override val base = HomeDestination.StoreDetail.base + "/store_inside_control"
+        override val path = base
+    }
+
+    object ZReport : StoreDetailDestination {
+        override val base = HomeDestination.StoreDetail.base + "/store_z_report"
+        override val path = base
+    }
+}

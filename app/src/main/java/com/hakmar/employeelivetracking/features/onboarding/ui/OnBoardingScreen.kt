@@ -39,6 +39,11 @@ class OnBoardingScreen : Screen {
                 rawRes = R.raw.work_team
             ),
             PermissionPagerModel(
+                title = "Kamera Bilgisi",
+                description = "Uygulama görevleri tamamlamanız için kameraya ihtiyac duymaktadır.",
+                rawRes = R.raw.qr_code_scanner
+            ),
+            PermissionPagerModel(
                 title = "Konum Bilgisi",
                 description = "Uygulama çevrenizdeki en yakın mağazaların gösterecek bu yüzden konum bilgisine ihtiyaç duymaktadır ",
                 rawRes = R.raw.map_pin_location
@@ -49,6 +54,7 @@ class OnBoardingScreen : Screen {
     override val key: ScreenKey
         get() = Destination.OnBoarding.base
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
         val context = LocalContext.current
@@ -75,14 +81,20 @@ class OnBoardingScreen : Screen {
             } else mutableStateOf(true)
         }
         var hasLocaitionPermission by remember {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                mutableStateOf(
-                    ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                )
-            } else mutableStateOf(true)
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            )
+        }
+        var hasCamPermission by remember {
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+            )
         }
         val launcherNotification = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
@@ -96,7 +108,7 @@ class OnBoardingScreen : Screen {
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
                 hasLocaitionPermission = isGranted
-                if (listOfPermission.size == 2) {
+                if (listOfPermission.size == 3) {
                     navigator.replaceAll(LoginScreen())
                     mainViewModel.setIsFirst()
                 } else {
@@ -107,7 +119,15 @@ class OnBoardingScreen : Screen {
 
             }
         )
-
+        val launcherCamera = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { granted ->
+                hasCamPermission = granted
+                coroutineScope.launch {
+                    pageState.animateScrollToPage(pageState.currentPage + 1)
+                }
+            }
+        )
         Column(modifier = Modifier.fillMaxSize()) {
             HorizontalPager(
                 modifier = Modifier.fillMaxSize(),
@@ -119,14 +139,24 @@ class OnBoardingScreen : Screen {
                     description = listOfPermission[page].description,
                     rawRes = listOfPermission[page].rawRes,
                     onClick = {
-                        if (page == 0) {
-                            coroutineScope.launch {
-                                pageState.animateScrollToPage(1)
+                        when (page) {
+                            0 -> {
+                                coroutineScope.launch {
+                                    pageState.animateScrollToPage(1)
+                                }
                             }
-                        } else if (page == 1) {
-                            launcherLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        } else {
-                            launcherNotification.launch(Manifest.permission.POST_NOTIFICATIONS)
+
+                            1 -> {
+                                launcherCamera.launch(Manifest.permission.CAMERA)
+                            }
+
+                            2 -> {
+                                launcherLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                            }
+
+                            else -> {
+                                launcherNotification.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
                         }
 
                     }

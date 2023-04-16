@@ -3,6 +3,7 @@ package com.hakmar.employeelivetracking.di
 import com.hakmar.employeelivetracking.common.data.remote.GeneralApi
 import com.hakmar.employeelivetracking.common.data.repository.CommonRepositoryImpl
 import com.hakmar.employeelivetracking.common.domain.repository.CommonRepository
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import dagger.Module
 import dagger.Provides
@@ -34,9 +35,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCommonRepository(
-        generalApi: GeneralApi
+        generalApi: GeneralApi,
+        dataStoreRepository: DataStoreRepository
     ): CommonRepository {
-        return CommonRepositoryImpl(generalApi)
+        return CommonRepositoryImpl(generalApi, dataStoreRepository)
     }
 
     @Provides

@@ -28,11 +28,25 @@ class StoreShiftServiceManager @Inject constructor(
         )
     }
 
-    fun triggerForegroundService(action: String, timerData: String? = null) {
+    fun triggerForegroundService(
+        action: String,
+        timerData: String? = null,
+        storeCode: String? = "****"
+    ) {
         Intent(context, StoreShiftService::class.java).apply {
             putExtra(AppConstants.LAST_TIME, timerData)
+            putExtra(AppConstants.STORE_INFO, storeCode)
             this.action = action
             context.startService(this)
         }
+    }
+
+    fun cancelPendingIntent(context: Context): PendingIntent {
+        val cancelIntent = Intent(context, StoreShiftService::class.java).apply {
+            putExtra(AppConstants.TIMER_STATE, TimerState.Closed.name)
+        }
+        return PendingIntent.getService(
+            context, AppConstants.STORE_SHIFT_CANCEL_REQUEST_CODE, cancelIntent, flag
+        )
     }
 }

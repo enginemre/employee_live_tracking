@@ -8,7 +8,6 @@ import android.os.Binder
 import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
-import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.StopGeneralShiftUseCase
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_CANCEL
 import com.hakmar.employeelivetracking.util.AppConstants.ACTION_GENERAL_SHIFT_TIME_START
@@ -24,8 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.launchIn
-import java.util.*
+import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
@@ -34,7 +32,6 @@ import kotlin.time.Duration.Companion.seconds
 @AndroidEntryPoint
 class GeneralShiftService : Service() {
 
-    var isServiceRunning: Boolean = false
 
     var dataUpdateListener: GeneralShiftServiceListener? = null
 
@@ -46,9 +43,6 @@ class GeneralShiftService : Service() {
 
     @Inject
     lateinit var generalShiftServiceManager: GeneralShiftServiceManager
-
-    @Inject
-    lateinit var stopGeneralShiftUseCase: StopGeneralShiftUseCase
 
     var seconds = mutableStateOf("00")
         private set
@@ -73,34 +67,49 @@ class GeneralShiftService : Service() {
     override fun onBind(intent: Intent?) = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        isServiceRunning = true
         var lastTime: Duration? = null
-        intent?.getStringExtra(AppConstants.LAST_TIME)?.let {
-            lastTime = Duration.parse(it)
-        }
-        intent?.action.let {
-            when (it) {
-                ACTION_GENERAL_SHIFT_TIME_START -> {
-                    startForegroundService()
-                    startTimer(pausedTime = lastTime,
-                        onTick = { hours, minutes, seconds ->
-                            updateNotification(hours = hours, minutes = minutes, seconds = seconds)
-                            dataUpdateListener?.onTick(hours, minutes, seconds)
-                            tickIntent.putExtra(
-                                AppConstants.TIME_ELAPSED,
-                                formatTime(seconds, minutes, hours)
+        if (intent?.getStringExtra(AppConstants.TIMER_STATE) == TimerState.Closed.name) {
+            currentState.value = TimerState.Closed
+            stopTimer()
+            stopForegroundService()
+        } else {
+            intent?.getStringExtra(AppConstants.LAST_TIME)?.let {
+                lastTime = Duration.parse(it)
+            }
+            intent?.action.let {
+                when (it) {
+                    ACTION_GENERAL_SHIFT_TIME_START -> {
+                        if (currentState.value != TimerState.Started) {
+                            startForegroundService()
+                            startTimer(pausedTime = lastTime,
+                                onTick = { hours, minutes, seconds ->
+                                    updateNotification(
+                                        hours = hours,
+                                        minutes = minutes,
+                                        seconds = seconds
+                                    )
+                                    dataUpdateListener?.onTick(hours, minutes, seconds)
+                                    tickIntent.putExtra(
+                                        AppConstants.TIME_ELAPSED,
+                                        formatTime(seconds, minutes, hours)
+                                    )
+                                    sendBroadcast(tickIntent)
+                                }
                             )
-                            sendBroadcast(tickIntent)
                         }
-                    )
+                    }
+
+                    ACTION_GENERAL_SHIFT_TIME_STOP -> {
+                        stopTimer()
+                    }
+
+                    ACTION_GENERAL_SHIFT_TIME_CANCEL -> {
+                        stopTimer()
+                        stopForegroundService()
+                    }
+
+                    else -> {}
                 }
-                ACTION_GENERAL_SHIFT_TIME_STOP -> {
-                    stopTimer()
-                }
-                ACTION_GENERAL_SHIFT_TIME_CANCEL -> {
-                    stopForegroundService()
-                }
-                else -> {}
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -181,18 +190,8 @@ class GeneralShiftService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        exitService()
-    }
-
-    private fun exitService() {
-        exitShiftJob?.cancel()
-        exitShiftJob = stopGeneralShiftUseCase(StopGeneralShiftUseCase.PauseType.Exit)
-            .launchIn(serviceScope)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        isServiceRunning = false
+        stopTimer()
+        stopForegroundService()
     }
 
 

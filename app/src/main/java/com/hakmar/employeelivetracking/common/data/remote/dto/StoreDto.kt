@@ -7,12 +7,15 @@ data class StoreDto(
     @SerializedName("area_code")
     val areaCode: String,
     @SerializedName("district_manager")
-    val districtManager: String,
+    val districtManager: DistrictManagerDto,
+    @SerializedName("id")
     val id: Int,
     @SerializedName("marketing_manager")
-    val marketingManager: String,
+    val marketingManager: MarketingManagerDto,
     @SerializedName("regional_director")
-    val regionalDirector: String,
+    val regionalDirector: RegionalDirectorDto,
+    @SerializedName("start_permission")
+    val isStoreShiftDisable: Boolean,
     @SerializedName("store_code")
     val storeCode: String,
     @SerializedName("store_latitude")
@@ -22,5 +25,7 @@ data class StoreDto(
     @SerializedName("store_name")
     val storeName: String,
     @SerializedName("store_uuid")
-    val storeUuid: String
+    val storeUuid: String,
+    @SerializedName("address")
+    val address: String
 )

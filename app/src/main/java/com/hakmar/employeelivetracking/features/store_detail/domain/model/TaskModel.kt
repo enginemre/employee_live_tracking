@@ -4,5 +4,6 @@ data class TaskModel(
     val name: String,
     var isCompleted: Boolean,
     val infoText: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val route: String,
 )

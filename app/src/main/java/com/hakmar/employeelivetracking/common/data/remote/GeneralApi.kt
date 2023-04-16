@@ -1,10 +1,12 @@
 package com.hakmar.employeelivetracking.common.data.remote
 
-import com.hakmar.employeelivetracking.common.data.remote.dto.StoreResponseDto
+import com.hakmar.employeelivetracking.common.data.remote.dto.BaseResponseDto
+import com.hakmar.employeelivetracking.common.data.remote.dto.StoreDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface GeneralApi {
 
-    @GET("/api/store")
-    suspend fun getAllStores(): StoreResponseDto
+    @GET("/api/store/{userId}/")
+    suspend fun getAllStores(@Path("userId") userId: String): BaseResponseDto<List<StoreDto>>
 }

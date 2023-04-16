@@ -8,11 +8,16 @@ import android.os.Binder
 import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.formatTime
 import com.hakmar.employeelivetracking.util.pad
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,9 +44,12 @@ class StoreShiftService : Service() {
         private set
     var currentState = mutableStateOf(TimerState.Idle)
         private set
+    var storeCode = mutableStateOf("****")
 
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var exitStoreShiftJob: Job? = null
 
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -49,6 +57,12 @@ class StoreShiftService : Service() {
     @Inject
     @Named("store")
     lateinit var notificationBuilder: NotificationCompat.Builder
+
+    @Inject
+    lateinit var dataStoreRepository: DataStoreRepository
+
+    @Inject
+    lateinit var storeShiftServiceManager: StoreShiftServiceManager
 
     private var tickIntent = Intent(
         AppConstants.ACTION_OBSERVE_STORE_SHIFT
@@ -63,22 +77,32 @@ class StoreShiftService : Service() {
         intent?.action.let {
             when (it) {
                 AppConstants.ACTION_STORE_SHIFT_TIME_START -> {
-                    startForegroundService(
-                        intent?.getStringExtra(AppConstants.STORE_INFO) ?: "****"
-                    )
-                    startTimer(pausedTime = lastTime,
-                        onTick = { hours, minutes, seconds ->
-                            updateNotification(hours = hours, minutes = minutes, seconds = seconds)
-                            dataUpdateListener?.onTick(hours, minutes, seconds)
-                            tickIntent.putExtra(AppConstants.TIME_ELAPSED, formatTime(seconds, minutes, hours))
-                            sendBroadcast(tickIntent)
-                        }
-                    )
+                    if (currentState.value != TimerState.Started) {
+                        startForegroundService(
+                            intent?.getStringExtra(AppConstants.STORE_INFO) ?: "****"
+                        )
+                        startTimer(pausedTime = lastTime,
+                            onTick = { hours, minutes, seconds ->
+                                updateNotification(
+                                    hours = hours,
+                                    minutes = minutes,
+                                    seconds = seconds
+                                )
+                                dataUpdateListener?.onTick(hours, minutes, seconds)
+                                tickIntent.putExtra(
+                                    AppConstants.TIME_ELAPSED,
+                                    formatTime(seconds, minutes, hours)
+                                )
+                                sendBroadcast(tickIntent)
+                            }
+                        )
+                    }
                 }
                 AppConstants.ACTION_STORE_SHIFT_TIME_STOP -> {
                     stopTimer()
                 }
                 AppConstants.ACTION_STORE_SHIFT_TIME_CANCEL -> {
+                    stopTimer()
                     stopForegroundService()
                 }
                 else -> {}
@@ -96,7 +120,7 @@ class StoreShiftService : Service() {
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(channel)
-            notificationBuilder.setContentTitle(storeCode + "mesai devam ediyor")
+            notificationBuilder.setContentTitle(storeCode + "  mesai devam ediyor")
         }
     }
 
@@ -156,9 +180,24 @@ class StoreShiftService : Service() {
         currentState.value = TimerState.Stoped
     }
 
+    private fun exitService() {
+        stopTimer()
+        stopForegroundService()
+        /* runBlocking {
+            dataStoreRepository.intPutKey(AppConstants.IS_STORE_VALIDATE, 1)
+            dataStoreRepository.stringPutKey(AppConstants.CURRENT_STORE_CODE, storeCode.value)
+        }*/
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
         isServiceRunning = false
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        exitService()
     }
 
 

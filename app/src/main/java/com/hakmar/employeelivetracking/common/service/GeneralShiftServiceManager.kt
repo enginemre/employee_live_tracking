@@ -36,4 +36,13 @@ class GeneralShiftServiceManager @Inject constructor(
             context.startService(this)
         }
     }
+
+    fun cancelPendingIntent(context: Context): PendingIntent {
+        val cancelIntent = Intent(context, GeneralShiftService::class.java).apply {
+            putExtra(AppConstants.TIMER_STATE, TimerState.Closed.name)
+        }
+        return PendingIntent.getService(
+            context, AppConstants.GENERAL_SHIFT_CANCEL_REQUEST_CODE, cancelIntent, flag
+        )
+    }
 }

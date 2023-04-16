@@ -5,18 +5,10 @@ import com.hakmar.employeelivetracking.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class StopGeneralShiftUseCase @Inject constructor(
+class PauseGeneralShiftUseCase @Inject constructor(
     private val bsStoreRepository: BsStoreRepository
 ) {
-    operator fun invoke(type:PauseType): Flow<Resource<Unit>> {
-       return if (type == PauseType.Pause)
-            bsStoreRepository.pauseGeneralShift()
-        else
-            bsStoreRepository.exitGeneralShift()
-    }
-
-    enum class PauseType{
-        Pause,
-        Exit
+    operator fun invoke(): Flow<Resource<Unit>> {
+        return bsStoreRepository.pauseGeneralShift()
     }
 }

@@ -100,10 +100,10 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        handleIntent(intent, null)
+        handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent?, savedInstanceState: Bundle?) {
+    private fun handleIntent(intent: Intent?) {
         if (intent?.action == Intent.ACTION_VIEW) {
             val uri = intent.data
             val list = uri.toString().split("/")

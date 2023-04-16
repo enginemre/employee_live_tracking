@@ -27,11 +27,13 @@ import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskCard(
     name: String,
     imageUrl: String,
-    isCompleted: Boolean
+    isCompleted: Boolean,
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -47,7 +49,8 @@ fun TaskCard(
             containerColor =
             if (isCompleted) MaterialTheme.colors.primary
             else Color.White
-        )
+        ),
+        onClick = { onClick() }
     ) {
 
         AsyncImage(
