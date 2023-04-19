@@ -146,7 +146,7 @@ sealed interface StoreDetailDestination {
         override val path = base
     }
 
-    object ZReport : StoreDetailDestination {
+    object PosAmounts : StoreDetailDestination {
         override val base = HomeDestination.StoreDetail.base + "/store_z_report"
         override val path = base
     }

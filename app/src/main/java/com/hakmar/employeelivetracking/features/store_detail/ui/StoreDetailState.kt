@@ -42,7 +42,7 @@ data class StoreDetailState(
             isCompleted = false,
             imageUrl = "https://cdn-icons-png.flaticon.com/512/9342/9342023.png",
             infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git",
-            route = StoreDetailDestination.ZReport.base
+            route = StoreDetailDestination.PosAmounts.base
         ),
     ),
     var store: Store? = null

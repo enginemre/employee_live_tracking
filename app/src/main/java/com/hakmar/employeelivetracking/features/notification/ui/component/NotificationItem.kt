@@ -2,7 +2,12 @@ package com.hakmar.employeelivetracking.features.notification.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,7 +26,11 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
 @Composable
-fun NotificationItem() {
+fun NotificationItemCard(
+    title: String,
+    description: String,
+    dateText: String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +38,7 @@ fun NotificationItem() {
     ) {
         Image(
             modifier = Modifier.size(40.dp),
-            painter = painterResource(id = R.drawable.man),
+            painter = painterResource(id = R.drawable.notification),
             contentDescription = null
         )
         Column(
@@ -38,7 +47,7 @@ fun NotificationItem() {
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Yeni Sistemimize hoş geldiniz",
+                text = title,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.W500,
                     fontSize = 14.sp,
@@ -49,7 +58,7 @@ fun NotificationItem() {
             )
             Spacer(modifier = Modifier.padding(top = MaterialTheme.spacing.extraSmall))
             Text(
-                text = "Bu bir deneme açıklaması ",
+                text = description,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
@@ -61,7 +70,7 @@ fun NotificationItem() {
             )
             Spacer(modifier = Modifier.padding(top = MaterialTheme.spacing.small))
             Text(
-                text = "15 min ago", style = MaterialTheme.typography.bodyMedium.copy(
+                text = dateText, style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     color = Natural80,

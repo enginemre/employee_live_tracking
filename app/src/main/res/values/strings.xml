@@ -72,4 +72,26 @@
     <string name="error_relogin">Please login again</string>
     <string name="store_shift_successfully_completed">Store shift completed</string>
     <string name="error_shift_completed">Store shift has already been completed\n</string>
+    <string name="pos_screen_title">POS Amounts</string>
+    <string name="pos_amount_label">Post Amount</string>
+    <string name="cashier_amount_label">Cashier Amount</string>
+    <string name="difference_amount_label">Difference</string>
+    <string name="okey">Okey</string>
+    <string name="error_store">Unknown error</string>
+    <string name="banknotes">Banknotes</string>
+    <string name="coins">Coins</string>
+    <string name="total_pos_amount_label">Total Pos Amount</string>
+    <string name="total_payment">Total Expenses and Payments</string>
+    <string name="steel_case_amoun_label">Steel Case Amount</string>
+    <string name="error_storeCode">"Error store code not found "</string>
+    <string name="error_cashTotal">Please enter valid cash total</string>
+    <string name="error_coinTotal">Please enter valid coin total</string>
+    <string name="error_posAmountTotal">Please enter valid  pos amount</string>
+    <string name="error_expensesTotal">Please enter valid expenses</string>
+    <string name="error_safeCurrentTotal">Please enter valid steel case amount</string>
+    <string name="error_cashbookBalance">"Please enter valid cashbook "</string>
+    <string name="error_difference">Please enter valid difference</string>
+    <string name="successfully_steel_case_amount">Successfully</string>
+    <string name="error_steel_case_amount">Please try again later</string>
+    <string name="error_cashier_amount">Please enter valid cashier amount</string>
 </resources>

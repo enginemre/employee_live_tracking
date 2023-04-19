@@ -31,7 +31,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.graphs.StoreDetailDestination
-import com.hakmar.employeelivetracking.common.presentation.tabs.SampleScreens
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
@@ -42,6 +41,10 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
 import com.hakmar.employeelivetracking.features.store_detail.ui.component.*
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.PosScreen
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.SteelCaseAmountScreen
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.StoreInsideScreen
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.StoreOutsideScreen
 import com.hakmar.employeelivetracking.util.*
 
 @ExperimentalGetImage
@@ -98,19 +101,24 @@ class StoreDetailScreen(
                     is UiEvent.Navigate<*> -> {
                         when (event.route) {
                             StoreDetailDestination.StoreInside.base -> {
-                                navigator.push(SampleScreens(event.route))
+                                navigator.push(StoreInsideScreen())
                             }
 
                             StoreDetailDestination.StoreOutside.base -> {
-                                navigator.push(SampleScreens(event.route))
+                                navigator.push(StoreOutsideScreen())
                             }
 
                             StoreDetailDestination.SteelCaseAmounts.base -> {
-                                navigator.push(SampleScreens(event.route))
+                                navigator.push(
+                                    SteelCaseAmountScreen(
+                                        storeCode,
+                                        state.store?.name ?: ""
+                                    )
+                                )
                             }
 
-                            StoreDetailDestination.ZReport.base -> {
-                                navigator.push(SampleScreens(event.route))
+                            StoreDetailDestination.PosAmounts.base -> {
+                                navigator.push(PosScreen(storeCode, state.store?.name ?: ""))
                             }
 
                             else -> {
@@ -180,7 +188,7 @@ class StoreDetailScreen(
             ) {
                 items(state.taskList) {
                     TaskCard(name = it.name, imageUrl = it.imageUrl, it.isCompleted) {
-                        navigator.push(SampleScreens(it.name))
+                        screenModel.onEvent(StoreDetailEvent.OnTaskClick(it))
                     }
                 }
             }
@@ -224,7 +232,7 @@ private fun StoreDetailScreenPrev(
             isCompleted = false,
             imageUrl = "https://cdn-icons-png.flaticon.com/512/9342/9342023.png",
             infoText = "Bu görevde yapmanız gereken şeyler şunlardır öncelikle mağazanın önüne git",
-            route = StoreDetailDestination.ZReport.base
+            route = StoreDetailDestination.PosAmounts.base
         ),
     )
     EmployeeLiveTrackingTheme {

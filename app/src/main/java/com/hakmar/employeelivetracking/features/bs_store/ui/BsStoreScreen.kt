@@ -187,23 +187,24 @@ class BsStoreScreen : Screen {
                     if (store != null && !store.isStoreShiftEnable) {
                         viewModel.onEvent(BsStoreEvent.ShowSnackBar)
                     } else {
-                        if (!mainViewModel.isValidatedBefore(storeCode)) {
-                            val adapter =
-                                (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
-                            if (adapter != null && adapter.isEnabled) {
-                                //Yes NFC available
-                                launcherForNFC.launch(Intent(context, NFCActivity::class.java))
-                            } else if (adapter != null && !adapter.isEnabled) {
-                                //NFC is not enabled.Need to enable by the user.
-                                mainViewModel.onEvent(MainEvent.OnNfcNotOpened)
-                            } else {
-                                //NFC is not supported
-                                launcherForQr.launch(Intent(context, QrActivity::class.java))
-                            }
+                        navigator.push(StoreDetailScreen(storeCode))
+                        /*  if (!mainViewModel.isValidatedBefore(storeCode)) {
+                              val adapter =
+                                  (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
+                              if (adapter != null && adapter.isEnabled) {
+                                  //Yes NFC available
+                                  launcherForNFC.launch(Intent(context, NFCActivity::class.java))
+                              } else if (adapter != null && !adapter.isEnabled) {
+                                  //NFC is not enabled.Need to enable by the user.
+                                  mainViewModel.onEvent(MainEvent.OnNfcNotOpened)
+                              } else {
+                                  //NFC is not supported
+                                  launcherForQr.launch(Intent(context, QrActivity::class.java))
+                              }
 
-                        } else {
-                            navigator.push(StoreDetailScreen(storeCode))
-                        }
+                          } else {
+                              navigator.push(StoreDetailScreen(storeCode))
+                          }*/
                     }
 
                 }
