@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">EmployeeLiveTracking</string>
+    <string name="app_name">Saha Takip</string>
     <string name="welcome_label">Hoşgeldiniz</string>
     <string name="welcome_header">Hemen giriş yapın ve görevlerinizi tamamlamaya başlayın</string>
     <string name="login">Giriş</string>

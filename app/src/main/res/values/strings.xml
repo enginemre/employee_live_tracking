@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EmployeeLiveTracking</string>
+    <string name="app_name">Employee Live Tracking</string>
     <string name="welcome_label">Welcome</string>
     <string name="welcome_header">Let\'s login and starting to complete our task</string>
     <string name="login">Login</string>
