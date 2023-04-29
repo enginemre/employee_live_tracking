@@ -16,7 +16,6 @@ import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,9 +42,6 @@ class MainViewModel @Inject constructor(
 
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
-
-    private var exitShiftJob: Job? = null
-    private var exitStoreShiftJob: Job? = null
 
 
     override fun onEvent(event: MainEvent) {

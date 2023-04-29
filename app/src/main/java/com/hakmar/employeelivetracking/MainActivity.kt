@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.presentation.DeepLink
 import com.hakmar.employeelivetracking.common.presentation.DeepLinkController
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
@@ -20,11 +21,15 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.service.GeneralShiftService
 import com.hakmar.employeelivetracking.common.service.StoreShiftService
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var dataStoreRepository: DataStoreRepository
 
     private val deepLinkNavigation: MutableState<DeepLink> = mutableStateOf(DeepLink())
     private var isBoundGeneral by mutableStateOf(false)
@@ -81,6 +86,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun RootScreen() {
+        handleIntent(intent = intent)
         val isLogin = mainViewModel.loginStatus()
         val isFirst = mainViewModel.isFirst()
         val startDestination =
@@ -93,7 +99,7 @@ class MainActivity : ComponentActivity() {
                     Destination.Auth.base
         DeepLinkController.HandleDeepLink(
             deepLinkNavigation = deepLinkNavigation.value,
-            startDestination = startDestination
+            startDestination = startDestination,
         )
     }
 

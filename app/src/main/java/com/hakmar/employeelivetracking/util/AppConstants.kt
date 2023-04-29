@@ -3,7 +3,6 @@ package com.hakmar.employeelivetracking.util
 object AppConstants {
 
 
-
     const val BASE_URL = "https://ruhidibadli.pythonanywhere.com"
     const val TIMEOUT_SHORT = 5L
     const val TIMEOUT_LONG = 30L

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,10 +24,12 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PmStoreCard(
     storeCode: String,
-    storeName: String
+    storeName: String,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -38,7 +41,8 @@ fun PmStoreCard(
         shape = CutCornerShape(MaterialTheme.spacing.small),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
-        )
+        ),
+        onClick = { onClick() }
     ) {
         Image(
             modifier = Modifier

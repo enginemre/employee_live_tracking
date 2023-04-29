@@ -19,6 +19,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
+    name: String,
     onNotificonClick: () -> Unit
 ) {
     TopAppBar(
@@ -42,7 +43,7 @@ fun HomeTopBar(
                     )
                 )
                 Text(
-                    text = "Emre Engin", style = MaterialTheme.typography.titleMedium.copy(
+                    text = name, style = MaterialTheme.typography.titleMedium.copy(
                         color = MaterialTheme.colors.onPrimary,
                     )
                 )

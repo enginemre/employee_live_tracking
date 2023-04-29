@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.features.pm_store.di
 
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.pm_store.data.remote.PmStoreApi
 import com.hakmar.employeelivetracking.features.pm_store.data.repository.PmStoreRepositoryImpl
 import com.hakmar.employeelivetracking.features.pm_store.domain.repository.PmStoreRepository
@@ -21,9 +22,10 @@ object PmStoreDataModule {
     @Provides
     @Singleton
     fun providesPmStoreRepository(
-        pmStoreApi: PmStoreApi
+        pmStoreApi: PmStoreApi,
+        dataStoreRepository: DataStoreRepository
     ): PmStoreRepository {
-        return PmStoreRepositoryImpl(pmStoreApi)
+        return PmStoreRepositoryImpl(pmStoreApi, dataStoreRepository)
     }
 
     @Provides

@@ -76,7 +76,7 @@
     <string name="pos_amount_label">Post Amount</string>
     <string name="cashier_amount_label">Cashier Amount</string>
     <string name="difference_amount_label">Difference</string>
-    <string name="okey">Okey</string>
+    <string name="okey">Okay</string>
     <string name="error_store">Unknown error</string>
     <string name="banknotes">Banknotes</string>
     <string name="coins">Coins</string>
@@ -94,4 +94,5 @@
     <string name="successfully_steel_case_amount">Successfully</string>
     <string name="error_steel_case_amount">Please try again later</string>
     <string name="error_cashier_amount">Please enter valid cashier amount</string>
+    <string name="error_authorization">You are not authorized for this action\n</string>
 </resources>

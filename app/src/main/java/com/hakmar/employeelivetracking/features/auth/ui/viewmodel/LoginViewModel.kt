@@ -3,6 +3,8 @@ package com.hakmar.employeelivetracking.features.auth.ui.viewmodel
 import androidx.compose.ui.focus.FocusState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.hakmar.employeelivetracking.common.domain.repository.CommonRepository
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.AuthUseCases
@@ -17,12 +19,20 @@ import com.hakmar.employeelivetracking.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
+    private val commonRepository: CommonRepository,
+    private val dataStoreRepository: DataStoreRepository,
     private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LoginEvent>() {
 
@@ -32,6 +42,7 @@ class LoginViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
 
     private var loginJob: Job? = null
+
 
     override fun onEvent(event: LoginEvent) {
         when (event) {
@@ -60,6 +71,10 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLogin(userCode: String, password: String) {
+        val token = runBlocking { dataStoreRepository.stringReadKey(AppConstants.FIREBASE_TOKEN) }
+        token?.let {
+            commonRepository.sendFCMToken(token).launchIn(viewModelScope)
+        }
         loginJob?.cancel()
         loginJob = authUseCases.loginUseCase(userCode, password).onEach { resource ->
             when (resource) {

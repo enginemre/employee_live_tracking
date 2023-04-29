@@ -187,8 +187,7 @@ class BsStoreScreen : Screen {
                     if (store != null && !store.isStoreShiftEnable) {
                         viewModel.onEvent(BsStoreEvent.ShowSnackBar)
                     } else {
-                        navigator.push(StoreDetailScreen(storeCode))
-                        /*  if (!mainViewModel.isValidatedBefore(storeCode)) {
+                          if (!mainViewModel.isValidatedBefore(storeCode)) {
                               val adapter =
                                   (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
                               if (adapter != null && adapter.isEnabled) {
@@ -204,7 +203,7 @@ class BsStoreScreen : Screen {
 
                           } else {
                               navigator.push(StoreDetailScreen(storeCode))
-                          }*/
+                          }
                     }
 
                 }

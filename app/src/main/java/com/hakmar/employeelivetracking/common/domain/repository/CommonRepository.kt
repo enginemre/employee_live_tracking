@@ -10,4 +10,6 @@ interface CommonRepository {
     fun getAllStores(): Flow<Resource<List<Store>>>
 
     fun getNotifications(): Flow<Resource<List<NotificationItem>>>
+
+    fun sendFCMToken(token: String): Flow<Resource<Unit>>
 }

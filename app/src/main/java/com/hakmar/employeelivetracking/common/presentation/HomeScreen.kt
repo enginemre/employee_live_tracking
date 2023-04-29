@@ -2,9 +2,21 @@ package com.hakmar.employeelivetracking.common.presentation
 
 import android.os.Parcelable
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalAbsoluteTonalElevation
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -23,9 +35,17 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
-import com.hakmar.employeelivetracking.common.presentation.tabs.*
+import com.hakmar.employeelivetracking.common.presentation.tabs.BsTab
+import com.hakmar.employeelivetracking.common.presentation.tabs.NavigationTab
+import com.hakmar.employeelivetracking.common.presentation.tabs.PmTab
+import com.hakmar.employeelivetracking.common.presentation.tabs.ProfileTab
+import com.hakmar.employeelivetracking.common.presentation.tabs.TaskTab
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
-import com.hakmar.employeelivetracking.common.presentation.ui.components.*
+import com.hakmar.employeelivetracking.common.presentation.ui.components.AppTopBar
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackBar
+import com.hakmar.employeelivetracking.common.presentation.ui.components.DrawFloatAction
+import com.hakmar.employeelivetracking.common.presentation.ui.components.HomeTopBar
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
@@ -143,6 +163,7 @@ fun DrawTopAppBar(
                 || tabNavigator.current.key == HomeDestination.Navigation.base)
     if (isHomeBar)
         HomeTopBar(
+            name = "Emre Engin",
             onNotificonClick = {
                 onNotificationClick()
             }
