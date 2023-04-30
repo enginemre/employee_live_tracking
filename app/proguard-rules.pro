@@ -20,40 +20,15 @@
   @com.google.gson.annotations.SerializedName <fields>;
 }
 
-### Retrofit 2
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
+-keep class retrofit2.** { *; }
+-keep class okhttp3.internal.** { *; }
 
--dontwarn retrofit2.adapter.rxjava.CompletableHelper$** # https://github.com/square/retrofit/issues/2034
-#Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
-# EnclosingMethod is required to use InnerClasses.
--keepattributes Signature, InnerClasses, EnclosingMethod
-# Retain service method parameters when optimizing.
--keepclassmembers,allowshrinking,allowobfuscation interface * {
+-dontwarn okhttp3.internal.**
+-dontwarn retrofit2.**
+
+-keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
-# Retrofit does reflection on method and parameter annotations.
--keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
-# Ignore JSR 305 annotations for embedding nullability information.
--dontwarn javax.annotation.**
-# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
--dontwarn kotlin.Unit
-# Top-level functions that can only be used by Kotlin.
--dontwarn retrofit2.KotlinExtensions
--dontwarn retrofit2.KotlinExtensions$*
-# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
-# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
--if interface * { @retrofit2.http.* <methods>; }
--keep,allowobfuscation interface <1>
-
-### OkHttp3
--dontwarn okhttp3.**
--dontwarn okio.**
--dontwarn javax.annotation.**
-# A resource is loaded with a relative path so the package of this class must be preserved.
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 ### Kotlin Coroutine
 # https://github.com/Kotlin/kotlinx.coroutines/blob/master/README.md
@@ -76,30 +51,30 @@
 -dontwarn kotlinx.coroutines.flow.**
 
 # Data models
--keep class com.hakmar.employeelivetracking.common.data.remote.dto.*
--keep class com.hakmar.employeelivetracking.common.data.mapper.*
--keep class com.hakmar.employeelivetracking.common.domain.model.*
--keep class com.hakmar.employeelivetracking.features.auth.data.remote.dto.*
--keep class com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.*
--keep class com.hakmar.employeelivetracking.features.bs_store.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.bs_store.domain.model.*
--keep class com.hakmar.employeelivetracking.features.navigation.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.navigation.domain.model.*
--keep class com.hakmar.employeelivetracking.features.notification.domain.model.*
--keep class com.hakmar.employeelivetracking.features.pm_store.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.pm_store.domain.model.*
--keep class com.hakmar.employeelivetracking.features.profile.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.profile.domain.model.*
--keep class com.hakmar.employeelivetracking.features.qr_screen.data.*
--keep class com.hakmar.employeelivetracking.features.store_detail.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.store_detail.data.remote.dto.*
--keep class com.hakmar.employeelivetracking.features.store_detail.domain.model.*
--keep class com.hakmar.employeelivetracking.features.store_detail_tasks.data.remote.dto.*
--keep class com.hakmar.employeelivetracking.features.store_detail_tasks.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.store_detail_tasks.domain.model.*
--keep class com.hakmar.employeelivetracking.features.tasks.domain.model.*
--keep class com.hakmar.employeelivetracking.features.tasks.data.mapper.*
--keep class com.hakmar.employeelivetracking.features.tasks.domain.model.*
+-keep class com.hakmar.employeelivetracking.common.data.remote.dto.* { *; }
+-keep class com.hakmar.employeelivetracking.common.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.common.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.auth.data.remote.dto.* { *; }
+-keep class com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.* { *; }
+-keep class com.hakmar.employeelivetracking.features.bs_store.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.bs_store.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.navigation.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.navigation.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.notification.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.pm_store.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.pm_store.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.profile.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.profile.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.qr_screen.data.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail.data.remote.dto.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail_tasks.data.remote.dto.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail_tasks.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.store_detail_tasks.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.tasks.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.tasks.data.mapper.* { *; }
+-keep class com.hakmar.employeelivetracking.features.tasks.domain.model.* { *; }
 
 
 

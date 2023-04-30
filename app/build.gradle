@@ -30,18 +30,14 @@ android {
         staging {
             applicationIdSuffix ".staging"
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/elt_app_icon",
-            ]
             signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/elt_app_icon",
-            ]
         }
     }
     compileOptions {
