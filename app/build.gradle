@@ -6,6 +6,7 @@
      id 'kotlin-parcelize'
      id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
      id 'com.google.gms.google-services'
+     id 'com.google.firebase.appdistribution'
  }
 
 android {
@@ -26,9 +27,21 @@ android {
     }
 
     buildTypes {
+        staging {
+            applicationIdSuffix ".staging"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/elt_app_icon",
+            ]
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/elt_app_icon",
+            ]
         }
     }
     compileOptions {
@@ -139,6 +152,5 @@ dependencies {
     // JsonSerialize
     implementation("com.google.code.gson:gson:2.10.1")
     implementation 'com.auth0.android:jwtdecode:2.0.2'
-
 
 }
