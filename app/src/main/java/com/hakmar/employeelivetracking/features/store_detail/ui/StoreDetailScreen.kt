@@ -101,11 +101,11 @@ class StoreDetailScreen(
                     is UiEvent.Navigate<*> -> {
                         when (event.route) {
                             StoreDetailDestination.StoreInside.base -> {
-                                navigator.push(StoreInsideScreen())
+                                navigator.push(StoreInsideScreen(storeCode))
                             }
 
                             StoreDetailDestination.StoreOutside.base -> {
-                                navigator.push(StoreOutsideScreen())
+                                navigator.push(StoreOutsideScreen(storeCode))
                             }
 
                             StoreDetailDestination.SteelCaseAmounts.base -> {

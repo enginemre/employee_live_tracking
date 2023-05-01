@@ -577,7 +577,6 @@ fun BsStoreScreenPrev() {
 }
 
 fun LazyListScope.storeList(list: List<Store>, onClick: (String) -> Unit) {
-
     items(list) { item ->
         StoreCardItem(
             storeName = item.name,

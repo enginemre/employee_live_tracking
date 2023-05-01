@@ -74,7 +74,7 @@
 -keep class com.hakmar.employeelivetracking.features.store_detail_tasks.domain.model.* { *; }
 -keep class com.hakmar.employeelivetracking.features.tasks.domain.model.* { *; }
 -keep class com.hakmar.employeelivetracking.features.tasks.data.mapper.* { *; }
--keep class com.hakmar.employeelivetracking.features.tasks.domain.model.* { *; }
+-keep class com.hakmar.employeelivetracking.features.tasks.data.remote.dto.* { *; }
 
 
 

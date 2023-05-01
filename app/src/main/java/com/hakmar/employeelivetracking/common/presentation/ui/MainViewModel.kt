@@ -190,5 +190,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getUserName(): String {
+        val name = runBlocking { dataStoreRepository.stringReadKey(AppConstants.NAME_SURNAME) }
+        return name.orEmpty()
+    }
+
+    fun saveUser(name: String) {
+        _userState.update {
+            it.copy(
+                nameSurname = name
+            )
+        }
+    }
+
 
 }

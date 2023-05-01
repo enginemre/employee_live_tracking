@@ -3,6 +3,7 @@ package com.hakmar.employeelivetracking.features.store_detail_tasks.data.reposit
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.store_detail_tasks.data.mapper.toAnswerDto
+import com.hakmar.employeelivetracking.features.store_detail_tasks.data.mapper.toCheckItem
 import com.hakmar.employeelivetracking.features.store_detail_tasks.data.remote.StoreTaskApi
 import com.hakmar.employeelivetracking.features.store_detail_tasks.data.remote.dto.StoreCheckListRequestBodyDto
 import com.hakmar.employeelivetracking.features.store_detail_tasks.domain.model.CheckItem
@@ -26,7 +27,7 @@ class StoreInsideRepositoryImpl @Inject constructor(
                 emit(Resource.Loading())
                 val result = storeTaskApi.getStoreInsideCheckList()
                 if (result.response.success) {
-                    emit(Resource.Success(result.data))
+                    emit(Resource.Success(result.data.map { it.toCheckItem() }))
                 } else
                     emit(Resource.Error(UiText.DynamicString(result.response.message)))
             } catch (e: SocketTimeoutException) {

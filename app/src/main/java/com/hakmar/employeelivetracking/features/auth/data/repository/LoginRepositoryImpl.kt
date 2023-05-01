@@ -5,6 +5,7 @@ import com.hakmar.employeelivetracking.common.domain.repository.DataStoreReposit
 import com.hakmar.employeelivetracking.features.auth.data.remote.LoginApi
 import com.hakmar.employeelivetracking.features.auth.data.remote.dto.LoginBodyDto
 import com.hakmar.employeelivetracking.features.auth.domain.repository.LoginRepository
+import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.UiText
@@ -18,7 +19,7 @@ class LoginRepositoryImpl @Inject constructor(
     val dataStore: DataStoreRepository,
     val loginApi: LoginApi
 ) : LoginRepository {
-    override fun login(userCode: String, password: String): Flow<Resource<Unit>> {
+    override fun login(userCode: String, password: String): Flow<Resource<User>> {
         return flow {
             try {
                 emit(Resource.Loading())
@@ -32,7 +33,18 @@ class LoginRepositoryImpl @Inject constructor(
                     emit(Resource.Loading())
                     dataStore.stringPutKey(AppConstants.USER_ID, apiResult.data.id)
                     dataStore.intPutKey(AppConstants.IS_LOGIN, 1)
-                    emit(Resource.Success(Unit))
+                    dataStore.stringPutKey(
+                        AppConstants.NAME_SURNAME,
+                        apiResult.data.firstName + " " + apiResult.data.lastName
+                    )
+                    emit(
+                        Resource.Success(
+                            User(
+                                apiResult.data.firstName + " " + apiResult.data.lastName,
+                                ""
+                            )
+                        )
+                    )
                 } else {
                     emit(
                         Resource.Error(

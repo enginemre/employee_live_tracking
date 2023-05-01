@@ -96,4 +96,8 @@
     <string name="error_cashier_amount">Please enter valid cashier amount</string>
     <string name="error_authorization">You are not authorized for this action\n</string>
     <string name="distance_far_away">Your location far away from store</string>
+    <string name="successfully_sent">Successfully sent</string>
+    <string name="error_can_not_send_without_modify">You can not send without modify</string>
+    <string name="store_inside_title">Store Inside Check</string>
+    <string name="store_outside_title">Store Outside Check</string>
 </resources>

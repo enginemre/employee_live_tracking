@@ -32,6 +32,7 @@ object AppConstants {
     const val FIREBASE_TOKEN = "fcm_token"
     const val CURRENT_STORE_CODE = "current_store_code"
     const val IS_STORE_VALIDATE = "is_store_validate"
+    const val NAME_SURNAME = "user_name"
 
     const val NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT = "notification_channel_id_general"
     const val NOTIFICATION_CHANNEL_ID_STORE_SHIFT = "notification_channel_id_general"

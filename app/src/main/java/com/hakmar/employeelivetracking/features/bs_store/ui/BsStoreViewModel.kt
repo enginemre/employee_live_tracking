@@ -16,7 +16,9 @@ import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestinatio
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.service.GeneralShiftServiceManager
+import com.hakmar.employeelivetracking.common.service.StoreShiftServiceManager
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.BsStoreUseCases
+import com.hakmar.employeelivetracking.features.store_detail.domain.usecase.GetStoreShiftStatusUseCase
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.SnackBarType
@@ -41,7 +43,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BsStoreViewModel @Inject constructor(
     private val generalShiftServiceManager: GeneralShiftServiceManager,
+    private val storeShiftServiceManager: StoreShiftServiceManager,
     private val bsStoreUseCases: BsStoreUseCases,
+    private val initStoreShiftStatusUseCase: GetStoreShiftStatusUseCase,
     private val dataStoreRepository: DataStoreRepository
 ) : BaseViewModel<BsStoreEvent>() {
 
@@ -64,6 +68,7 @@ class BsStoreViewModel @Inject constructor(
     private var resumeShiftJob: Job? = null
     private var getStoresJob: Job? = null
     private var getStatusShiftsJob: Job? = null
+    private var getStatusStoreShiftJob: Job? = null
 
 
     override fun onEvent(event: BsStoreEvent) {
@@ -338,7 +343,89 @@ class BsStoreViewModel @Inject constructor(
 
     private fun initInfo() {
         initStatus()
+        initStoreStatus()
         getStores()
+    }
+
+    private fun initStoreStatus() {
+        val storedStore =
+            runBlocking { dataStoreRepository.stringReadKey(AppConstants.CURRENT_STORE_CODE) }
+        if (!storedStore.isNullOrEmpty()) {
+            getStatusStoreShiftJob?.cancel()
+            getStatusStoreShiftJob = initStoreShiftStatusUseCase(storedStore).onEach { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                        resource.data?.let { timerStatus ->
+                            when (timerStatus.status) {
+                                "started" -> {
+                                    _state.update {
+                                        it.copy(
+                                            isLoading = false,
+                                            seconds = timerStatus.timer.second,
+                                            hours = timerStatus.timer.hour,
+                                            minutes = timerStatus.timer.minute,
+                                            isPlaying = TimerState.Started,
+                                        )
+                                    }
+                                    startStoreShiftService(
+                                        storeCode = storedStore,
+                                        seconds = timerStatus.timer.second,
+                                        hours = timerStatus.timer.hour,
+                                        minutes = timerStatus.timer.minute
+                                    )
+                                }
+
+                                else -> {}
+                            }
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                    }
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    private fun startStoreShiftService(
+        storeCode: String,
+        seconds: String,
+        minutes: String,
+        hours: String
+    ) {
+        val pausedTime =
+            convertStringToDuration(seconds, minutes, hours)
+        pausedTime?.let {
+            storeShiftServiceManager.triggerForegroundService(
+                AppConstants.ACTION_STORE_SHIFT_TIME_START,
+                it.toString(),
+                storeCode
+            )
+        } ?: kotlin.run {
+            storeShiftServiceManager.triggerForegroundService(
+                AppConstants.ACTION_STORE_SHIFT_TIME_START,
+                storeCode = storeCode
+            )
+        }
+
     }
 
     private fun initStatus() {

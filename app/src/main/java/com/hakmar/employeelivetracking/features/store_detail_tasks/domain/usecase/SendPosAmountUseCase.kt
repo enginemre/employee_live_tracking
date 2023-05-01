@@ -29,7 +29,8 @@ class SendPosAmountUseCase @Inject constructor(
             hashMapOf(
                 DIFFERENCE_KEY to difference.toFloat(),
                 POS_AMOUNT_KEY to posAmount.toFloat(),
-                CASHIER_AMOUNT_KEY to cashierAmount.toFloat()
+                CASHIER_AMOUNT_KEY to cashierAmount.toFloat(),
+                STORE_CODE to storeCode
             )
         )
     }
@@ -38,5 +39,6 @@ class SendPosAmountUseCase @Inject constructor(
         private const val DIFFERENCE_KEY = "difference"
         private const val POS_AMOUNT_KEY = "pos_amount"
         private const val CASHIER_AMOUNT_KEY = "cashier_amount"
+        private const val STORE_CODE = "store_code"
     }
 }

@@ -87,4 +87,8 @@
     <string name="error_cashier_amount">Geçerli kasiyer miktarı giriniz</string>
     <string name="error_authorization">Bu işlem için yetkiniz bulunmamaktadır\n</string>
     <string name="distance_far_away">Mağazanın yakınında olduğunuza emin olunuz</string>
+    <string name="successfully_sent">Başarıyla gönderildi</string>
+    <string name="error_can_not_send_without_modify">Hiç bir değişiklik yapmadınız</string>
+    <string name="store_inside_title">Mağaza İçi Kontrol</string>
+    <string name="store_outside_title">Mağaza Önü Kontrol</string>
 </resources>

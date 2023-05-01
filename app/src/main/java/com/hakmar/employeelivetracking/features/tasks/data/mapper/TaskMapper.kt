@@ -4,10 +4,9 @@ import androidx.compose.ui.graphics.Color
 import com.hakmar.employeelivetracking.features.tasks.data.remote.dto.TaskDto
 import com.hakmar.employeelivetracking.features.tasks.data.remote.dto.TaskRequestBodyDto
 import com.hakmar.employeelivetracking.features.tasks.domain.model.Task
-import kotlin.random.Random
 
 fun TaskDto.toTask(): Task {
-    val randomColor = Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+    val randomColor = colorList.random()
     return Task(
         id = id,
         title = title,
@@ -24,3 +23,11 @@ fun Task.toTaskRequestBodyDto(): TaskRequestBodyDto {
         storeCode = storeCode
     )
 }
+
+val colorList = listOf<Color>(
+    Color.Cyan,
+    Color.Yellow,
+    Color.Magenta,
+    Color.Green,
+    Color.LightGray,
+)

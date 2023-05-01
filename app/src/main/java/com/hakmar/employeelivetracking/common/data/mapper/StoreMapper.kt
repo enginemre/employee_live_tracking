@@ -8,9 +8,9 @@ fun StoreDto.toStore(): Store {
         id = storeUuid,
         code = storeCode,
         name = storeName,
-        completedTask = 2,
-        taskCount = 5,
-        passedTime = "2 saat 12 dk",
+        completedTask = completedTask?.toIntOrNull() ?: 0,
+        taskCount = taskCount.toIntOrNull() ?: 4,
+        passedTime = storeTimerStatus ?: "0 dk",
         longtitude = storeLongitude.toDouble(),
         lattitude = storeLatitude.toDouble(),
         areaCode = areaCode,
@@ -18,6 +18,6 @@ fun StoreDto.toStore(): Store {
         distirctManager = districtManager.toDistirctManager(),
         regionalManager = regionalDirector.toRegionalManager(),
         isStoreShiftEnable = isStoreShiftDisable,
-        address = address
+        address = address ?: "",
     )
 }

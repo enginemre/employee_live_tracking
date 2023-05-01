@@ -163,7 +163,7 @@ fun DrawTopAppBar(
                 || tabNavigator.current.key == HomeDestination.Navigation.base)
     if (isHomeBar)
         HomeTopBar(
-            name = "Emre Engin",
+            name = mainViewModel.getUserName(),
             onNotificonClick = {
                 onNotificationClick()
             }

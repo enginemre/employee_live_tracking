@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.HomeScreen
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.*
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
@@ -37,6 +38,7 @@ import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.L
 import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.PasswordIcon
 import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.UserIcon
 import com.hakmar.employeelivetracking.features.auth.ui.viewmodel.LoginViewModel
+import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.getContainerColor
 import com.hakmar.employeelivetracking.util.getContentColor
@@ -51,6 +53,7 @@ class LoginScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = getViewModel<LoginViewModel>()
+        val mainViewModel = getViewModel<MainViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val keyboardController = LocalSoftwareKeyboardController.current
         val context = LocalContext.current
@@ -72,9 +75,15 @@ class LoginScreen : Screen {
                         }
 
                     }
+
+                    is UiEvent.Intent<*> -> {
+                        mainViewModel.saveUser((event.data as User).nameSurname)
+                    }
+
                     is UiEvent.Navigate<*> -> {
                         navigator.replaceAll(HomeScreen())
                     }
+
                     else -> Unit
                 }
             }

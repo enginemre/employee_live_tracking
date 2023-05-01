@@ -12,6 +12,7 @@ import com.hakmar.employeelivetracking.features.auth.domain.usecase.UserValidate
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent
 import com.hakmar.employeelivetracking.features.auth.presentation.LoginFields
 import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginState
+import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.SnackBarType
@@ -49,9 +50,11 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.OnFocused -> {
                 onFocused(event.focusState, type = event.type)
             }
+
             is LoginEvent.OnLoginClick -> {
                 validateLogin()
             }
+
             is LoginEvent.OnTextChange -> {
                 if (event.type == LoginFields.UserText)
                     _state.update {
@@ -66,7 +69,6 @@ class LoginViewModel @Inject constructor(
                         )
                     }
             }
-            else -> {}
         }
     }
 
@@ -81,9 +83,12 @@ class LoginViewModel @Inject constructor(
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
-                            isLoading = false
+                            isLoading = false,
                         )
                     }
+                    _uiEvent.send(
+                        UiEvent.Intent(User(nameSurname = resource.data?.nameSurname ?: "", ""))
+                    )
                     savedStateHandle[AppConstants.IS_LOGIN] = 1
                     _uiEvent.send(
                         UiEvent.Navigate(
@@ -92,6 +97,7 @@ class LoginViewModel @Inject constructor(
                         )
                     )
                 }
+
                 is Resource.Loading -> {
                     _state.update {
                         it.copy(
@@ -99,6 +105,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Resource.Error -> {
                     _state.update {
                         it.copy(
@@ -127,6 +134,7 @@ class LoginViewModel @Inject constructor(
                     )
                 )
             }
+
             is UserValidateUseCase.LoginValidationResult.Success -> {
                 onLogin(validate.userCode, validate.password)
             }
@@ -141,6 +149,7 @@ class LoginViewModel @Inject constructor(
                         focusState.isFocused -> {
                             true
                         }
+
                         else -> {
                             false
                         }
@@ -154,6 +163,7 @@ class LoginViewModel @Inject constructor(
                         focusState.isFocused -> {
                             true
                         }
+
                         else -> {
                             false
                         }

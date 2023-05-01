@@ -26,6 +26,14 @@ data class StoreDto(
     val storeName: String,
     @SerializedName("store_uuid")
     val storeUuid: String,
+    @SerializedName("store_email")
+    val storeEmail: String?,
     @SerializedName("address")
-    val address: String
+    val address: String?,
+    @SerializedName("taskCount")
+    val taskCount: String,
+    @SerializedName("completedTask")
+    val completedTask: String?,
+    @SerializedName("store_timer_status")
+    val storeTimerStatus: String?,
 )
