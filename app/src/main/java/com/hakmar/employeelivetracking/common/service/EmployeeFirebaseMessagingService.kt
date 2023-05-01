@@ -81,7 +81,7 @@ class EmployeeFirebaseMessagingService : FirebaseMessagingService() {
                     addNextIntentWithParentStack(intent)
                     getPendingIntent(
                         AppConstants.STORE_SHIFT_CLICK_REQUEST_CODE,
-                        PendingIntent.FLAG_ONE_SHOT
+                        PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
                     )!!
                 }
                 notification

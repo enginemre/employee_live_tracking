@@ -73,10 +73,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLogin(userCode: String, password: String) {
-        val token = runBlocking { dataStoreRepository.stringReadKey(AppConstants.FIREBASE_TOKEN) }
-        token?.let {
-            commonRepository.sendFCMToken(token).launchIn(viewModelScope)
-        }
         loginJob?.cancel()
         loginJob = authUseCases.loginUseCase(userCode, password).onEach { resource ->
             when (resource) {
@@ -85,6 +81,11 @@ class LoginViewModel @Inject constructor(
                         it.copy(
                             isLoading = false,
                         )
+                    }
+                    val token =
+                        runBlocking { dataStoreRepository.stringReadKey(AppConstants.FIREBASE_TOKEN) }
+                    token?.let {
+                        commonRepository.sendFCMToken(token).launchIn(viewModelScope)
                     }
                     _uiEvent.send(
                         UiEvent.Intent(User(nameSurname = resource.data?.nameSurname ?: "", ""))

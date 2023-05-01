@@ -4,7 +4,6 @@ import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.data.mapper.toNotification
 import com.hakmar.employeelivetracking.common.data.mapper.toStore
 import com.hakmar.employeelivetracking.common.data.remote.GeneralApi
-import com.hakmar.employeelivetracking.common.data.remote.dto.SendTokenBodyDto
 import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.domain.repository.CommonRepository
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
@@ -105,7 +104,11 @@ class CommonRepositoryImpl @Inject constructor(
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let { id ->
                     emit(Resource.Loading())
-                    val result = api.sendFirebaseToken(id, SendTokenBodyDto(token))
+                    val result = api.sendFirebaseToken(
+                        id, mapOf(
+                            "firebase_token" to token
+                        )
+                    )
                     if (result.response.success)
                         emit(Resource.Success(Unit))
                     else
