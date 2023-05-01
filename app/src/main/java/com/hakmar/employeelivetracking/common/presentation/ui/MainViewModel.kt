@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<MainEvent>() {
 
     private val _appBarState = MutableStateFlow(AppBarState())
@@ -123,7 +123,7 @@ class MainViewModel @Inject constructor(
                 }
             }
         } catch (e: SecurityException) {
-
+            e.printStackTrace()
         }
     }
 
@@ -132,14 +132,6 @@ class MainViewModel @Inject constructor(
             dataStoreRepository.intPutKey(AppConstants.IS_LOGIN, 0)
             dataStoreRepository.clearDataStore(AppConstants.USER_ID)
         }
-    }
-
-    fun isValidatedBefore(storeCode: String): Boolean {
-        val storedStore =
-            runBlocking { dataStoreRepository.stringReadKey(AppConstants.CURRENT_STORE_CODE) }
-        val isValidated =
-            runBlocking { dataStoreRepository.intReadKey(AppConstants.IS_STORE_VALIDATE) }
-        return storeCode == storedStore && isValidated == 1
     }
 
     private fun getNFCData(nfcCode: String?, storeCode: String) {

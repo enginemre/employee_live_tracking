@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
+import com.google.android.gms.location.LocationServices
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.presentation.DeepLink
 import com.hakmar.employeelivetracking.common.presentation.DeepLinkController
@@ -69,6 +70,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        try {
+            val client = LocationServices.getFusedLocationProviderClient(this)
+            mainViewModel.getUserLocation(client)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         Intent(this, GeneralShiftService::class.java).also {
             bindService(it, generalShiftConnection, BIND_AUTO_CREATE)
         }

@@ -2,8 +2,17 @@ package com.hakmar.employeelivetracking.features.bs_store.ui
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.domain.model.Store
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
+import com.hakmar.employeelivetracking.common.domain.usecases.CaclulateDistanceUseCase
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.service.GeneralShiftServiceManager
@@ -14,6 +23,7 @@ import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
+import com.hakmar.employeelivetracking.util.await
 import com.hakmar.employeelivetracking.util.convertStringToDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -25,12 +35,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class BsStoreViewModel @Inject constructor(
     private val generalShiftServiceManager: GeneralShiftServiceManager,
-    private val bsStoreUseCases: BsStoreUseCases
+    private val bsStoreUseCases: BsStoreUseCases,
+    private val dataStoreRepository: DataStoreRepository
 ) : BaseViewModel<BsStoreEvent>() {
 
     private var _state = MutableStateFlow(BsStoreState())
@@ -41,6 +53,10 @@ class BsStoreViewModel @Inject constructor(
 
     init {
         initInfo()
+    }
+
+    companion object {
+        const val NFC_OP = "nfc_op"
     }
 
     private var startShiftJob: Job? = null
@@ -57,9 +73,7 @@ class BsStoreViewModel @Inject constructor(
             }
 
             is BsStoreEvent.OnStoreClick -> {
-                event.data?.let {
-                    updateStoreCode(it.code)
-                }
+                onStoreClick(event.data, event.fusedLocationProviderClient)
             }
 
             is BsStoreEvent.OnTick -> {
@@ -69,9 +83,26 @@ class BsStoreViewModel @Inject constructor(
             BsStoreEvent.Idle -> {
                 initInfo()
             }
+        }
+    }
 
-            BsStoreEvent.ShowSnackBar -> {
+    private fun onStoreClick(
+        data: Store?,
+        fusedLocationProviderClient: FusedLocationProviderClient
+    ) {
+        data?.let { store ->
+            _state.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
+            if (!store.isStoreShiftEnable) {
                 viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
                     _uiEvent.send(
                         UiEvent.ShowSnackBar(
                             message = UiText.StringResorce(R.string.error_shift_completed),
@@ -79,7 +110,54 @@ class BsStoreViewModel @Inject constructor(
                         )
                     )
                 }
-
+            } else {
+                viewModelScope.launch {
+                    if (!isValidatedBefore(store.code)) {
+                        updateStoreCode(store.code)
+                        val isInArea = isInArea(
+                            fusedLocationProviderClient,
+                            store.longtitude,
+                            store.lattitude
+                        )
+                        if (isInArea) {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false
+                                )
+                            }
+                            _uiEvent.send(
+                                UiEvent.Navigate(
+                                    route = NFC_OP,
+                                    data = null
+                                )
+                            )
+                        } else {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false
+                                )
+                            }
+                            _uiEvent.send(
+                                UiEvent.ShowSnackBar(
+                                    UiText.StringResorce(R.string.distance_far_away),
+                                    SnackBarType.ERROR
+                                )
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                        _uiEvent.send(
+                            UiEvent.Navigate(
+                                route = HomeDestination.StoreDetail.base,
+                                data = store.code
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -386,6 +464,46 @@ class BsStoreViewModel @Inject constructor(
             it.copy(
                 selectedStoreCode = storeCode
             )
+        }
+    }
+
+    private fun isValidatedBefore(storeCode: String): Boolean {
+        val storedStore =
+            runBlocking { dataStoreRepository.stringReadKey(AppConstants.CURRENT_STORE_CODE) }
+        val isValidated =
+            runBlocking { dataStoreRepository.intReadKey(AppConstants.IS_STORE_VALIDATE) }
+        return storeCode == storedStore && isValidated == 1
+    }
+
+    private suspend fun isInArea(
+        fusedLocationProviderClient: FusedLocationProviderClient,
+        targetLat: Double,
+        targetLon: Double
+    ): Boolean {
+        var isInArea = false
+        try {
+            val locationResult = fusedLocationProviderClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                object : CancellationToken() {
+                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                        CancellationTokenSource().token
+
+                    override fun isCancellationRequested() = false
+                }).await()
+            val result = bsStoreUseCases.calculateDistanceUseCase(
+                locationResult.latitude,
+                locationResult.longitude,
+                targetLat,
+                targetLon
+            )
+            isInArea = when (result) {
+                is CaclulateDistanceUseCase.ResultDistance.FarAway -> false
+                CaclulateDistanceUseCase.ResultDistance.Near -> true
+            }
+            return isInArea
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            return isInArea
         }
     }
 

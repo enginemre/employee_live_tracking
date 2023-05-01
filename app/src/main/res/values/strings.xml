@@ -95,4 +95,5 @@
     <string name="error_steel_case_amount">Please try again later</string>
     <string name="error_cashier_amount">Please enter valid cashier amount</string>
     <string name="error_authorization">You are not authorized for this action\n</string>
+    <string name="distance_far_away">Your location far away from store</string>
 </resources>

@@ -25,8 +25,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.android.gms.location.LocationServices
 import com.hakmar.employeelivetracking.common.domain.model.DistirctManager
 import com.hakmar.employeelivetracking.common.domain.model.MarketingManager
 import com.hakmar.employeelivetracking.common.domain.model.ProfileUser
@@ -60,6 +60,7 @@ class BsStoreScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val snackbarHostState = LocalSnackbarHostState.current
         val context = LocalContext.current
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         val launcherForNFC =
             rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == Activity.RESULT_OK)
@@ -111,6 +112,21 @@ class BsStoreScreen : Screen {
                         when (event.route) {
                             HomeDestination.StoreDetail.base -> {
                                 navigator.push(StoreDetailScreen(event.data as String))
+                            }
+
+                            BsStoreViewModel.NFC_OP -> {
+                                val adapter =
+                                    (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
+                                if (adapter != null && adapter.isEnabled) {
+                                    //Yes NFC available
+                                    launcherForNFC.launch(Intent(context, NFCActivity::class.java))
+                                } else if (adapter != null && !adapter.isEnabled) {
+                                    //NFC is not enabled.Need to enable by the user.
+                                    mainViewModel.onEvent(MainEvent.OnNfcNotOpened)
+                                } else {
+                                    //NFC is not supported
+                                    launcherForQr.launch(Intent(context, QrActivity::class.java))
+                                }
                             }
                         }
                     }
@@ -181,31 +197,9 @@ class BsStoreScreen : Screen {
                 }
             }
             state.value.storeList?.let {
-                storeList(it, navigator = navigator) { storeCode ->
+                storeList(it) { storeCode ->
                     val store = it.find { store -> storeCode == store.code }
-                    viewModel.onEvent(BsStoreEvent.OnStoreClick(store))
-                    if (store != null && !store.isStoreShiftEnable) {
-                        viewModel.onEvent(BsStoreEvent.ShowSnackBar)
-                    } else {
-                          if (!mainViewModel.isValidatedBefore(storeCode)) {
-                              val adapter =
-                                  (context.getSystemService(Context.NFC_SERVICE) as? NfcManager)?.defaultAdapter
-                              if (adapter != null && adapter.isEnabled) {
-                                  //Yes NFC available
-                                  launcherForNFC.launch(Intent(context, NFCActivity::class.java))
-                              } else if (adapter != null && !adapter.isEnabled) {
-                                  //NFC is not enabled.Need to enable by the user.
-                                  mainViewModel.onEvent(MainEvent.OnNfcNotOpened)
-                              } else {
-                                  //NFC is not supported
-                                  launcherForQr.launch(Intent(context, QrActivity::class.java))
-                              }
-
-                          } else {
-                              navigator.push(StoreDetailScreen(storeCode))
-                          }
-                    }
-
+                    viewModel.onEvent(BsStoreEvent.OnStoreClick(store, fusedLocationProviderClient))
                 }
             }
 
@@ -576,15 +570,13 @@ fun BsStoreScreenPrev() {
                     )
                 }
             }
-            storeList(list, null) {
-
-            }
+            storeList(list) {}
 
         }
     }
 }
 
-fun LazyListScope.storeList(list: List<Store>, navigator: Navigator?, onClick: (String) -> Unit) {
+fun LazyListScope.storeList(list: List<Store>, onClick: (String) -> Unit) {
 
     items(list) { item ->
         StoreCardItem(
@@ -595,8 +587,6 @@ fun LazyListScope.storeList(list: List<Store>, navigator: Navigator?, onClick: (
             completedTaskCount = item.completedTask,
             onClick = {
                 onClick(item.code)
-
-                //navigator?.push(StoreDetailScreen(it))
             }
         )
     }
