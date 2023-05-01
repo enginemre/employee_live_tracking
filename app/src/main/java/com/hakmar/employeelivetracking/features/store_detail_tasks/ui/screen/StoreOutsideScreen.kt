@@ -165,7 +165,7 @@ private fun StoreOutsideScreenPrev() {
                 }
                 items(
                     count = 10
-                ) { bodyIndex ->
+                ) {
                     StoreCheckCard(
                         modifier = Modifier.padding(
                             vertical = MaterialTheme.spacing.small,

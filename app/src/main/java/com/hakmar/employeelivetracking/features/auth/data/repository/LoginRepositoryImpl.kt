@@ -25,8 +25,8 @@ class LoginRepositoryImpl @Inject constructor(
                 emit(Resource.Loading())
                 val apiResult = loginApi.login(
                     loginBodyDto = LoginBodyDto(
-                        username = "testadmin",
-                        password = "testuser",
+                        username = userCode,
+                        password = password,
                     )
                 )
                 if (apiResult.response.success) {

@@ -109,6 +109,7 @@ class NFCActivity : ComponentActivity() {
     }
 
 
+    @Suppress("DEPRECATION")
     private fun handleIntent(intent: Intent?) {
         val action = intent?.action
         if (NfcAdapter.ACTION_TAG_DISCOVERED == action

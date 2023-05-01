@@ -18,7 +18,12 @@ import com.hakmar.employeelivetracking.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -75,6 +80,7 @@ class TaskDetailViewModel @Inject constructor(
                 else
                     createTask()
             }
+
             TaskDetailEvent.OnDeleteTask -> {
                 deleteTask()
             }
@@ -82,8 +88,8 @@ class TaskDetailViewModel @Inject constructor(
     }
 
 
-    fun getTask(id: Int?) {
-        id?.let { id ->
+    fun getTask(data: Int?) {
+        data?.let { id ->
             if (id != 0) {
                 getTaskById?.cancel()
                 getTaskById = getTaskByIdUseCase(id).onEach { resource ->

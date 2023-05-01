@@ -1,7 +1,12 @@
 package com.hakmar.employeelivetracking.features.profile.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,8 +43,6 @@ class PrivatePolicyScreen : Screen {
     override fun Content() {
         val mainViewModel = getViewModel<MainViewModel>()
         val title = stringResource(id = com.hakmar.employeelivetracking.R.string.private_policy)
-        val ppText =
-            stringResource(id = com.hakmar.employeelivetracking.R.string.private_policy_text)
         val navigator = LocalNavigator.currentOrThrow
         LaunchedEffect(key1 = Unit) {
             mainViewModel.updateAppBar(

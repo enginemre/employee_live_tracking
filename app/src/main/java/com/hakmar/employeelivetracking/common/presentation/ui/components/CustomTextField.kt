@@ -28,7 +28,6 @@ fun CustomTextField(
     hint: String,
     keyboardType: KeyboardType,
     onValueChange: (String) -> Unit,
-    isVisible: Boolean = false,
     trailIcon: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     imeAction: ImeAction = ImeAction.Next,
