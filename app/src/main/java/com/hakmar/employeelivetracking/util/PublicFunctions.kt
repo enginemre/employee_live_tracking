@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
-import com.auth0.android.jwt.JWT
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Warning
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.White
+import io.jsonwebtoken.Jwts
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -49,18 +49,15 @@ fun convertStringToDuration(seconds: String, minutes: String, hours: String): Du
 
 fun decodeJwt(token: String): String? {
     return try {
-        val jwt = JWT(token)
-        val user = jwt.getClaim("user").asString()
-//        val uuid = jwt.getClaim("user_uuid").asString()
-//        val storeCode = jwt.getClaim("nameid").asString()
-        val isExpired = jwt.isExpired(3)
-        if (!isExpired) user else null
+        val jwtParser = Jwts.parserBuilder()
+            .setSigningKey("asdv234234^&%&^%&^hjsdfb2%%%anambabamburdayam".toByteArray()).build()
+        val claims = jwtParser.parseClaimsJws(token).body
+        val storeCode = claims["nameid"] as? String
+        storeCode
     } catch (e: Exception) {
         null
     }
-
 }
-
 
 fun getContainerColor(type: SnackBarType) = when (type) {
     SnackBarType.WARNING -> Warning

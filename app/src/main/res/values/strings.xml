@@ -100,4 +100,8 @@
     <string name="error_can_not_send_without_modify">You can not send without modify</string>
     <string name="store_inside_title">Store Inside Check</string>
     <string name="store_outside_title">Store Outside Check</string>
+    <string name="do_you_want_to_mark_as_completed">"Do you want to mark as completed ? "</string>
+    <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="succesfully_completed">Successfuly completed</string>
 </resources>

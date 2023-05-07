@@ -1,11 +1,15 @@
-package com.hakmar.employeelivetracking.features.navigation.ui
+ package com.hakmar.employeelivetracking.features.navigation.ui
 
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +27,12 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.Circle
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
@@ -37,7 +46,7 @@ import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.getContainerColor
 import com.hakmar.employeelivetracking.util.getContentColor
 
-class NavigationScreen : Screen {
+ class NavigationScreen : Screen {
 
     override val key: ScreenKey
         get() = HomeDestination.Navigation.base

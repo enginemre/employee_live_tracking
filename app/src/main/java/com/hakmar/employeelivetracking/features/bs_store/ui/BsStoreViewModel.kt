@@ -10,7 +10,7 @@ import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
-import com.hakmar.employeelivetracking.common.domain.usecases.CaclulateDistanceUseCase
+import com.hakmar.employeelivetracking.common.domain.usecases.CalculateDistanceUseCase
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Green40
@@ -121,8 +121,8 @@ class BsStoreViewModel @Inject constructor(
                         updateStoreCode(store.code)
                         val isInArea = isInArea(
                             fusedLocationProviderClient,
-                            store.longtitude,
-                            store.lattitude
+                            store.lattitude,
+                            store.longtitude
                         )
                         if (isInArea) {
                             _state.update {
@@ -584,8 +584,8 @@ class BsStoreViewModel @Inject constructor(
                 targetLon
             )
             isInArea = when (result) {
-                is CaclulateDistanceUseCase.ResultDistance.FarAway -> false
-                CaclulateDistanceUseCase.ResultDistance.Near -> true
+                is CalculateDistanceUseCase.ResultDistance.FarAway -> false
+                CalculateDistanceUseCase.ResultDistance.Near -> true
             }
             return isInArea
         } catch (e: SecurityException) {

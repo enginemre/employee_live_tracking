@@ -7,6 +7,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.hakmar.employeelivetracking.util.decodeJwt
 import javax.inject.Inject
 
 @ExperimentalGetImage
@@ -23,13 +24,12 @@ class QrCodeAnalyzer @Inject constructor(
             scanner.process(inputImage)
                 .addOnSuccessListener { barcode ->
                     if (barcode.isNotEmpty()) {
-                        /* val decoded = decodeJwt(barcode.first().rawValue ?: "")
-                         decoded?.let { decodedBarcode ->
-                             onRecived(decodedBarcode)
-                         } ?: onRecived(null)*/
+                        val decoded = decodeJwt(barcode.first().rawValue ?: "")
+                        decoded?.let { decodedBarcode ->
+                            onRecived(decodedBarcode)
+                        } ?: onRecived(null)
                         // Successfuly tested
-                        onRecived(barcode.first().rawValue)
-
+//                        onRecived(barcode.first().rawValue)
                     }
                 }
                 .addOnFailureListener { exception ->

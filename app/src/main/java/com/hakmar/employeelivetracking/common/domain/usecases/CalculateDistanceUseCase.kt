@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import javax.inject.Inject
 
-class CaclulateDistanceUseCase @Inject constructor() {
+class CalculateDistanceUseCase @Inject constructor() {
 
     companion object {
         private const val DISTANCE_LIMIT = 220
