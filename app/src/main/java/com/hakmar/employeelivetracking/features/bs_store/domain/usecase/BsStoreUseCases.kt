@@ -1,6 +1,6 @@
 package com.hakmar.employeelivetracking.features.bs_store.domain.usecase
 
-import com.hakmar.employeelivetracking.common.domain.usecases.CaclulateDistanceUseCase
+import com.hakmar.employeelivetracking.common.domain.usecases.CalculateDistanceUseCase
 import javax.inject.Inject
 
 class BsStoreUseCases @Inject constructor(
@@ -9,5 +9,5 @@ class BsStoreUseCases @Inject constructor(
     val resumeGeneralShiftUseCase: ResumeGeneralShiftUseCase,
     val getBsStoresUseCase: GetBsStoresUseCase,
     val getGeneralShiftStatusUseCase: GetGeneralShiftStatusUseCase,
-    val calculateDistanceUseCase: CaclulateDistanceUseCase
+    val calculateDistanceUseCase: CalculateDistanceUseCase
 )

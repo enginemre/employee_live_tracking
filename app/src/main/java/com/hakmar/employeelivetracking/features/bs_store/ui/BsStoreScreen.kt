@@ -122,7 +122,7 @@ class BsStoreScreen : Screen {
                                     launcherForNFC.launch(Intent(context, NFCActivity::class.java))
                                 } else if (adapter != null && !adapter.isEnabled) {
                                     //NFC is not enabled.Need to enable by the user.
-                                    mainViewModel.onEvent(MainEvent.OnNfcNotOpened)
+                                    launcherForQr.launch(Intent(context, QrActivity::class.java))
                                 } else {
                                     //NFC is not supported
                                     launcherForQr.launch(Intent(context, QrActivity::class.java))

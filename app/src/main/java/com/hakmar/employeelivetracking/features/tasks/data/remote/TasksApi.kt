@@ -22,6 +22,9 @@ interface TasksApi {
     @DELETE("/api/task/{taskId}/")
     suspend fun deleteTask(@Path("taskId") taskId: String): BaseResponseDto<String>
 
+    @GET("/api/complete-task/{taskId}/")
+    suspend fun markCompleted(@Path("taskId") taskId: String): BaseResponseDto<String?>
+
     @POST("/api/task/1/")
     suspend fun createTask(@Body taskBody: TaskRequestBodyDto): BaseResponseDto<String>
 }

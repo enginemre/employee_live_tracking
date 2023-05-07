@@ -15,4 +15,6 @@ interface TaskRepository {
     fun getTasks(): Flow<Resource<List<Task>>>
 
     fun getTaskById(taskId: Int): Flow<Resource<Task>>
+
+    fun markComleted(taskId: Int): Flow<Resource<Unit>>
 }

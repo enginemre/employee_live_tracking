@@ -91,4 +91,8 @@
     <string name="error_can_not_send_without_modify">Hiç bir değişiklik yapmadınız</string>
     <string name="store_inside_title">Mağaza İçi Kontrol</string>
     <string name="store_outside_title">Mağaza Önü Kontrol</string>
+    <string name="do_you_want_to_mark_as_completed">"Görevi tamamlandı olarak işaretlemek ister misiniz ? "</string>
+    <string name="cancel">İptal</string>
+    <string name="warning">Uyarı</string>
+    <string name="succesfully_completed">Başarıyla tamamlandı</string>
 </resources>

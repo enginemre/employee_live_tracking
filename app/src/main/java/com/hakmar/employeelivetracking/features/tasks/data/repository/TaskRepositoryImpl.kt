@@ -198,5 +198,38 @@ class TaskRepositoryImpl(
         }
     }
 
+    override fun markComleted(taskId: Int): Flow<Resource<Unit>> {
+        return flow {
+            try {
+                emit(Resource.Loading())
+                val result = tasksApi.markCompleted(taskId.toString())
+                if (result.response.success) {
+                    emit(Resource.Success(Unit))
+                } else {
+                    emit(
+                        Resource.Error(
+                            message = UiText.DynamicString(result.response.message)
+                        )
+                    )
+                }
+            } catch (e: SocketTimeoutException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(UiText.StringResorce(R.string.error_internet)))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(
+                    Resource.Error(
+                        UiText.DynamicString(
+                            e.localizedMessage ?: "Unexceptred error"
+                        )
+                    )
+                )
+            }
+        }
+    }
+
 
 }

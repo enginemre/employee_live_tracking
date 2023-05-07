@@ -1,6 +1,6 @@
 package com.hakmar.employeelivetracking.features.bs_store.di
 
-import com.hakmar.employeelivetracking.common.domain.usecases.CaclulateDistanceUseCase
+import com.hakmar.employeelivetracking.common.domain.usecases.CalculateDistanceUseCase
 import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.BsStoreUseCases
 import com.hakmar.employeelivetracking.features.bs_store.domain.usecase.GetBsStoresUseCase
@@ -26,6 +26,6 @@ object BsStoreUiModule {
        resumeGeneralShiftUseCase = ResumeGeneralShiftUseCase(bsStoreRepository),
        getBsStoresUseCase = GetBsStoresUseCase(bsStoreRepository),
        getGeneralShiftStatusUseCase = GetGeneralShiftStatusUseCase(bsStoreRepository),
-       calculateDistanceUseCase = CaclulateDistanceUseCase()
+       calculateDistanceUseCase = CalculateDistanceUseCase()
    )
 }

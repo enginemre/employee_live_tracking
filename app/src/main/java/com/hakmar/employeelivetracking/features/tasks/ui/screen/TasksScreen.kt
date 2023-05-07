@@ -32,6 +32,7 @@ import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestinatio
 import com.hakmar.employeelivetracking.common.presentation.graphs.TaskDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomAlertDialog
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
 import com.hakmar.employeelivetracking.common.presentation.ui.components.FabState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
@@ -91,6 +92,7 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
                             )
                         )
                     }
+
                     is UiEvent.Navigate<*> -> {
                         when (event.route) {
                             TaskDestination.TaskDetail.base -> {
@@ -98,6 +100,11 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
                             }
                         }
                     }
+
+                    is UiEvent.ShowDialog<*> -> {
+
+                    }
+
                     else -> Unit
                 }
             }
@@ -105,6 +112,15 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = { viewModel.onEvent(TaskEvent.OnRefreshTask) }) {
+            if (state.shouldShowDialog)
+                CustomAlertDialog(
+                    title = stringResource(id = R.string.warning),
+                    description = stringResource(id = R.string.do_you_want_to_mark_as_completed),
+                    postiveText = stringResource(id = R.string.okey),
+                    negativeText = stringResource(id = R.string.cancel),
+                    onPositive = { viewModel.onEvent(TaskEvent.MarkTaskCompleted(state.selectedTaskId)) },
+                    onNegative = { viewModel.onEvent(TaskEvent.DismissDialog) }
+                )
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(150.dp),
                 modifier = Modifier
@@ -119,10 +135,10 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
                         color = it.color!!,
                         storeCode = it.storeCode,
                         title = it.title,
-                        description = it.description
-                    ) {
-                        viewModel.onEvent(TaskEvent.OnClickTask(it))
-                    }
+                        description = it.description,
+                        onClick = { viewModel.onEvent(TaskEvent.OnClickTask(it)) },
+                        onLongClick = { viewModel.onEvent(TaskEvent.OnLongClickTask(it)) }
+                    )
                 }
             }
         }
