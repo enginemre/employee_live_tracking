@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hakmar.employeelivetracking.R
-import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
+import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,12 +39,13 @@ fun HomeTopBar(
             ) {
                 Text(
                     text = "Merhaba 👋", style = MaterialTheme.typography.bodySmall.copy(
-                        fontSize = 13.sp
+                        fontSize = 13.sp,
+                        color = Natural110
                     )
                 )
                 Text(
                     text = name, style = MaterialTheme.typography.titleMedium.copy(
-                        color = MaterialTheme.colors.onPrimary,
+                        color = Natural110,
                     )
                 )
             }

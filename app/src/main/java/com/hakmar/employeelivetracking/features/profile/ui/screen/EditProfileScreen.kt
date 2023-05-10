@@ -103,7 +103,6 @@ class EditProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 64.dp)
                 .background(
                     color = Color.White,
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
