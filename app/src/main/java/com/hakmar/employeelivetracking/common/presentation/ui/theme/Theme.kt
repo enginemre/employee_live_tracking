@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val LightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = Green40,
     secondary = Green40,
     background = DefaultBackground,
@@ -47,7 +47,7 @@ fun EmployeeLiveTrackingTheme(
             dynamicLightColorScheme(context)
         }
 
-        else -> LightColorScheme
+        else -> lightColorScheme
     }
     val view = LocalView.current
     val currentWindow = (view.context as? Activity)?.window

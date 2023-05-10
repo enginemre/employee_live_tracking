@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural80
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreCheckCard(
     modifier: Modifier,

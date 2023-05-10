@@ -19,7 +19,6 @@ import com.hakmar.employeelivetracking.common.domain.usecases.SendFCMTokenUseCas
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.AppConstants.NOTIFICATION_CHANNEL_ID_APP
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -41,15 +40,12 @@ class EmployeeFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var sendFCMTokenUseCase: SendFCMTokenUseCase
 
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var jobSendToken: Job? = null
-    private var jobSaveToken: Job? = null
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-//        val link =  message.notification?.clickAction
         val link = message.data["link"]
         message.notification?.let {
             generateNotification(it.title ?: "Mesaj örneği", it.body ?: "Messjjj", link)

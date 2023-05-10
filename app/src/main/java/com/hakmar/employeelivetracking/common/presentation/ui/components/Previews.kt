@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
     group = "font scales",
     fontScale = 1.5f
 )
-annotation class FontScalePreviews
 
 
 @Preview(name = "Pixel XL", group = "Devices", device = Devices.PIXEL, showSystemUi = true)

@@ -22,6 +22,7 @@ fun CustomAlertDialog(
     onNegative: () -> Unit
 ) {
     AlertDialog(
+        modifier = modifier,
         onDismissRequest = {},
         title = {
             Text(

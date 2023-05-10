@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.hakmar.employeelivetracking.util.AppConstants
@@ -19,10 +18,6 @@ import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.formatTime
 import com.hakmar.employeelivetracking.util.pad
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
@@ -41,9 +36,6 @@ class GeneralShiftService : Service() {
     @Inject
     lateinit var notificationBuilder: NotificationCompat.Builder
 
-    @Inject
-    lateinit var generalShiftServiceManager: GeneralShiftServiceManager
-
     var seconds = mutableStateOf("00")
         private set
     var minutes = mutableStateOf("00")
@@ -53,9 +45,7 @@ class GeneralShiftService : Service() {
     var currentState = mutableStateOf(TimerState.Idle)
         private set
 
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val binder = GeneralShiftServiceBinder()
-    private var exitShiftJob: Job? = null
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
 
@@ -116,14 +106,12 @@ class GeneralShiftService : Service() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT,
-                NOTIFICATION_CHANNEL_NAME_GENERAL,
-                NotificationManager.IMPORTANCE_LOW
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID_GENERAL_SHIFT,
+            NOTIFICATION_CHANNEL_NAME_GENERAL,
+            NotificationManager.IMPORTANCE_LOW
+        )
+        notificationManager.createNotificationChannel(channel)
     }
 
 

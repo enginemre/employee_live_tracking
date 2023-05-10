@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
@@ -14,10 +13,6 @@ import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.formatTime
 import com.hakmar.employeelivetracking.util.pad
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,8 +43,6 @@ class StoreShiftService : Service() {
 
     private var time: Duration = Duration.ZERO
     private lateinit var timer: Timer
-    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var exitStoreShiftJob: Job? = null
 
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -60,9 +53,6 @@ class StoreShiftService : Service() {
 
     @Inject
     lateinit var dataStoreRepository: DataStoreRepository
-
-    @Inject
-    lateinit var storeShiftServiceManager: StoreShiftServiceManager
 
     private var tickIntent = Intent(
         AppConstants.ACTION_OBSERVE_STORE_SHIFT
@@ -113,15 +103,13 @@ class StoreShiftService : Service() {
 
 
     private fun createNotificationChannel(storeCode: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                AppConstants.NOTIFICATION_CHANNEL_ID_STORE_SHIFT,
-                AppConstants.NOTIFICATION_CHANNEL_NAME_STORE,
-                NotificationManager.IMPORTANCE_LOW
-            )
-            notificationManager.createNotificationChannel(channel)
-            notificationBuilder.setContentTitle(storeCode + "  mesai devam ediyor")
-        }
+        val channel = NotificationChannel(
+            AppConstants.NOTIFICATION_CHANNEL_ID_STORE_SHIFT,
+            AppConstants.NOTIFICATION_CHANNEL_NAME_STORE,
+            NotificationManager.IMPORTANCE_LOW
+        )
+        notificationManager.createNotificationChannel(channel)
+        notificationBuilder.setContentTitle("$storeCode  mesai devam ediyor")
     }
 
     private fun updateNotification(hours: String, minutes: String, seconds: String) {

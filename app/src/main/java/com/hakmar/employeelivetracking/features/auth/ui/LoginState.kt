@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.auth.presentation.ui
+package com.hakmar.employeelivetracking.features.auth.ui
 
 data class LoginState(
     var usercode: String = "",

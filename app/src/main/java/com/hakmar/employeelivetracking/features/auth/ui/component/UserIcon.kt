@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.auth.presentation.ui.component
+package com.hakmar.employeelivetracking.features.auth.ui.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person

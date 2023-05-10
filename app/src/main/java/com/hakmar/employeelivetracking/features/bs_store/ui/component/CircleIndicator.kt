@@ -56,7 +56,7 @@ fun CircleIndicator(
 
     val sweepAngle by animateFloatAsState(
         targetValue = (2.4 * percentage).toFloat(),
-        animationSpec = tween(1000)
+        animationSpec = tween(1000), label = ""
     )
 
     LaunchedEffect(key1 = allowedIndicatorValue) {

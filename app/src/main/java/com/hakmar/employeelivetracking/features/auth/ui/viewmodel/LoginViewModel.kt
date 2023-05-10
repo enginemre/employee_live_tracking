@@ -9,9 +9,9 @@ import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.AuthUseCases
 import com.hakmar.employeelivetracking.features.auth.domain.usecase.UserValidateUseCase
-import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent
-import com.hakmar.employeelivetracking.features.auth.presentation.LoginFields
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.LoginState
+import com.hakmar.employeelivetracking.features.auth.ui.LoginEvent
+import com.hakmar.employeelivetracking.features.auth.ui.LoginFields
+import com.hakmar.employeelivetracking.features.auth.ui.LoginState
 import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource

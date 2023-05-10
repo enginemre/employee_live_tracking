@@ -41,9 +41,7 @@ class SendSteelCaseUseCase @Inject constructor(
         private const val CASH_TOTAL_KEY = "cash_total"
         private const val COIN_TOTAL_KEY = "coin_total"
         private const val POS_AMOUNT_KEY = "pos_amount_total"
-        private const val EXPENSES_TOTAL_KEY = "expenses_total"
         private const val STEEL_CASE_AMOUNT_KEY = "safe_current_balance"
-        private const val CASHBOOK_BALANCE_KEY = "cashbook_balance"
         private const val DIFFERENCE_KEY = "difference"
     }
 

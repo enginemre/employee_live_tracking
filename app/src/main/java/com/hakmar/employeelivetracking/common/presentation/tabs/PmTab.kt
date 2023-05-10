@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.common.presentation.tabs
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -11,6 +12,7 @@ import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestinatio
 import com.hakmar.employeelivetracking.common.presentation.ui.components.TabContent
 import com.hakmar.employeelivetracking.features.pm_store.ui.PMStoreScreen
 
+@ExperimentalGetImage
 class PmTab(private val innerScreens: List<Screen> = listOf(PMStoreScreen())) : Tab {
 
     override val key: ScreenKey

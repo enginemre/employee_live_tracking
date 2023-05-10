@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.util
+package com.hakmar.employeelivetracking.common.presentation.ui.components
 
 import android.content.BroadcastReceiver
 import android.content.Context

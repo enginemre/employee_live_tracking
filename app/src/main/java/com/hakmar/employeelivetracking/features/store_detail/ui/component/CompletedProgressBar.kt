@@ -41,7 +41,7 @@ fun CompletedStatusProgressBar(
         animationSpec = tween(
             durationMillis = 1000,
             delayMillis = 500,
-        )
+        ), label = ""
     )
     LaunchedEffect(key1 = true) {
         animationPlayed = true

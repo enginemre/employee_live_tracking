@@ -32,11 +32,9 @@ import com.hakmar.employeelivetracking.common.presentation.ui.components.*
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
-import com.hakmar.employeelivetracking.features.auth.presentation.LoginEvent
-import com.hakmar.employeelivetracking.features.auth.presentation.LoginFields
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.LoginHeader
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.PasswordIcon
-import com.hakmar.employeelivetracking.features.auth.presentation.ui.component.UserIcon
+import com.hakmar.employeelivetracking.features.auth.ui.component.LoginHeader
+import com.hakmar.employeelivetracking.features.auth.ui.component.PasswordIcon
+import com.hakmar.employeelivetracking.features.auth.ui.component.UserIcon
 import com.hakmar.employeelivetracking.features.auth.ui.viewmodel.LoginViewModel
 import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.util.UiEvent

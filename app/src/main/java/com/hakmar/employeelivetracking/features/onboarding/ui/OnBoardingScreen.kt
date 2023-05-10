@@ -155,7 +155,9 @@ class OnBoardingScreen : Screen {
                             }
 
                             else -> {
-                                launcherNotification.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    launcherNotification.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                }
                             }
                         }
 

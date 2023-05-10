@@ -43,7 +43,7 @@ fun LargeButton(
 }
 
 
-@Preview()
+@Preview
 @Composable
 fun LargeButtonPrev() {
     EmployeeLiveTrackingTheme {

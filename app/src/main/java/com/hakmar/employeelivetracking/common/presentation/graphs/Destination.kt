@@ -65,11 +65,6 @@ sealed interface HomeDestination {
         override val base = "/notification"
         override val path = base
     }
-
-    object QRScreen : HomeDestination {
-        override val base = "/qr_screen"
-        override val path = base
-    }
 }
 
 sealed interface Destination {

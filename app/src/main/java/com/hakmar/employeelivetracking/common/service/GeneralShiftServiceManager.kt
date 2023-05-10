@@ -3,7 +3,6 @@ package com.hakmar.employeelivetracking.common.service
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import com.hakmar.employeelivetracking.MainActivity
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.AppConstants.GENERAL_SHIFT_CLICK_REQUEST_CODE
@@ -15,10 +14,7 @@ class GeneralShiftServiceManager @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     private val flag =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            PendingIntent.FLAG_IMMUTABLE
-        else
-            0
+        PendingIntent.FLAG_IMMUTABLE
 
     fun clickPendingIntent(): PendingIntent {
         val clickIntent = Intent(context, MainActivity::class.java).apply {
@@ -35,14 +31,5 @@ class GeneralShiftServiceManager @Inject constructor(
             this.action = action
             context.startService(this)
         }
-    }
-
-    fun cancelPendingIntent(context: Context): PendingIntent {
-        val cancelIntent = Intent(context, GeneralShiftService::class.java).apply {
-            putExtra(AppConstants.TIMER_STATE, TimerState.Closed.name)
-        }
-        return PendingIntent.getService(
-            context, AppConstants.GENERAL_SHIFT_CANCEL_REQUEST_CODE, cancelIntent, flag
-        )
     }
 }

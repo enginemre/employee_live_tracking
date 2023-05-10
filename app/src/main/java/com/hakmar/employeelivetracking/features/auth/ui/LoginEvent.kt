@@ -1,4 +1,4 @@
-package com.hakmar.employeelivetracking.features.auth.presentation
+package com.hakmar.employeelivetracking.features.auth.ui
 
 import androidx.compose.ui.focus.FocusState
 

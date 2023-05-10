@@ -39,7 +39,7 @@ fun DrawFloatAction(
 }
 
 
-@Preview()
+@Preview
 @Composable
 fun DrawFloatActionPrev() {
     EmployeeLiveTrackingTheme {
