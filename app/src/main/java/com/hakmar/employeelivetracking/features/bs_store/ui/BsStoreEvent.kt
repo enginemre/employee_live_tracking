@@ -6,7 +6,9 @@ import com.hakmar.employeelivetracking.common.domain.model.Store
 
 sealed class BsStoreEvent {
     object Idle : BsStoreEvent()
-    object OnGeneralShiftClick : BsStoreEvent()
+    data class OnGeneralShiftClick(val fusedLocationProviderClient: FusedLocationProviderClient) :
+        BsStoreEvent()
+
     data class OnStoreClick(
         val data: Store?,
         val fusedLocationProviderClient: FusedLocationProviderClient

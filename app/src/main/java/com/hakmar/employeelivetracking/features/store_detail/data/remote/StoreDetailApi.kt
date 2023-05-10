@@ -4,7 +4,10 @@ import com.hakmar.employeelivetracking.common.data.remote.dto.BaseResponseDto
 import com.hakmar.employeelivetracking.common.data.remote.dto.StoreDto
 import com.hakmar.employeelivetracking.common.data.remote.dto.TimerStatusDto
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerDto
+import com.hakmar.employeelivetracking.features.store_detail.data.remote.dto.StoreTimerRequestBodyDto
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface StoreDetailApi {
@@ -15,10 +18,9 @@ interface StoreDetailApi {
         @Query("user_uuid") userId: String
     ): BaseResponseDto<StoreDto>
 
-    @GET("api/start-timer/")
+    @POST("api/start-timer/")
     suspend fun startStoreShift(
-        @Query("store_code") storeCode: String,
-        @Query("user_uuid") userId: String
+        @Body body: StoreTimerRequestBodyDto
     ): BaseResponseDto<TimerDto>
 
     @GET("/api/pause-timer/")
@@ -33,10 +35,9 @@ interface StoreDetailApi {
         @Query("user_uuid") userId: String
     ): BaseResponseDto<TimerDto>
 
-    @GET("api/stop-timer/")
+    @POST("api/stop-timer/")
     suspend fun cancelStoreShift(
-        @Query("store_code") storeCode: String,
-        @Query("user_uuid") userId: String
+        @Body body: StoreTimerRequestBodyDto
     ): BaseResponseDto<String>
 
     @GET("/api/timer-status/")

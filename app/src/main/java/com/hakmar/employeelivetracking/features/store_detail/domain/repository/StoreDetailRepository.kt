@@ -10,13 +10,13 @@ interface StoreDetailRepository {
 
     fun getStoreDetail(storeCode: String): Flow<Resource<Store>>
 
-    fun startStoreShift(storeCode: String): Flow<Resource<Timer>>
+    fun startStoreShift(storeCode: String, lat: Double, lon: Double): Flow<Resource<Timer>>
 
     fun pauseStoreShift(storeCode: String): Flow<Resource<Unit>>
 
     fun resumeStoreShift(storeCode: String): Flow<Resource<Timer>>
 
-    fun cancelStoreShift(storeCode: String): Flow<Resource<Unit>>
+    fun cancelStoreShift(storeCode: String, lat: Double, lon: Double): Flow<Resource<Unit>>
 
     fun initStoreShift(storeCode: String): Flow<Resource<TimerStatus>>
 }

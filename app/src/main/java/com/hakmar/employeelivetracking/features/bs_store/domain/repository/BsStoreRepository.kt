@@ -7,7 +7,7 @@ import com.hakmar.employeelivetracking.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface BsStoreRepository {
-    fun startGeneralShift(): Flow<Resource<Timer>>
+    fun startGeneralShift(lat: Double, lon: Double): Flow<Resource<Timer>>
 
     fun pauseGeneralShift(): Flow<Resource<Unit>>
 

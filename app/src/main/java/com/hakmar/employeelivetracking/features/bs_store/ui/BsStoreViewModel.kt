@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
+import android.location.Location
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -73,8 +74,16 @@ class BsStoreViewModel @Inject constructor(
 
     override fun onEvent(event: BsStoreEvent) {
         when (event) {
-            BsStoreEvent.OnGeneralShiftClick -> {
-                generalShiftButtonClick()
+            is BsStoreEvent.OnGeneralShiftClick -> {
+                viewModelScope.launch {
+                    val result = getCurrentLocation(event.fusedLocationProviderClient)
+                    result?.let { loc ->
+                        generalShiftButtonClick(loc.latitude, loc.longitude)
+                    } ?: kotlin.run {
+                        generalShiftButtonClick(0.0, 0.0)
+                    }
+                }
+
             }
 
             is BsStoreEvent.OnStoreClick -> {
@@ -167,9 +176,9 @@ class BsStoreViewModel @Inject constructor(
         }
     }
 
-    private fun startGeneralShift() {
+    private fun startGeneralShift(lat: Double, lon: Double) {
         startShiftJob?.cancel()
-        startShiftJob = bsStoreUseCases.startGeneralShiftUseCase().onEach { resource ->
+        startShiftJob = bsStoreUseCases.startGeneralShiftUseCase(lat, lon).onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
                     _state.update {
@@ -286,9 +295,9 @@ class BsStoreViewModel @Inject constructor(
     }
 
 
-    private fun generalShiftButtonClick() {
+    private fun generalShiftButtonClick(lat: Double?, lon: Double?) {
         when (state.value.isPlaying) {
-            TimerState.Idle -> startGeneralShift()
+            TimerState.Idle -> startGeneralShift(lat ?: 0.0, lon ?: 0.0)
             TimerState.Started -> pauseGeneralShift()
             TimerState.Stoped -> resumeGeneralShift()
             else -> {}
@@ -591,6 +600,23 @@ class BsStoreViewModel @Inject constructor(
         } catch (e: SecurityException) {
             e.printStackTrace()
             return isInArea
+        }
+    }
+
+    private suspend fun getCurrentLocation(fusedLocationProviderClient: FusedLocationProviderClient): Location? {
+        return try {
+            val locationResult = fusedLocationProviderClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                object : CancellationToken() {
+                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                        CancellationTokenSource().token
+
+                    override fun isCancellationRequested() = false
+                }).await()
+            locationResult
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            null
         }
     }
 

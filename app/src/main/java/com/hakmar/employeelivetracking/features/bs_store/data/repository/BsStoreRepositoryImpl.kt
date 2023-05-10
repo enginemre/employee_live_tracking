@@ -8,6 +8,7 @@ import com.hakmar.employeelivetracking.common.domain.model.TimerStatus
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.bs_store.data.mapper.toTimer
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.BsStoreApi
+import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerRequestBody
 import com.hakmar.employeelivetracking.features.bs_store.domain.model.Timer
 import com.hakmar.employeelivetracking.features.bs_store.domain.repository.BsStoreRepository
 import com.hakmar.employeelivetracking.util.AppConstants
@@ -23,13 +24,19 @@ class BsStoreRepositoryImpl @Inject constructor(
     private val bsStoreApi: BsStoreApi,
     private val dataStoreRepository: DataStoreRepository
 ) : BsStoreRepository {
-    override fun startGeneralShift(): Flow<Resource<Timer>> {
+    override fun startGeneralShift(lat: Double, lon: Double): Flow<Resource<Timer>> {
         return flow {
             try {
                 emit(Resource.Loading())
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let {
-                    val apiResult = bsStoreApi.startGeneralShift(userId)
+                    val apiResult = bsStoreApi.startGeneralShift(
+                        TimerRequestBody(
+                            it,
+                            lat.toString(),
+                            lon.toString()
+                        )
+                    )
                     if (apiResult.response.success) {
                         emit(Resource.Success(apiResult.data.toTimer()))
                     } else {

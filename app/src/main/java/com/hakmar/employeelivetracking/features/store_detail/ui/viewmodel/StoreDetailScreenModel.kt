@@ -1,8 +1,14 @@
 package com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel
 
+import android.location.Location
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.hilt.ScreenModelFactory
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.service.StoreShiftServiceManager
@@ -22,6 +28,7 @@ import com.hakmar.employeelivetracking.util.SnackBarType
 import com.hakmar.employeelivetracking.util.TimerState
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
+import com.hakmar.employeelivetracking.util.await
 import com.hakmar.employeelivetracking.util.convertStringToDuration
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -87,11 +94,25 @@ class StoreDetailScreenModel @AssistedInject constructor(
             }
 
             is StoreDetailEvent.OnActionButtonClick -> {
-                actionButtonClick(event.storeCode)
+                coroutineScope.launch {
+                    val result = getCurrentLocation(event.fusedLocationProviderClient)
+                    result?.let { loc ->
+                        actionButtonClick(event.storeCode, loc.latitude, loc.longitude)
+                    } ?: kotlin.run {
+                        actionButtonClick(event.storeCode, 0.0, 0.0)
+                    }
+                }
             }
 
-            StoreDetailEvent.OnStopButtonClick -> {
-                stopButtonClick()
+            is StoreDetailEvent.OnStopButtonClick -> {
+                coroutineScope.launch {
+                    val result = getCurrentLocation(event.fusedLocationProviderClient)
+                    result?.let { loc ->
+                        stopButtonClick(loc.latitude, loc.longitude)
+                    } ?: kotlin.run {
+                        stopButtonClick(0.0, 0.0)
+                    }
+                }
             }
         }
     }
@@ -165,10 +186,10 @@ class StoreDetailScreenModel @AssistedInject constructor(
     }
 
 
-    private fun actionButtonClick(storeCode: String) {
+    private fun actionButtonClick(storeCode: String, lat: Double, lon: Double) {
         when (state.value.isPlaying) {
             TimerState.Idle -> {
-                start(storeCode)
+                start(storeCode, lat, lon)
             }
 
             TimerState.Stoped -> {
@@ -219,9 +240,9 @@ class StoreDetailScreenModel @AssistedInject constructor(
         }.launchIn(coroutineScope)
     }
 
-    private fun start(storeCode: String) {
+    private fun start(storeCode: String, lat: Double, lon: Double) {
         startStoreShiftJob?.cancel()
-        startStoreShiftJob = startStoreShiftUseCase(storeCode).onEach { resource ->
+        startStoreShiftJob = startStoreShiftUseCase(storeCode, lat, lon).onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
                     _state.update {
@@ -265,9 +286,9 @@ class StoreDetailScreenModel @AssistedInject constructor(
         pauseStoreShiftService(storeCode = storeCode)
     }
 
-    private fun stopButtonClick() {
+    private fun stopButtonClick(lat: Double, lon: Double) {
         cancelStoreShiftJob?.cancel()
-        cancelStoreShiftJob = cancelStoreShiftUseCase(storeCode).onEach { resource ->
+        cancelStoreShiftJob = cancelStoreShiftUseCase(storeCode, lat, lon).onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
                     stopStoreShiftService()
@@ -484,5 +505,21 @@ class StoreDetailScreenModel @AssistedInject constructor(
         }
     }
 
+    private suspend fun getCurrentLocation(fusedLocationProviderClient: FusedLocationProviderClient): Location? {
+        return try {
+            val locationResult = fusedLocationProviderClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                object : CancellationToken() {
+                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                        CancellationTokenSource().token
+
+                    override fun isCancellationRequested() = false
+                }).await()
+            locationResult
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            null
+        }
+    }
 
 }

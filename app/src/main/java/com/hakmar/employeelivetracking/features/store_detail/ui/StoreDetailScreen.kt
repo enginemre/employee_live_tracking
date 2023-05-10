@@ -28,6 +28,7 @@ import cafe.adriel.voyager.hilt.getScreenModel
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.google.android.gms.location.LocationServices
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.graphs.StoreDetailDestination
@@ -69,6 +70,7 @@ class StoreDetailScreen(
         val navigator = LocalNavigator.currentOrThrow
         val title = stringResource(id = R.string.store_detail)
         val state by screenModel.state.collectAsStateWithLifecycle()
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         SystemReciver(action = AppConstants.ACTION_OBSERVE_STORE_SHIFT) {
             if (it?.action == AppConstants.ACTION_OBSERVE_STORE_SHIFT) {
                 val string = it.getStringExtra(AppConstants.TIME_ELAPSED)
@@ -145,11 +147,18 @@ class StoreDetailScreen(
                 maxIndicValue = state.maxValueOfTime,
                 positiveIcon = if (state.isPlaying == TimerState.Started) Icons.Default.Pause else Icons.Default.PlayArrow,
                 isStopIconVisible = state.isPlaying != TimerState.Idle,
-                onStopClick = { screenModel.onEvent(StoreDetailEvent.OnStopButtonClick) },
+                onStopClick = {
+                    screenModel.onEvent(
+                        StoreDetailEvent.OnStopButtonClick(
+                            fusedLocationProviderClient
+                        )
+                    )
+                },
                 onPositiveClick = {
                     screenModel.onEvent(
                         StoreDetailEvent.OnActionButtonClick(
-                            storeCode
+                            storeCode,
+                            fusedLocationProviderClient = fusedLocationProviderClient
                         )
                     )
                 }

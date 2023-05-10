@@ -8,7 +8,7 @@ import javax.inject.Inject
 class CancelStoreShiftUseCase @Inject constructor(
     private val repository: StoreDetailRepository
 ) {
-    operator fun invoke(storeCode: String): Flow<Resource<Unit>> {
-        return repository.cancelStoreShift(storeCode)
+    operator fun invoke(storeCode: String, lat: Double, lon: Double): Flow<Resource<Unit>> {
+        return repository.cancelStoreShift(storeCode, lat, lon)
     }
 }

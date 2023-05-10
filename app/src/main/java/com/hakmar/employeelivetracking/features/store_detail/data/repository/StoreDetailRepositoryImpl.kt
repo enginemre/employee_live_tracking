@@ -9,6 +9,7 @@ import com.hakmar.employeelivetracking.common.domain.repository.DataStoreReposit
 import com.hakmar.employeelivetracking.features.bs_store.data.mapper.toTimer
 import com.hakmar.employeelivetracking.features.bs_store.domain.model.Timer
 import com.hakmar.employeelivetracking.features.store_detail.data.remote.StoreDetailApi
+import com.hakmar.employeelivetracking.features.store_detail.data.remote.dto.StoreTimerRequestBodyDto
 import com.hakmar.employeelivetracking.features.store_detail.domain.repository.StoreDetailRepository
 import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.Resource
@@ -56,13 +57,24 @@ class StoreDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun startStoreShift(storeCode: String): Flow<Resource<Timer>> {
+    override fun startStoreShift(
+        storeCode: String,
+        lat: Double,
+        lon: Double
+    ): Flow<Resource<Timer>> {
         return flow {
             try {
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let {
                     emit(Resource.Loading())
-                    val result = storeDetailApi.startStoreShift(storeCode, it)
+                    val result = storeDetailApi.startStoreShift(
+                        StoreTimerRequestBodyDto(
+                            storeCode,
+                            it,
+                            lat.toString(),
+                            lon.toString()
+                        )
+                    )
                     if (result.response.success) {
                         emit(Resource.Success(result.data.toTimer()))
                     } else
@@ -158,13 +170,24 @@ class StoreDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun cancelStoreShift(storeCode: String): Flow<Resource<Unit>> {
+    override fun cancelStoreShift(
+        storeCode: String,
+        lat: Double,
+        lon: Double
+    ): Flow<Resource<Unit>> {
         return flow {
             try {
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let { id ->
                     emit(Resource.Loading())
-                    val result = storeDetailApi.cancelStoreShift(storeCode, id)
+                    val result = storeDetailApi.cancelStoreShift(
+                        StoreTimerRequestBodyDto(
+                            storeCode,
+                            id,
+                            lat.toString(),
+                            lon.toString()
+                        )
+                    )
                     if (result.response.success) {
                         emit(Resource.Success(Unit))
                     } else

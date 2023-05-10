@@ -9,7 +9,7 @@ import javax.inject.Inject
 class StartGeneralShiftUseCase @Inject constructor(
     private val bsStoreRepository: BsStoreRepository
 ) {
-    operator fun invoke(): Flow<Resource<Timer>> {
-      return  bsStoreRepository.startGeneralShift()
+    operator fun invoke(lat: Double, lon: Double): Flow<Resource<Timer>> {
+        return bsStoreRepository.startGeneralShift(lat, lon)
     }
 }

@@ -190,7 +190,13 @@ class BsStoreScreen : Screen {
                     )
                     LargeButton(
                         text = stringResource(id = state.value.buttonText),
-                        onClick = { viewModel.onEvent(BsStoreEvent.OnGeneralShiftClick) },
+                        onClick = {
+                            viewModel.onEvent(
+                                BsStoreEvent.OnGeneralShiftClick(
+                                    fusedLocationProviderClient
+                                )
+                            )
+                        },
                         containerColor = state.value.containerColor,
                         textColor = state.value.buttonTextColor
                     )

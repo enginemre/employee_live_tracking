@@ -4,7 +4,10 @@ import com.hakmar.employeelivetracking.common.data.remote.dto.BaseResponseDto
 import com.hakmar.employeelivetracking.common.data.remote.dto.StoreDto
 import com.hakmar.employeelivetracking.common.data.remote.dto.TimerStatusDto
 import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerDto
+import com.hakmar.employeelivetracking.features.bs_store.data.remote.dto.TimerRequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface BsStoreApi {
@@ -12,8 +15,8 @@ interface BsStoreApi {
     @GET("/accounts/timer-status/{userId}}/")
     suspend fun initGeneralShift(@Path("userId") userId: String): BaseResponseDto<TimerStatusDto>
 
-    @GET("/accounts/start-timer/{userId}/")
-    suspend fun startGeneralShift(@Path("userId") userId: String): BaseResponseDto<TimerDto>
+    @POST("/accounts/start-timer/")
+    suspend fun startGeneralShift(@Body body: TimerRequestBody): BaseResponseDto<TimerDto>
 
     @GET("/accounts/pause-timer/{userId}/")
     suspend fun pauseGeneralShift(@Path("userId") userId: String): BaseResponseDto<String>

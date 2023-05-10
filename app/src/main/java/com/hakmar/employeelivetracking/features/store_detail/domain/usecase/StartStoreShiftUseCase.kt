@@ -9,7 +9,7 @@ import javax.inject.Inject
 class StartStoreShiftUseCase @Inject constructor(
     private val repository: StoreDetailRepository
 ) {
-    operator fun invoke(storeCode: String): Flow<Resource<Timer>> {
-        return repository.startStoreShift(storeCode)
+    operator fun invoke(storeCode: String, lat: Double, lon: Double): Flow<Resource<Timer>> {
+        return repository.startStoreShift(storeCode, lat, lon)
     }
 }
