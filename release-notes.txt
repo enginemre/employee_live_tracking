@@ -1,1 +1,4 @@
--First test app
+- Dark mode support removed
+- Shifts services updted
+- App bar personel name changed
+- Edit profile screen margin updated
