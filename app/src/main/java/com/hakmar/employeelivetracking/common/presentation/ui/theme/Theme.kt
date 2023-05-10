@@ -14,16 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Green40,
-    secondary = Green40,
-    background = DefaultBackground,
-    onPrimary = Natural100,
-    onSecondary = Natural100,
-    surface = White,
-    onSurface = Natural80,
-)
-
 private val LightColorScheme = lightColorScheme(
     primary = Green40,
     secondary = Green40,
@@ -47,15 +37,14 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun EmployeeLiveTrackingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
 
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            dynamicLightColorScheme(context)
         }
 
         else -> LightColorScheme
