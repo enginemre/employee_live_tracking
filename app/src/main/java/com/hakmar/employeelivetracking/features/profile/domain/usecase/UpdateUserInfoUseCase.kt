@@ -1,7 +1,6 @@
 package com.hakmar.employeelivetracking.features.profile.domain.usecase
 
 import com.hakmar.employeelivetracking.R
-import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.features.profile.domain.repository.ProfileRepository
 import com.hakmar.employeelivetracking.util.Resource
 import com.hakmar.employeelivetracking.util.UiText
@@ -16,7 +15,7 @@ class UpdateUserInfoUseCase @Inject constructor(
         oldPassword: String,
         newPassword: String,
         email: String
-    ): Flow<Resource<User>> {
+    ): Flow<Resource<String>> {
         if (oldPassword.isEmpty())
             return flow {
                 emit(

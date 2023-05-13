@@ -12,5 +12,5 @@ interface ProfileRepository {
         oldPassword: String,
         newPassword: String,
         email: String
-    ): Flow<Resource<User>>
+    ): Flow<Resource<String>>
 }

@@ -74,7 +74,7 @@ class PrivatePolicyScreen : Screen {
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium
                     ),
-                text = stringResource(id = com.hakmar.employeelivetracking.R.string.our_history),
+                text = stringResource(id = com.hakmar.employeelivetracking.R.string.private_policy),
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = Natural110,
                     fontSize = 16.sp,
@@ -90,7 +90,7 @@ class PrivatePolicyScreen : Screen {
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium
                     ),
-                text = stringResource(id = com.hakmar.employeelivetracking.R.string.our_history_content),
+                text = stringResource(id = com.hakmar.employeelivetracking.R.string.private_policy_text),
                 style = MaterialTheme.typography.titleSmall.copy(
                     color = Natural80,
                     fontSize = 16.sp,

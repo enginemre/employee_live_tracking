@@ -35,19 +35,17 @@
     <string name="new_password_label">New Password</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="save">Save</string>
-    <string name="private_policy_text">
-
+    <string name="private_policy_text">Our application does not require users to provide personal information such as their name, email address, or phone number. However, some features of our application may require users to create an account. In such cases, user information will be securely stored in our application and will not be shared with any third parties.
+        Information we may collect during the use of our application includes device information (such as device model and operating system version), data about the usage of our application (such as which pages were viewed and for how long), and information about the users internet connection. This information may be used to improve our applications performance and user experience. However, this information does not contain personally identifiable information and is only used in aggregate.
+        Our application may use cookies and similar technologies to provide users with a better experience. These technologies help us remember the user\'s actions and preferences in our application. Users can disable or delete cookies by changing their device settings.
+        Our application may include links to third-party websites or applications. Please note that we are not responsible for the privacy policies and practices of these websites and applications. Therefore, we recommend that you read the relevant privacy policies before accessing these websites or applications.
     </string>
     <string name="our_history">History</string>
     <string name="our_history_content">
-        Food First envisions a world in which all people have access to healthy,
-        ecologically produced, and culturally appropriate food. After 40 years of analysis of the global
-        food system, we know that making this vision a reality involves more than tech nical
-        solutions—it requires political tran sformation. That’s why Food First supports activists,
-        social movements, alliances, and coalitions working for systemic change.
-        Our work—including action-oriented rese arch, publications, and projects—gives you the
-        tools to understand the global food system, build your local food movement, and engage with the global movement
-        for food sovereignty.</string>
+        We are a leading and innovative application developer in our industry. Our mission is to create applications that will make users lives easier and provide them with a quality experience. Our team consists of experienced and talented professionals in the industry. We work to create products that meet user expectations by using the latest technologies in every stage of our applications.
+        Customer satisfaction is one of our top priorities. Therefore, our customer support team is always ready to provide you with the best service when you have any questions or problems. Our developers are highly committed to data security and privacy. We design our applications using the latest security technologies to protect users\' personal information and ensure their privacy. You can learn more about how our application works by reading our privacy policy.
+        Thank you for continuing to use our application. We are always working to provide you with better service.
+    </string>
     <string name="private_policy">Private Policy</string>
     <string name="about_us">About Us</string>
     <string name="notification">Notification</string>

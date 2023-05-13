@@ -4,6 +4,7 @@ import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.features.profile.data.mapper.toUser
 import com.hakmar.employeelivetracking.features.profile.data.remote.ProfileApi
+import com.hakmar.employeelivetracking.features.profile.data.remote.dto.ChangePasswordRequestBody
 import com.hakmar.employeelivetracking.features.profile.domain.model.User
 import com.hakmar.employeelivetracking.features.profile.domain.repository.ProfileRepository
 import com.hakmar.employeelivetracking.util.AppConstants
@@ -47,14 +48,15 @@ class ProfileRepositoryImpl @Inject constructor(
         oldPassword: String,
         newPassword: String,
         email: String
-    ): Flow<Resource<User>> {
+    ): Flow<Resource<String>> {
         return flow {
             emit(Resource.Loading())
             val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
-            userId?.let {
-                val result = profileApi.getUserDetail(it)
+            userId?.let { id ->
+                val result =
+                    profileApi.changePassword(ChangePasswordRequestBody(email, id, newPassword))
                 if (result.response.success) {
-                    emit(Resource.Success(result.data.toUser()))
+                    emit(Resource.Success(result.data))
                 } else {
                     emit(
                         Resource.Error(

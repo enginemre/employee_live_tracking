@@ -36,9 +36,19 @@
     <string name="new_password_label">Yeni Şifre</string>
     <string name="edit_profile">Profil Düzenle</string>
     <string name="save">Kaydet</string>
-    <string name="private_policy_text">e</string>
+    <string name="private_policy_text">Uygulamamız, kullanıcıların adı, e-posta adresi veya telefon numarası gibi kişisel bilgileri istememektedir. Ancak, uygulamamızın bazı özelliklerini kullanmak için kullanıcıların hesap oluşturması gerekebilir. Bu durumda, kullanıcıların bilgileri uygulamamızda güvenli bir şekilde saklanacak ve hiçbir şekilde üçüncü taraflarla paylaşılmayacaktır.
+        Uygulamamızın kullanımı sırasında elde ettiğimiz bilgiler arasında, kullanıcının cihaz bilgileri (örneğin, cihaz modeli ve işletim sistemi sürümü), uygulamamızın kullanımı hakkındaki veriler (örneğin, hangi sayfaların görüntülendiği ve ne kadar süreyle görüntülendiği) ve kullanıcının internet bağlantısı hakkında bilgiler bulunabilir. Bu bilgiler, uygulamamızın performansını ve kullanıcı deneyimini iyileştirmek için kullanılabilir. Ancak, bu bilgiler hiçbir şekilde kişisel olarak tanımlanabilir bilgiler içermez ve sadece toplu olarak kullanılır.
+        Uygulamamız, kullanıcılara daha iyi bir deneyim sunmak için çerezler ve benzer teknolojiler kullanabilir. Bu teknolojiler, kullanıcının uygulamamızda yaptığı işlemleri ve tercihlerini hatırlamamıza yardımcı olur. Kullanıcılar, cihazlarının ayarlarını değiştirerek çerezleri devre dışı bırakabilir veya silebilirler.
+        Uygulamamızda, üçüncü taraf sitelere veya uygulamalara bağlantılar içerebiliriz. Bu sitelerin ve uygulamaların gizlilik politikaları ve uygulamalarından sorumlu olmadığımızı lütfen unutmayın. Bu nedenle, bu sitelere veya uygulamalara erişmeden önce, ilgili gizlilik politikalarını okumanızı öneririz.
+    </string>
     <string name="our_history">Hakkımızda</string>
-    <string name="our_history_content">Food First envisions a world in which all people have access to healthy, ecologically produced, and culturally appropriate food. After 40 years of analysis of the global food system, we know that making this vision a reality involves more than tech nical solutions—it requires political tran sformation. That’s why Food First supports activists, social movements, alliances, and coalitions working for systemic change. Our work—including action-oriented rese arch, publications, and projects—gives you the tools to understand the global food system, build your local food movement, and engage with the global movement for food sovereignty.</string>
+    <string name="our_history_content">
+        Sektörümüzde öncü ve yenilikçi bir uygulama geliştiricisiyiz. Misyonumuz, kullanıcıların hayatını kolaylaştıracak ve onlara kaliteli bir deneyim sunacak uygulamalar yaratmaktır.
+        Ekibimiz, sektörde deneyimli ve yetenekli profesyonellerden oluşmaktadır. Uygulamalarımızın her aşamasında, en son teknolojileri kullanarak, kullanıcıların beklentilerine uygun ürünler oluşturmak için çalışıyoruz.
+        Kullanıcı memnuniyeti, şirketimizin öncelikli hedeflerinden biridir. Bu nedenle, müşteri desteği ekibimiz, herhangi bir sorunuz veya sorununuz olduğunda size en iyi hizmeti sunmak için her zaman hazırdır.
+        Geliştiricilerimiz, veri güvenliği ve gizliliğine büyük önem vermektedir. Kullanıcıların kişisel bilgilerini korumak ve gizliliklerini sağlamak için, en son güvenlik teknolojilerini kullanarak uygulamalarımızı tasarlıyoruz. Gizlilik politikamızı okuyarak, uygulamamızın nasıl çalıştığı hakkında daha fazla bilgi edinebilirsiniz.
+        Teşekkür ederiz, uygulamamızı kullanmaya devam ettiğiniz için minnettarız. Sizleri daha iyi hizmet sunabilmek için her zaman çalışıyoruz.
+    </string>
     <string name="private_policy">Gizlilik Sözleşmesi</string>
     <string name="about_us">Hakkımızda</string>
     <string name="notification">Bildirimler</string>
