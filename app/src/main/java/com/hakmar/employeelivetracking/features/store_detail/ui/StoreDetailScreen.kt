@@ -37,6 +37,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
 import com.hakmar.employeelivetracking.common.presentation.ui.components.DevicePreviews
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
 import com.hakmar.employeelivetracking.common.presentation.ui.components.SystemReciver
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
@@ -157,6 +158,7 @@ class StoreDetailScreen(
                             StoreDetailDestination.PosAmounts.base -> {
                                 navigator.push(PosScreen(storeCode, state.store?.name ?: ""))
                             }
+
                             else -> {
                                 navigator.pop()
                                 state.store?.let {
@@ -170,6 +172,8 @@ class StoreDetailScreen(
                 }
             }
         }
+        if (state.isLoading)
+            LoadingDialog(stateLoading = state.isLoading)
         Column(
             modifier = Modifier
                 .fillMaxSize()
