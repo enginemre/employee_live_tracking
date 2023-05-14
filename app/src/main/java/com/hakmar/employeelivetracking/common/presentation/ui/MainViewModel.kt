@@ -29,6 +29,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
     private val savedStateHandle: SavedStateHandle,
+    val eventManager: EventManager,
 ) : BaseViewModel<MainEvent>() {
 
     private val _appBarState = MutableStateFlow(AppBarState())
@@ -38,11 +39,13 @@ class MainViewModel @Inject constructor(
     val fabState = _fabState.asStateFlow()
 
     private val _userState = MutableStateFlow(UserState())
-    val userState = _userState.asStateFlow()
 
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    fun postEvent(sharedEvent: SharedEvent) {
+        eventManager.postEvent(sharedEvent)
+    }
 
     override fun onEvent(event: MainEvent) {
         when (event) {

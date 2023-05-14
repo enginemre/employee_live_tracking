@@ -6,6 +6,7 @@ import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskMo
 sealed class StoreDetailEvent {
     data class OnTaskClick(val taskModel: TaskModel) : StoreDetailEvent()
     data class OnTick(val hour: String, val minute: String, val second: String) : StoreDetailEvent()
+    data class OnTaskCompleted(val taskName: String) : StoreDetailEvent()
     data class OnActionButtonClick(
         val storeCode: String,
         val fusedLocationProviderClient: FusedLocationProviderClient

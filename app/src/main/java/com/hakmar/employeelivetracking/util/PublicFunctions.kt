@@ -46,6 +46,16 @@ fun getContentColor(type: SnackBarType) = when (type) {
     SnackBarType.ERROR -> White
 }
 
+fun createTimeToText(hour: String, minutes: String): String {
+    val result =
+        if (hour == "00") {
+            "${minutes.trim('0')} dakika "
+        } else {
+            "${hour.trim('0')} saat ${minutes.trim('0')} dk"
+        }
+    return result
+}
+
 enum class SnackBarType {
     WARNING,
     SUCCESS,

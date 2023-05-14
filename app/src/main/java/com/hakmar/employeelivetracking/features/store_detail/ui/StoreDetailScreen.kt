@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.features.store_detail.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -40,9 +41,15 @@ import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSn
 import com.hakmar.employeelivetracking.common.presentation.ui.components.SystemReciver
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
+import com.hakmar.employeelivetracking.features.bs_store.ui.BsSharedEvent
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
 import com.hakmar.employeelivetracking.features.store_detail.ui.component.*
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel
+import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.POS_TASK
+import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.STEEL_CASE_TASK
+import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.STORE_INSIDE_TASK
+import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.STORE_OUTSIDE_TASK
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.event.TaskValidated
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.PosScreen
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.SteelCaseAmountScreen
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.StoreInsideScreen
@@ -79,6 +86,12 @@ class StoreDetailScreen(
                 screenModel.onEvent(StoreDetailEvent.OnTick(result[0], result[1], result[2]))
             }
         }
+        BackHandler(enabled = true) {
+            navigator.pop()
+            state.store?.let {
+                mainViewModel.eventManager.postEvent(BsSharedEvent.RefreshDashboard(it))
+            }
+        }
         LaunchedEffect(key1 = Unit) {
             mainViewModel.updateAppBar(
                 AppBarState(
@@ -87,6 +100,27 @@ class StoreDetailScreen(
                     navigationClick = { navigator.pop() }
                 )
             )
+        }
+        LaunchedEffect(key1 = Unit) {
+            mainViewModel.eventManager.eventFlow.collect {
+                when (it) {
+                    is TaskValidated.PostAmountValidated -> {
+                        screenModel.onEvent(StoreDetailEvent.OnTaskCompleted(POS_TASK))
+                    }
+
+                    is TaskValidated.SteelCaseValidated -> {
+                        screenModel.onEvent(StoreDetailEvent.OnTaskCompleted(STEEL_CASE_TASK))
+                    }
+
+                    is TaskValidated.StoreInsideValidated -> {
+                        screenModel.onEvent(StoreDetailEvent.OnTaskCompleted(STORE_INSIDE_TASK))
+                    }
+
+                    is TaskValidated.StoreOutsideValidated -> {
+                        screenModel.onEvent(StoreDetailEvent.OnTaskCompleted(STORE_OUTSIDE_TASK))
+                    }
+                }
+            }
         }
         LaunchedEffect(key1 = Unit) {
             screenModel.uiEvent.collect { event ->
@@ -123,9 +157,11 @@ class StoreDetailScreen(
                             StoreDetailDestination.PosAmounts.base -> {
                                 navigator.push(PosScreen(storeCode, state.store?.name ?: ""))
                             }
-
                             else -> {
                                 navigator.pop()
+                                state.store?.let {
+                                    mainViewModel.postEvent(BsSharedEvent.RefreshDashboard(it))
+                                }
                             }
                         }
                     }

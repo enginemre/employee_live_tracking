@@ -5,6 +5,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.hilt.ScreenModelFactory
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.features.store_detail_tasks.domain.model.CheckItem
 import com.hakmar.employeelivetracking.features.store_detail_tasks.domain.usecase.GetStoreOutsideUseCase
 import com.hakmar.employeelivetracking.features.store_detail_tasks.domain.usecase.SendStoreOutSideUseCase
@@ -19,6 +20,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -108,6 +110,12 @@ class StoreOutsideScreenModel @AssistedInject constructor(
                         UiEvent.ShowSnackBar(
                             message = UiText.StringResorce(R.string.successfully_sent),
                             type = SnackBarType.SUCCESS
+                        )
+                    )
+                    delay(250L)
+                    _uiEvent.send(
+                        UiEvent.Navigate<Any>(
+                            route = HomeDestination.StoreDetail.base,
                         )
                     )
                 }

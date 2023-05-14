@@ -30,6 +30,7 @@ import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.UiText
 import com.hakmar.employeelivetracking.util.await
 import com.hakmar.employeelivetracking.util.convertStringToDuration
+import com.hakmar.employeelivetracking.util.createTimeToText
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -94,6 +95,11 @@ class StoreDetailScreenModel @AssistedInject constructor(
             }
 
             is StoreDetailEvent.OnActionButtonClick -> {
+                _state.update {
+                    it.copy(
+                        isLoading = true
+                    )
+                }
                 coroutineScope.launch {
                     val result = getCurrentLocation(event.fusedLocationProviderClient)
                     result?.let { loc ->
@@ -105,12 +111,89 @@ class StoreDetailScreenModel @AssistedInject constructor(
             }
 
             is StoreDetailEvent.OnStopButtonClick -> {
+                _state.update {
+                    it.copy(
+                        isLoading = true
+                    )
+                }
                 coroutineScope.launch {
                     val result = getCurrentLocation(event.fusedLocationProviderClient)
                     result?.let { loc ->
                         stopButtonClick(loc.latitude, loc.longitude)
                     } ?: kotlin.run {
                         stopButtonClick(0.0, 0.0)
+                    }
+                }
+            }
+
+            is StoreDetailEvent.OnTaskCompleted -> {
+                when (event.taskName) {
+                    POS_TASK -> {
+                        val item =
+                            state.value.taskList.find { it.name.contains("Z Raporları Kontrol") }
+                        val index = state.value.taskList.indexOf(item)
+                        val list = state.value.taskList.toMutableList()
+                        list[index] = item!!.copy(
+                            isCompleted = true
+                        )
+                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
+                        _state.update {
+                            it.copy(
+                                taskList = list,
+                                store = it.store?.copy(completedTask = newCompletedTaskCount)
+                            )
+                        }
+                    }
+
+                    STORE_OUTSIDE_TASK -> {
+                        val item =
+                            state.value.taskList.find { it.name.contains("Mağaza Önü Kontrol") }
+                        val index = state.value.taskList.indexOf(item)
+                        val list = state.value.taskList.toMutableList()
+                        list[index] = item!!.copy(
+                            isCompleted = true
+                        )
+                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
+                        _state.update {
+                            it.copy(
+                                taskList = list,
+                                store = it.store?.copy(completedTask = newCompletedTaskCount)
+                            )
+                        }
+                    }
+
+                    STORE_INSIDE_TASK -> {
+                        val item =
+                            state.value.taskList.find { it.name.contains("Mağaza İçi Kontrol") }
+                        val index = state.value.taskList.indexOf(item)
+                        val list = state.value.taskList.toMutableList()
+                        list[index] = item!!.copy(
+                            isCompleted = true
+                        )
+                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
+                        _state.update {
+                            it.copy(
+                                taskList = list,
+                                store = it.store?.copy(completedTask = newCompletedTaskCount)
+                            )
+                        }
+                    }
+
+                    STEEL_CASE_TASK -> {
+                        val item =
+                            state.value.taskList.find { it.name.contains("Çelik Kasa Sayım") }
+                        val index = state.value.taskList.indexOf(item)
+                        val list = state.value.taskList.toMutableList()
+                        list[index] = item!!.copy(
+                            isCompleted = true
+                        )
+                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
+                        _state.update {
+                            it.copy(
+                                taskList = list,
+                                store = it.store?.copy(completedTask = newCompletedTaskCount)
+                            )
+                        }
                     }
                 }
             }
@@ -291,9 +374,14 @@ class StoreDetailScreenModel @AssistedInject constructor(
         cancelStoreShiftJob = cancelStoreShiftUseCase(storeCode, lat, lon).onEach { resource ->
             when (resource) {
                 is Resource.Success -> {
+                    val passedTime = createTimeToText(state.value.hours, state.value.minutes)
                     stopStoreShiftService()
                     _state.update {
                         it.copy(
+                            store = it.store?.copy(
+                                isStoreShiftEnable = false,
+                                passedTime = passedTime
+                            ),
                             isLoading = false,
                             seconds = "00",
                             minutes = "00",
@@ -330,6 +418,12 @@ class StoreDetailScreenModel @AssistedInject constructor(
                             isLoading = false
                         )
                     }
+                    _uiEvent.send(
+                        UiEvent.ShowSnackBar(
+                            message = resource.message,
+                            type = SnackBarType.ERROR
+                        )
+                    )
                 }
             }
         }.launchIn(coroutineScope)
@@ -520,6 +614,13 @@ class StoreDetailScreenModel @AssistedInject constructor(
             e.printStackTrace()
             null
         }
+    }
+
+    companion object {
+        const val POS_TASK = "Z Raporları"
+        const val STORE_INSIDE_TASK = "STORE_INSIDE_TASK"
+        const val STORE_OUTSIDE_TASK = "STORE_OUTSIDE_TASK"
+        const val STEEL_CASE_TASK = "STEEL_CASE"
     }
 
 }

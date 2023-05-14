@@ -15,4 +15,15 @@ data class Store(
     val regionalManager: RegionalManager,
     var isStoreShiftEnable: Boolean,
     val address: String?
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        return (other as Store).id == this.id
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + code.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
+}

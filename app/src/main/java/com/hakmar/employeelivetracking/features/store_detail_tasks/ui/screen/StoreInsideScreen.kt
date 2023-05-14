@@ -22,6 +22,7 @@ import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.graphs.StoreDetailDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.AppBarState
@@ -34,6 +35,7 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.component.StoreCheckCard
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.event.StoreInsideEvent
+import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.event.TaskValidated
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.viewmodel.StoreInsideScreenModel
 import com.hakmar.employeelivetracking.util.UiEvent
 import com.hakmar.employeelivetracking.util.getContainerColor
@@ -79,6 +81,15 @@ class StoreInsideScreen(val storeCode: String) : Screen {
                                 containerColor = getContainerColor(event.type)
                             )
                         )
+                    }
+
+                    is UiEvent.Navigate<*> -> {
+                        when (event.route) {
+                            HomeDestination.StoreDetail.base -> {
+                                navigator.pop()
+                                mainViewModel.postEvent(TaskValidated.StoreInsideValidated)
+                            }
+                        }
                     }
 
                     else -> Unit

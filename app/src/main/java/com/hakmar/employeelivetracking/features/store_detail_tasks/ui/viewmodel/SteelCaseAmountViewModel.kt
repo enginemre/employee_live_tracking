@@ -3,6 +3,7 @@ package com.hakmar.employeelivetracking.features.store_detail_tasks.ui.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.base.BaseViewModel
+import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.features.store_detail_tasks.domain.usecase.SendSteelCaseUseCase
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.event.SteelCaseAmountEvent
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.event.SteelCaseAmountField.Banknotes
@@ -19,6 +20,7 @@ import com.hakmar.employeelivetracking.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -124,6 +126,12 @@ class SteelCaseAmountViewModel @Inject constructor(
                         UiEvent.ShowSnackBar(
                             message = UiText.StringResorce(R.string.successfully_steel_case_amount),
                             type = SnackBarType.SUCCESS
+                        )
+                    )
+                    delay(250L)
+                    _uiEvent.send(
+                        UiEvent.Navigate<Any>(
+                            route = HomeDestination.StoreDetail.base,
                         )
                     )
                 }

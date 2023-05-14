@@ -14,5 +14,6 @@ sealed class BsStoreEvent {
         val fusedLocationProviderClient: FusedLocationProviderClient
     ) : BsStoreEvent()
 
+    data class RefreshDashBoard(val store: Store?) : BsStoreEvent()
     data class OnTick(val hour: String, val minute: String, val second: String) : BsStoreEvent()
 }

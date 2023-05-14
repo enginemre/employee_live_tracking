@@ -96,6 +96,15 @@ class BsStoreScreen : Screen {
             }
         }
         LaunchedEffect(key1 = Unit) {
+            mainViewModel.eventManager.eventFlow.collect {
+                when (it) {
+                    is BsSharedEvent.RefreshDashboard -> {
+                        viewModel.onEvent(BsStoreEvent.RefreshDashBoard(it.store))
+                    }
+                }
+            }
+        }
+        LaunchedEffect(key1 = Unit) {
             viewModel.uiEvent.collect { event ->
                 when (event) {
                     is UiEvent.ShowSnackBar -> {
@@ -202,7 +211,7 @@ class BsStoreScreen : Screen {
                     )
                 }
             }
-            state.value.storeList?.let {
+            viewModel.storeList.let {
                 storeList(it) { storeCode ->
                     val store = it.find { store -> storeCode == store.code }
                     viewModel.onEvent(BsStoreEvent.OnStoreClick(store, fusedLocationProviderClient))

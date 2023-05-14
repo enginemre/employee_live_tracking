@@ -127,7 +127,7 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
                     .fillMaxSize()
                     .background(Color.White),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                verticalItemSpacing = MaterialTheme.spacing.small,
                 contentPadding = PaddingValues(16.dp)
             ) {
                 items(state.taskList) {

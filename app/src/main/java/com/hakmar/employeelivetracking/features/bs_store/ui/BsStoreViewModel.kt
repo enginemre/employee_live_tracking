@@ -1,6 +1,7 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
 import android.location.Location
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -47,11 +48,14 @@ class BsStoreViewModel @Inject constructor(
     private val storeShiftServiceManager: StoreShiftServiceManager,
     private val bsStoreUseCases: BsStoreUseCases,
     private val initStoreShiftStatusUseCase: GetStoreShiftStatusUseCase,
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: DataStoreRepository,
 ) : BaseViewModel<BsStoreEvent>() {
 
     private var _state = MutableStateFlow(BsStoreState())
     val state = _state.asStateFlow()
+
+    private val _storeList = mutableStateListOf<Store>()
+    val storeList: List<Store> = _storeList
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -75,6 +79,11 @@ class BsStoreViewModel @Inject constructor(
     override fun onEvent(event: BsStoreEvent) {
         when (event) {
             is BsStoreEvent.OnGeneralShiftClick -> {
+                _state.update {
+                    it.copy(
+                        isLoading = true
+                    )
+                }
                 viewModelScope.launch {
                     val result = getCurrentLocation(event.fusedLocationProviderClient)
                     result?.let { loc ->
@@ -97,6 +106,20 @@ class BsStoreViewModel @Inject constructor(
             BsStoreEvent.Idle -> {
                 initInfo()
             }
+
+            is BsStoreEvent.RefreshDashBoard -> {
+                findAndUpdate(event.store)
+            }
+        }
+    }
+
+    private fun findAndUpdate(store: Store?) {
+        store?.let {
+            val tempList = storeList.toMutableList()
+            val index = tempList.indexOf(it)
+            tempList[index] = it
+            _storeList.clear()
+            _storeList.addAll(tempList)
         }
     }
 
@@ -518,9 +541,10 @@ class BsStoreViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 isLoading = false,
-                                storeList = resource.data!!
-                            )
+
+                                )
                         }
+                        _storeList.addAll(resource.data!!)
                     }
 
                     is Resource.Loading -> {

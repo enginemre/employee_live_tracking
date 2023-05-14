@@ -38,7 +38,7 @@ interface StoreDetailApi {
     @POST("api/stop-timer/")
     suspend fun cancelStoreShift(
         @Body body: StoreTimerRequestBodyDto
-    ): BaseResponseDto<String>
+    ): BaseResponseDto<TimerDto>
 
     @GET("/api/timer-status/")
     suspend fun initStoreShift(
