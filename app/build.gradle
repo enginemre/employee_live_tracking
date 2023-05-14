@@ -20,7 +20,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
+        testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -34,6 +34,13 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
+        }
+        benchmark {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+            proguardFiles "benchmark-rules.pro"
+            debuggable false
         }
         release {
             minifyEnabled true
