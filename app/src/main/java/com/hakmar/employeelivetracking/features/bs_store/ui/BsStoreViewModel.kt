@@ -128,7 +128,7 @@ class BsStoreViewModel @Inject constructor(
         fusedLocationProviderClient: FusedLocationProviderClient
     ) {
         data?.let { store ->
-            _state.update {
+           /* _state.update {
                 it.copy(
                     isLoading = true
                 )
@@ -195,7 +195,19 @@ class BsStoreViewModel @Inject constructor(
                         )
                     }
                 }
+            }*/
+
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
             }
+            _uiEvent.trySend(
+                UiEvent.Navigate(
+                    route = HomeDestination.StoreDetail.base,
+                    data = store.code
+                )
+            )
         }
     }
 

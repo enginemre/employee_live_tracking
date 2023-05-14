@@ -2,7 +2,7 @@ package com.hakmar.employeelivetracking.common.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
-
+// "pos_amount_completed":false,"steel_safe_completed":false,"store_opening_completed":false,"store_closing_completed":false
 data class StoreDto(
     @SerializedName("area_code")
     val areaCode: String,
@@ -31,9 +31,18 @@ data class StoreDto(
     @SerializedName("address")
     val address: String?,
     @SerializedName("taskCount")
-    val taskCount: String,
+    val taskCount: String?,
     @SerializedName("completedTask")
     val completedTask: String?,
     @SerializedName("store_timer_status")
     val storeTimerStatus: String?,
-)
+    @SerializedName("pos_amount_completed")
+    val postAmountStatus: Boolean?,
+    @SerializedName("store_closing_completed")
+    val storeClosingStatus: Boolean?,
+    @SerializedName("store_opening_completed")
+    val storeOpeningStatus: Boolean?,
+    @SerializedName("steel_safe_completed")
+    val steelCaseStatus: Boolean?,
+
+    )

@@ -273,7 +273,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Güzelyalı",
@@ -320,7 +321,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Gözdağı Pendik",
@@ -367,7 +369,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Gülsuyu Maltepe",
@@ -414,7 +417,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Güzelyalı",
@@ -461,7 +465,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Gözdağı Pendik",
@@ -508,7 +513,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
         Store(
             name = "Gülsuyu Maltepe",
@@ -555,7 +561,8 @@ fun BsStoreScreenPrev() {
                 )
             ),
             isStoreShiftEnable = false,
-            address = ""
+            address = "",
+            taskStatus = hashMapOf()
         ),
     )
     EmployeeLiveTrackingTheme {

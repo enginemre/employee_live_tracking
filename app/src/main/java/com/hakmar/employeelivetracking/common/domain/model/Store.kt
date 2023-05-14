@@ -14,7 +14,8 @@ data class Store(
     val distirctManager: DistirctManager,
     val regionalManager: RegionalManager,
     var isStoreShiftEnable: Boolean,
-    val address: String?
+    val address: String?,
+    val taskStatus: HashMap<String, Boolean>
 ) {
     override fun equals(other: Any?): Boolean {
         return (other as Store).id == this.id

@@ -10,6 +10,10 @@ import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.hakmar.employeelivetracking.R
+import com.hakmar.employeelivetracking.common.data.mapper.POS_STATUS
+import com.hakmar.employeelivetracking.common.data.mapper.STEEL_STATUS
+import com.hakmar.employeelivetracking.common.data.mapper.STORE_INSIDE_STATUS
+import com.hakmar.employeelivetracking.common.data.mapper.STORE_OUTSIDE_STATUS
 import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.service.StoreShiftServiceManager
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
@@ -64,7 +68,6 @@ class StoreDetailScreenModel @AssistedInject constructor(
     }
 
     init {
-
         initStatus(storeCode)
         getStoreDetail(storeCode)
     }
@@ -129,74 +132,61 @@ class StoreDetailScreenModel @AssistedInject constructor(
             is StoreDetailEvent.OnTaskCompleted -> {
                 when (event.taskName) {
                     POS_TASK -> {
-                        val item =
-                            state.value.taskList.find { it.name.contains("Z Raporları Kontrol") }
-                        val index = state.value.taskList.indexOf(item)
-                        val list = state.value.taskList.toMutableList()
-                        list[index] = item!!.copy(
-                            isCompleted = true
-                        )
-                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
-                        _state.update {
-                            it.copy(
-                                taskList = list,
-                                store = it.store?.copy(completedTask = newCompletedTaskCount)
-                            )
-                        }
+                        updateTask(taskDescription = "Z Raporları Kontrol", true)
                     }
 
                     STORE_OUTSIDE_TASK -> {
-                        val item =
-                            state.value.taskList.find { it.name.contains("Mağaza Önü Kontrol") }
-                        val index = state.value.taskList.indexOf(item)
-                        val list = state.value.taskList.toMutableList()
-                        list[index] = item!!.copy(
-                            isCompleted = true
-                        )
-                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
-                        _state.update {
-                            it.copy(
-                                taskList = list,
-                                store = it.store?.copy(completedTask = newCompletedTaskCount)
-                            )
-                        }
+                        updateTask(taskDescription = "Mağaza Önü Kontrol", true)
                     }
 
                     STORE_INSIDE_TASK -> {
-                        val item =
-                            state.value.taskList.find { it.name.contains("Mağaza İçi Kontrol") }
-                        val index = state.value.taskList.indexOf(item)
-                        val list = state.value.taskList.toMutableList()
-                        list[index] = item!!.copy(
-                            isCompleted = true
-                        )
-                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
-                        _state.update {
-                            it.copy(
-                                taskList = list,
-                                store = it.store?.copy(completedTask = newCompletedTaskCount)
-                            )
-                        }
+                        updateTask(taskDescription = "Mağaza İçi Kontrol", true)
                     }
 
                     STEEL_CASE_TASK -> {
-                        val item =
-                            state.value.taskList.find { it.name.contains("Çelik Kasa Sayım") }
-                        val index = state.value.taskList.indexOf(item)
-                        val list = state.value.taskList.toMutableList()
-                        list[index] = item!!.copy(
-                            isCompleted = true
-                        )
-                        val newCompletedTaskCount = state.value.store!!.completedTask + 1
-                        _state.update {
-                            it.copy(
-                                taskList = list,
-                                store = it.store?.copy(completedTask = newCompletedTaskCount)
-                            )
-                        }
+                        updateTask(taskDescription = "Çelik Kasa Sayım", true)
                     }
                 }
             }
+        }
+    }
+
+    private fun updateTask(taskDescription: String, isCompleted: Boolean) {
+        val key = when (taskDescription) {
+            "Z Raporları Kontrol" -> {
+                POS_STATUS
+            }
+
+            "Mağaza Önü Kontrol" -> {
+                STORE_OUTSIDE_STATUS
+            }
+
+            "Mağaza İçi Kontrol" -> {
+                STORE_INSIDE_STATUS
+            }
+
+            "Çelik Kasa Sayım" -> {
+                STEEL_STATUS
+            }
+
+            else -> {
+                ""
+            }
+        }
+        val item =
+            state.value.taskList.find { it.name.contains(taskDescription) }
+        val index = state.value.taskList.indexOf(item)
+        val list = state.value.taskList.toMutableList()
+        list[index] = item!!.copy(
+            isCompleted = isCompleted
+        )
+        state.value.store?.taskStatus?.set(key, isCompleted)
+        val newCompletedTaskCount = state.value.store?.taskStatus?.values?.count { it } ?: 0
+        _state.update {
+            it.copy(
+                taskList = list,
+                store = it.store?.copy(completedTask = newCompletedTaskCount)
+            )
         }
     }
 
@@ -560,7 +550,7 @@ class StoreDetailScreenModel @AssistedInject constructor(
                             store = resource.data
                         )
                     }
-
+                    updateTaskList(resource.data!!.taskStatus)
                 }
 
                 is Resource.Loading -> {
@@ -586,6 +576,28 @@ class StoreDetailScreenModel @AssistedInject constructor(
                 }
             }
         }.launchIn(coroutineScope)
+    }
+
+    private fun updateTaskList(taskStatus: Map<String, Boolean>) {
+        taskStatus.forEach { key, value ->
+            when (key) {
+                POS_STATUS -> {
+                    updateTask(taskDescription = "Z Raporları Kontrol", value)
+                }
+
+                STEEL_STATUS -> {
+                    updateTask(taskDescription = "Çelik Kasa Sayım", value)
+                }
+
+                STORE_INSIDE_STATUS -> {
+                    updateTask(taskDescription = "Mağaza İçi Kontrol", value)
+                }
+
+                STORE_OUTSIDE_STATUS -> {
+                    updateTask(taskDescription = "Mağaza Önü Kontrol", value)
+                }
+            }
+        }
     }
 
     private fun goTaskScreen(taskModel: TaskModel) {
