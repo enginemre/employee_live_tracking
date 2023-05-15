@@ -34,6 +34,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
+import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
 import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
 import com.hakmar.employeelivetracking.common.presentation.ui.components.LocalSnackbarHostState
@@ -55,6 +56,7 @@ import com.hakmar.employeelivetracking.util.getContentColor
     override fun Content() {
         val context = LocalContext.current
         val viewModel = getViewModel<NavigationViewModel>()
+        val mainViewModel = getViewModel<MainViewModel>()
         val mapLauncher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
         val state = viewModel.state.collectAsStateWithLifecycle()
@@ -65,7 +67,8 @@ import com.hakmar.employeelivetracking.util.getContentColor
             position = CameraPosition.fromLatLngZoom(state.value.cameraPosition, 15f)
         }
         LaunchedEffect(key1 = Unit) {
-            viewModel.onEvent(NavigationEvent.GetLocaiton(fusedLocationProviderClient))
+            if (mainViewModel.isGranetedLocaitonPermission)
+                viewModel.onEvent(NavigationEvent.GetLocaiton(fusedLocationProviderClient))
         }
         LaunchedEffect(key1 = Unit) {
             viewModel.uiEvent.collect { event ->

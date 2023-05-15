@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -108,6 +113,7 @@ class OnBoardingScreen : Screen {
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
                 hasLocaitionPermission = isGranted
+                mainViewModel.isGranetedLocaitonPermission = isGranted
                 if (listOfPermission.size == 3) {
                     navigator.replaceAll(LoginScreen())
                     mainViewModel.setIsFirst()
@@ -122,6 +128,7 @@ class OnBoardingScreen : Screen {
         val launcherCamera = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { granted ->
+                mainViewModel.isGrantedCameraPermission = granted
                 hasCamPermission = granted
                 coroutineScope.launch {
                     pageState.animateScrollToPage(pageState.currentPage + 1)

@@ -66,6 +66,8 @@ class BsStoreViewModel @Inject constructor(
 
     companion object {
         const val NFC_OP = "nfc_op"
+        const val CAMERA_PERMISSION = "camera_permission"
+        const val LOCATION_PERMISSION = "location_permission"
     }
 
     private var startShiftJob: Job? = null
@@ -84,19 +86,31 @@ class BsStoreViewModel @Inject constructor(
                         isLoading = true
                     )
                 }
-                viewModelScope.launch {
-                    val result = getCurrentLocation(event.fusedLocationProviderClient)
-                    result?.let { loc ->
-                        generalShiftButtonClick(loc.latitude, loc.longitude)
-                    } ?: kotlin.run {
-                        generalShiftButtonClick(0.0, 0.0)
+                if (event.isLocationPermissionGranted) {
+                    viewModelScope.launch {
+                        val result = getCurrentLocation(event.fusedLocationProviderClient)
+                        result?.let { loc ->
+                            generalShiftButtonClick(loc.latitude, loc.longitude)
+                        } ?: kotlin.run {
+                            generalShiftButtonClick(0.0, 0.0)
+                        }
                     }
+                } else {
+                    sendPermissionError(R.string.location_permission_error)
                 }
-
             }
 
             is BsStoreEvent.OnStoreClick -> {
+                if (!event.isLocationPermissionGranted) {
+                    sendPermissionError(R.string.location_permission_error)
+                    return
+                }
+                if (!event.isCameraLocationPermissionGranted) {
+                    sendPermissionError(R.string.camera_permission_error)
+                    return
+                }
                 onStoreClick(event.data, event.fusedLocationProviderClient)
+
             }
 
             is BsStoreEvent.OnTick -> {
@@ -110,6 +124,52 @@ class BsStoreViewModel @Inject constructor(
             is BsStoreEvent.RefreshDashBoard -> {
                 findAndUpdate(event.store)
             }
+
+            BsStoreEvent.DismissDialog -> {
+                _state.update {
+                    it.copy(
+                        showAlertDialog = false,
+                        alertText = null
+                    )
+                }
+            }
+
+            is BsStoreEvent.PermissionRequest -> {
+                _state.update {
+                    it.copy(
+                        showAlertDialog = false,
+                        alertText = null
+                    )
+                }
+                if (!event.isLocationPermissionGranted) {
+                    _uiEvent.trySend(
+                        UiEvent.Navigate<Any>(
+                            route = LOCATION_PERMISSION,
+                            data = null
+                        )
+                    )
+                    return
+                }
+                if (!event.isCameraPermissionGranted) {
+                    _uiEvent.trySend(
+                        UiEvent.Navigate<Any>(
+                            route = CAMERA_PERMISSION,
+                            data = null
+                        )
+                    )
+                    return
+                }
+            }
+
+        }
+    }
+
+    private fun sendPermissionError(alertText: Int) {
+        _state.update {
+            it.copy(
+                showAlertDialog = true,
+                alertText = alertText
+            )
         }
     }
 

@@ -18,4 +18,6 @@ data class BsStoreState(
     var buttonTextColor: Color = Natural110,
     var buttonText: Int = R.string.start,
     var selectedStoreCode: String = "",
+    var showAlertDialog: Boolean = false,
+    var alertText: Int? = null
 )

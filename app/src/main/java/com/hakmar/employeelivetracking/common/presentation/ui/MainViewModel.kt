@@ -40,6 +40,9 @@ class MainViewModel @Inject constructor(
 
     private val _userState = MutableStateFlow(UserState())
 
+    var isGrantedCameraPermission = false
+    var isGranetedLocaitonPermission = false
+
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 

@@ -105,4 +105,6 @@
     <string name="cancel">İptal</string>
     <string name="warning">Uyarı</string>
     <string name="succesfully_completed">Başarıyla tamamlandı</string>
+    <string name="location_permission_error">"Konum izni vermediniz\nKonum izni vermek ister misiniz ? "</string>
+    <string name="camera_permission_error">"Kamera izni vermediniz\nKamera izni vermek ister misiniz ? "</string>
 </resources>

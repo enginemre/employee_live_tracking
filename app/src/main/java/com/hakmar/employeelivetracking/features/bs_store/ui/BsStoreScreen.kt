@@ -1,5 +1,6 @@
 package com.hakmar.employeelivetracking.features.bs_store.ui
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -27,6 +28,7 @@ import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.google.android.gms.location.LocationServices
+import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.domain.model.DistirctManager
 import com.hakmar.employeelivetracking.common.domain.model.MarketingManager
 import com.hakmar.employeelivetracking.common.domain.model.ProfileUser
@@ -87,6 +89,18 @@ class BsStoreScreen : Screen {
                 else
                     mainViewModel.onEvent(MainEvent.OnQrDataNotRead)
             })
+        val launcherPermissionLocation = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                mainViewModel.isGranetedLocaitonPermission = isGranted
+            }
+        )
+        val launcherPermissionCamera = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                mainViewModel.isGrantedCameraPermission = isGranted
+            }
+        )
         SystemReciver(action = AppConstants.ACTION_OBSERVE_GENERAL_SHIFT) {
             if (it?.action == AppConstants.ACTION_OBSERVE_GENERAL_SHIFT) {
                 val string = it.getStringExtra(AppConstants.TIME_ELAPSED)
@@ -129,12 +143,40 @@ class BsStoreScreen : Screen {
                                     //Yes NFC available
                                     launcherForNFC.launch(Intent(context, NFCActivity::class.java))
                                 } else if (adapter != null && !adapter.isEnabled) {
-                                    //NFC is not enabled.Need to enable by the user.
-                                    launcherForQr.launch(Intent(context, QrActivity::class.java))
+                                    // NFC Closed by user
+                                    if (mainViewModel.isGrantedCameraPermission)
+                                        launcherForQr.launch(
+                                            Intent(
+                                                context,
+                                                QrActivity::class.java
+                                            )
+                                        )
+                                    else {
+                                        // Request Permission
+                                        launcherPermissionCamera.launch(Manifest.permission.CAMERA)
+                                    }
                                 } else {
                                     //NFC is not supported
-                                    launcherForQr.launch(Intent(context, QrActivity::class.java))
+                                    if (mainViewModel.isGrantedCameraPermission)
+                                        launcherForQr.launch(
+                                            Intent(
+                                                context,
+                                                QrActivity::class.java
+                                            )
+                                        )
+                                    else {
+                                        // Request Permission
+                                        launcherPermissionCamera.launch(Manifest.permission.CAMERA)
+                                    }
                                 }
+                            }
+
+                            BsStoreViewModel.CAMERA_PERMISSION -> {
+                                launcherPermissionCamera.launch(Manifest.permission.CAMERA)
+                            }
+
+                            BsStoreViewModel.LOCATION_PERMISSION -> {
+                                launcherPermissionLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                             }
                         }
                     }
@@ -172,6 +214,22 @@ class BsStoreScreen : Screen {
         if (state.value.isLoading) {
             LoadingDialog(stateLoading = state.value.isLoading)
         }
+        if (state.value.showAlertDialog)
+            CustomAlertDialog(
+                title = stringResource(id = R.string.warning),
+                description = stringResource(id = state.value.alertText!!),
+                postiveText = stringResource(id = R.string.okey),
+                negativeText = stringResource(id = R.string.cancel),
+                onPositive = {
+                    viewModel.onEvent(
+                        BsStoreEvent.PermissionRequest(
+                            mainViewModel.isGrantedCameraPermission,
+                            mainViewModel.isGranetedLocaitonPermission
+                        )
+                    )
+                },
+                onNegative = { viewModel.onEvent(BsStoreEvent.DismissDialog) }
+            )
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize(),
@@ -201,7 +259,8 @@ class BsStoreScreen : Screen {
                         onClick = {
                             viewModel.onEvent(
                                 BsStoreEvent.OnGeneralShiftClick(
-                                    fusedLocationProviderClient
+                                    fusedLocationProviderClient,
+                                    mainViewModel.isGranetedLocaitonPermission
                                 )
                             )
                         },
@@ -213,7 +272,14 @@ class BsStoreScreen : Screen {
             viewModel.storeList.let {
                 storeList(it) { storeCode ->
                     val store = it.find { store -> storeCode == store.code }
-                    viewModel.onEvent(BsStoreEvent.OnStoreClick(store, fusedLocationProviderClient))
+                    viewModel.onEvent(
+                        BsStoreEvent.OnStoreClick(
+                            store,
+                            fusedLocationProviderClient,
+                            mainViewModel.isGrantedCameraPermission,
+                            mainViewModel.isGranetedLocaitonPermission
+                        )
+                    )
                 }
             }
 

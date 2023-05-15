@@ -101,10 +101,6 @@ class TasksScreen(var isRefresh: Boolean = false) : Screen {
                         }
                     }
 
-                    is UiEvent.ShowDialog<*> -> {
-
-                    }
-
                     else -> Unit
                 }
             }
