@@ -1,14 +1,30 @@
 package com.hakmar.employeelivetracking.features.auth.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -18,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
@@ -28,7 +45,12 @@ import com.hakmar.employeelivetracking.R
 import com.hakmar.employeelivetracking.common.presentation.HomeScreen
 import com.hakmar.employeelivetracking.common.presentation.graphs.Destination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainViewModel
-import com.hakmar.employeelivetracking.common.presentation.ui.components.*
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackBar
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomSnackbarVisuals
+import com.hakmar.employeelivetracking.common.presentation.ui.components.CustomTextField
+import com.hakmar.employeelivetracking.common.presentation.ui.components.DevicePreviews
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LargeButton
+import com.hakmar.employeelivetracking.common.presentation.ui.components.LoadingDialog
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.colors
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
@@ -135,7 +157,18 @@ class LoginScreen : Screen {
                             leadingIcon = { PasswordIcon(isActive = state.value.isActivePassword) },
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
-                            visualTransformation = PasswordVisualTransformation(),
+                            visualTransformation = if (state.value.isVisiblePassword) VisualTransformation.None else PasswordVisualTransformation(),
+                            trailIcon = {
+                                IconButton(onClick = {
+                                    viewModel.onEvent(LoginEvent.ChangeVisibilty)
+                                }) {
+                                    Icon(
+                                        imageVector = if (state.value.isVisiblePassword)
+                                            Icons.Filled.Visibility
+                                        else Icons.Filled.VisibilityOff, null
+                                    )
+                                }
+                            },
                             onFocused = {
                                 viewModel.onEvent(
                                     LoginEvent.OnFocused(

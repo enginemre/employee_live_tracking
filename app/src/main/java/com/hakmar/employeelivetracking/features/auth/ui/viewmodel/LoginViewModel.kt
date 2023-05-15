@@ -69,6 +69,14 @@ class LoginViewModel @Inject constructor(
                         )
                     }
             }
+
+            LoginEvent.ChangeVisibilty -> {
+                _state.update {
+                    it.copy(
+                        isVisiblePassword = !state.value.isVisiblePassword
+                    )
+                }
+            }
         }
     }
 
