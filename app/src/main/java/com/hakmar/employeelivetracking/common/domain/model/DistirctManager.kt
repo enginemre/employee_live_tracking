@@ -1,8 +1,8 @@
 package com.hakmar.employeelivetracking.common.domain.model
 
 data class DistirctManager(
-    val areaCode: String,
+    val areaCode: String?,
     val id: Int,
-    val marketingManagerId: Int,
+    val marketingManagerId: MarketingManager,
     val profile: ProfileUser
 )

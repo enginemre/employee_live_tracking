@@ -30,7 +30,6 @@ import com.google.android.gms.location.LocationServices
 import com.hakmar.employeelivetracking.common.domain.model.DistirctManager
 import com.hakmar.employeelivetracking.common.domain.model.MarketingManager
 import com.hakmar.employeelivetracking.common.domain.model.ProfileUser
-import com.hakmar.employeelivetracking.common.domain.model.RegionalManager
 import com.hakmar.employeelivetracking.common.domain.model.Store
 import com.hakmar.employeelivetracking.common.presentation.graphs.HomeDestination
 import com.hakmar.employeelivetracking.common.presentation.ui.MainEvent
@@ -238,32 +237,20 @@ fun BsStoreScreenPrev() {
             lattitude = 23.3,
             longtitude = 43.5,
             areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
             distirctManager = DistirctManager(
                 "234",
                 1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
+                MarketingManager(
+                    "001",
+                    1,
+                    ProfileUser(
+                        "0034334",
+                        "2342342",
+                        "rsdfas",
+                        userId = "2312",
+                        user = User(nameSurname = "", "")
+                    )
+                ),
                 ProfileUser(
                     "0034334",
                     "2342342",
@@ -286,32 +273,20 @@ fun BsStoreScreenPrev() {
             lattitude = 23.3,
             longtitude = 43.5,
             areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
             distirctManager = DistirctManager(
                 "234",
                 1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
+                MarketingManager(
+                    "001",
+                    1,
+                    ProfileUser(
+                        "0034334",
+                        "2342342",
+                        "rsdfas",
+                        userId = "2312",
+                        user = User(nameSurname = "", "")
+                    )
+                ),
                 ProfileUser(
                     "0034334",
                     "2342342",
@@ -334,80 +309,20 @@ fun BsStoreScreenPrev() {
             lattitude = 23.3,
             longtitude = 43.5,
             areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
             distirctManager = DistirctManager(
                 "234",
                 1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            isStoreShiftEnable = false,
-            address = "",
-            taskStatus = hashMapOf()
-        ),
-        Store(
-            name = "Gülsuyu Maltepe",
-            code = "5014",
-            passedTime = "2 saat 12 dk",
-            taskCount = 25,
-            completedTask = 17,
-            id = "",
-            lattitude = 23.3,
-            longtitude = 43.5,
-            areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            distirctManager = DistirctManager(
-                "234",
-                1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
+                MarketingManager(
+                    "001",
+                    1,
+                    ProfileUser(
+                        "0034334",
+                        "2342342",
+                        "rsdfas",
+                        userId = "2312",
+                        user = User(nameSurname = "", "")
+                    )
+                ),
                 ProfileUser(
                     "0034334",
                     "2342342",
@@ -430,32 +345,20 @@ fun BsStoreScreenPrev() {
             lattitude = 23.3,
             longtitude = 43.5,
             areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
             distirctManager = DistirctManager(
                 "234",
                 1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
+                MarketingManager(
+                    "001",
+                    1,
+                    ProfileUser(
+                        "0034334",
+                        "2342342",
+                        "rsdfas",
+                        userId = "2312",
+                        user = User(nameSurname = "", "")
+                    )
+                ),
                 ProfileUser(
                     "0034334",
                     "2342342",
@@ -478,32 +381,20 @@ fun BsStoreScreenPrev() {
             lattitude = 23.3,
             longtitude = 43.5,
             areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
             distirctManager = DistirctManager(
                 "234",
                 1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
+                MarketingManager(
+                    "001",
+                    1,
+                    ProfileUser(
+                        "0034334",
+                        "2342342",
+                        "rsdfas",
+                        userId = "2312",
+                        user = User(nameSurname = "", "")
+                    )
+                ),
                 ProfileUser(
                     "0034334",
                     "2342342",
@@ -515,55 +406,7 @@ fun BsStoreScreenPrev() {
             isStoreShiftEnable = false,
             address = "",
             taskStatus = hashMapOf()
-        ),
-        Store(
-            name = "Gülsuyu Maltepe",
-            code = "5014",
-            passedTime = "2 saat 12 dk",
-            taskCount = 25,
-            completedTask = 17,
-            id = "",
-            lattitude = 23.3,
-            longtitude = 43.5,
-            areaCode = "001",
-            regionalManager = RegionalManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            distirctManager = DistirctManager(
-                "234",
-                1,
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            marketingManager = MarketingManager(
-                "001",
-                1,
-                ProfileUser(
-                    "0034334",
-                    "2342342",
-                    "rsdfas",
-                    userId = "2312",
-                    user = User(nameSurname = "", "")
-                )
-            ),
-            isStoreShiftEnable = false,
-            address = "",
-            taskStatus = hashMapOf()
-        ),
+        )
     )
     EmployeeLiveTrackingTheme {
         LazyColumn(

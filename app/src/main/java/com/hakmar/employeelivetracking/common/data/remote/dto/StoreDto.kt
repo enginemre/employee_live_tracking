@@ -7,13 +7,9 @@ data class StoreDto(
     @SerializedName("area_code")
     val areaCode: String,
     @SerializedName("district_manager")
-    val districtManager: DistrictManagerDto,
+    val districtManager: DistrictManagerDto?,
     @SerializedName("id")
     val id: Int,
-    @SerializedName("marketing_manager")
-    val marketingManager: MarketingManagerDto,
-    @SerializedName("regional_director")
-    val regionalDirector: RegionalDirectorDto,
     @SerializedName("start_permission")
     val isStoreShiftDisable: Boolean,
     @SerializedName("store_code")

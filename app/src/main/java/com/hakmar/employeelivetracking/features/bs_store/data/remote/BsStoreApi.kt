@@ -24,6 +24,6 @@ interface BsStoreApi {
     @GET("/accounts/resume-timer/{userId}/")
     suspend fun resumeGeneralShift(@Path("userId") userId: String): BaseResponseDto<TimerDto>
 
-    @GET("/api/store/{userId}/")
-    suspend fun getAllStores(@Path("userId") userId: String): BaseResponseDto<List<StoreDto>>
+    @GET("/api/dm-store/{userId}/")
+    suspend fun getDmStores(@Path("userId") userId: String): BaseResponseDto<List<StoreDto>>
 }

@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 
 data class DistrictManagerDto(
     @SerializedName("area_code")
-    val areaCode: String,
+    val areaCode: String?,
     @SerializedName("id")
     val id: Int,
     @SerializedName("marketing_manager")
-    val marketingManager: Int,
+    val marketingManager: MarketingManagerDto,
     @SerializedName("profile")
-    val profile: ProfileDto
+    val profile: ProfileDto,
 )

@@ -7,13 +7,13 @@ data class ProfileDto(
     @SerializedName("id")
     val id: Int,
     @SerializedName("phone_number")
-    val phoneNumber: String,
+    val phoneNumber: String?,
     @SerializedName("registration_number")
-    val registrationNumber: String,
+    val registrationNumber: String?,
     @SerializedName("role")
-    val role: String,
+    val role: String?,
     @SerializedName("user")
     val user: UserDto,
     @SerializedName("user_uuid")
-    val userUuid: String
+    val userUuid: String?
 )

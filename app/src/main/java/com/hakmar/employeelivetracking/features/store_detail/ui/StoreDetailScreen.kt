@@ -3,7 +3,13 @@ package com.hakmar.employeelivetracking.features.store_detail.ui
 import androidx.activity.compose.BackHandler
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -13,7 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +50,11 @@ import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLive
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
 import com.hakmar.employeelivetracking.features.bs_store.ui.BsSharedEvent
 import com.hakmar.employeelivetracking.features.store_detail.domain.model.TaskModel
-import com.hakmar.employeelivetracking.features.store_detail.ui.component.*
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.LayoutTitle
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.StoreInfoCard
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.StoreShiftCard
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.TaskCard
+import com.hakmar.employeelivetracking.features.store_detail.ui.component.TaskProgressCard
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.POS_TASK
 import com.hakmar.employeelivetracking.features.store_detail.ui.viewmodel.StoreDetailScreenModel.Companion.STEEL_CASE_TASK
@@ -55,7 +65,11 @@ import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.Pos
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.SteelCaseAmountScreen
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.StoreInsideScreen
 import com.hakmar.employeelivetracking.features.store_detail_tasks.ui.screen.StoreOutsideScreen
-import com.hakmar.employeelivetracking.util.*
+import com.hakmar.employeelivetracking.util.AppConstants
+import com.hakmar.employeelivetracking.util.TimerState
+import com.hakmar.employeelivetracking.util.UiEvent
+import com.hakmar.employeelivetracking.util.getContainerColor
+import com.hakmar.employeelivetracking.util.getContentColor
 
 @ExperimentalGetImage
 class StoreDetailScreen(
@@ -213,7 +227,8 @@ class StoreDetailScreen(
                         storeName = state.store?.name ?: "Store Name",
                         storeCode = state.store?.code ?: "****",
                         bsName = state.store?.distirctManager?.profile?.user?.nameSurname ?: "",
-                        pmName = state.store?.marketingManager?.profile?.user?.nameSurname ?: "",
+                        pmName = state.store?.distirctManager?.marketingManagerId?.profile?.user?.nameSurname
+                            ?: "",
                         address = "Çınardere mah gençlik cad no 16 daire 15 pendik İsitanbul"
                     )
                 } else {

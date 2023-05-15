@@ -162,7 +162,7 @@ class BsStoreRepositoryImpl @Inject constructor(
                 emit(Resource.Loading())
                 val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
                 userId?.let { id ->
-                    val result = bsStoreApi.getAllStores(userId = id)
+                    val result = bsStoreApi.getDmStores(userId = id)
                     if (result.response.success) {
                         emit(Resource.Success(result.data.map { it.toStore() }))
                     } else {

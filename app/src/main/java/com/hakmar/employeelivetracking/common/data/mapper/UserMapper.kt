@@ -14,18 +14,18 @@ fun DistrictManagerDto.toDistirctManager(): DistirctManager {
     return DistirctManager(
         areaCode,
         id,
-        marketingManager,
+        marketingManager.toMarketingManager(),
         profile.toProfileUser()
     )
 }
 
 fun ProfileDto.toProfileUser(): ProfileUser {
     return ProfileUser(
-        phoneNumber,
-        registrationNumber,
-        role,
+        phoneNumber ?: "",
+        registrationNumber ?: "",
+        role ?: "",
         user.toUser(),
-        userUuid
+        userUuid ?: ""
     )
 }
 
