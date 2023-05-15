@@ -128,46 +128,73 @@ class BsStoreViewModel @Inject constructor(
         fusedLocationProviderClient: FusedLocationProviderClient
     ) {
         data?.let { store ->
-           /* _state.update {
+            _state.update {
                 it.copy(
                     isLoading = true
                 )
             }
-            if (!store.isStoreShiftEnable) {
-                viewModelScope.launch {
-                    _state.update {
-                        it.copy(
-                            isLoading = false
-                        )
-                    }
-                    _uiEvent.send(
-                        UiEvent.ShowSnackBar(
-                            message = UiText.StringResorce(R.string.error_shift_completed),
-                            type = SnackBarType.ERROR
-                        )
+            // Adding Test store
+            if (store.code == "5004") {
+                _state.update {
+                    it.copy(
+                        isLoading = false
                     )
                 }
+                _uiEvent.trySend(
+                    UiEvent.Navigate(
+                        route = HomeDestination.StoreDetail.base,
+                        data = store.code
+                    )
+                )
             } else {
-                viewModelScope.launch {
-                    if (!isValidatedBefore(store.code)) {
-                        updateStoreCode(store.code)
-                        val isInArea = isInArea(
-                            fusedLocationProviderClient,
-                            store.lattitude,
-                            store.longtitude
+                if (!store.isStoreShiftEnable) {
+                    viewModelScope.launch {
+                        _state.update {
+                            it.copy(
+                                isLoading = false
+                            )
+                        }
+                        _uiEvent.send(
+                            UiEvent.ShowSnackBar(
+                                message = UiText.StringResorce(R.string.error_shift_completed),
+                                type = SnackBarType.ERROR
+                            )
                         )
-                        if (isInArea) {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false
+                    }
+                } else {
+                    viewModelScope.launch {
+                        if (!isValidatedBefore(store.code)) {
+                            updateStoreCode(store.code)
+                            val isInArea = isInArea(
+                                fusedLocationProviderClient,
+                                store.lattitude,
+                                store.longtitude
+                            )
+                            if (isInArea) {
+                                _state.update {
+                                    it.copy(
+                                        isLoading = false
+                                    )
+                                }
+                                _uiEvent.send(
+                                    UiEvent.Navigate(
+                                        route = NFC_OP,
+                                        data = null
+                                    )
+                                )
+                            } else {
+                                _state.update {
+                                    it.copy(
+                                        isLoading = false
+                                    )
+                                }
+                                _uiEvent.send(
+                                    UiEvent.ShowSnackBar(
+                                        UiText.StringResorce(R.string.distance_far_away),
+                                        SnackBarType.ERROR
+                                    )
                                 )
                             }
-                            _uiEvent.send(
-                                UiEvent.Navigate(
-                                    route = NFC_OP,
-                                    data = null
-                                )
-                            )
                         } else {
                             _state.update {
                                 it.copy(
@@ -175,39 +202,16 @@ class BsStoreViewModel @Inject constructor(
                                 )
                             }
                             _uiEvent.send(
-                                UiEvent.ShowSnackBar(
-                                    UiText.StringResorce(R.string.distance_far_away),
-                                    SnackBarType.ERROR
+                                UiEvent.Navigate(
+                                    route = HomeDestination.StoreDetail.base,
+                                    data = store.code
                                 )
                             )
                         }
-                    } else {
-                        _state.update {
-                            it.copy(
-                                isLoading = false
-                            )
-                        }
-                        _uiEvent.send(
-                            UiEvent.Navigate(
-                                route = HomeDestination.StoreDetail.base,
-                                data = store.code
-                            )
-                        )
                     }
                 }
-            }*/
-
-            _state.update {
-                it.copy(
-                    isLoading = false
-                )
             }
-            _uiEvent.trySend(
-                UiEvent.Navigate(
-                    route = HomeDestination.StoreDetail.base,
-                    data = store.code
-                )
-            )
+
         }
     }
 
