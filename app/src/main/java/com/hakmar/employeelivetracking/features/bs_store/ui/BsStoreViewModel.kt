@@ -81,12 +81,7 @@ class BsStoreViewModel @Inject constructor(
     override fun onEvent(event: BsStoreEvent) {
         when (event) {
             is BsStoreEvent.OnGeneralShiftClick -> {
-                _state.update {
-                    it.copy(
-                        isLoading = true
-                    )
-                }
-                if (!event.isLocationPermissionGranted) {
+                if (event.isLocationPermissionGranted) {
                     viewModelScope.launch {
                         val result = getCurrentLocation(event.fusedLocationProviderClient)
                         result?.let { loc ->
@@ -704,6 +699,11 @@ class BsStoreViewModel @Inject constructor(
     }
 
     private suspend fun getCurrentLocation(fusedLocationProviderClient: FusedLocationProviderClient): Location? {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
         return try {
             val locationResult = fusedLocationProviderClient.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY,
@@ -713,9 +713,19 @@ class BsStoreViewModel @Inject constructor(
 
                     override fun isCancellationRequested() = false
                 }).await()
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
             locationResult
         } catch (e: SecurityException) {
             e.printStackTrace()
+            _state.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
             null
         }
     }
