@@ -86,7 +86,7 @@ class BsStoreViewModel @Inject constructor(
                         isLoading = true
                     )
                 }
-                if (event.isLocationPermissionGranted) {
+                if (!event.isLocationPermissionGranted) {
                     viewModelScope.launch {
                         val result = getCurrentLocation(event.fusedLocationProviderClient)
                         result?.let { loc ->
