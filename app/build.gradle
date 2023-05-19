@@ -18,8 +18,8 @@ android {
         applicationId "com.hakmar.employeelivetracking"
         minSdk 28
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0"
         testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -164,3 +164,4 @@ dependencies {
     }
 
 }
+ android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
