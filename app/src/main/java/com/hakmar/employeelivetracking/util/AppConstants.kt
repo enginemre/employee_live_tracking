@@ -6,7 +6,6 @@ object AppConstants {
     const val BASE_URL = "https://ruhidibadli.pythonanywhere.com"
     const val TIMEOUT_SHORT = 5L
     const val TIMEOUT_LONG = 30L
-    const val TIMEOUT_VERY_LONG = 50L
     const val DATASTORE_NAME = "employee_datastore"
     const val ACTION_GENERAL_SHIFT_TIME_START = "start_general_shift_time"
     const val ACTION_GENERAL_SHIFT_TIME_STOP = "stop_general_shift_time"
@@ -27,6 +26,8 @@ object AppConstants {
     const val IS_LOGIN = "is_login"
     const val IS_FIRST = "is_first"
     const val USER_ID = "user_id"
+    const val CAMERA_PERMISSION = "camera_permission"
+    const val LOCATION_PERMISSION = "location_permission"
     const val LAST_KNOWN_LOCATION_LAT = "last_known_location_lat"
     const val LAST_KNOWN_LOCATION_LON = "last_known_locaiton_lon"
     const val FIREBASE_TOKEN = "fcm_token"
@@ -46,8 +47,6 @@ object AppConstants {
 
     const val GENERAL_SHIFT_CLICK_REQUEST_CODE = 100
     const val STORE_SHIFT_CLICK_REQUEST_CODE = 101
-    const val STORE_SHIFT_CANCEL_REQUEST_CODE = 102
-    const val GENERAL_SHIFT_CANCEL_REQUEST_CODE = 103
 
     const val DEBUG_TAG = "Fenerbahce"
 
