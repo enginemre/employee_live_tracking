@@ -7,5 +7,7 @@ data class TaskRequestBodyDto(
     val description: String,
     @SerializedName("store_code")
     val storeCode: String,
-    val title: String
+    val title: String,
+    @SerializedName("user_uuid")
+    val userId: String
 )
