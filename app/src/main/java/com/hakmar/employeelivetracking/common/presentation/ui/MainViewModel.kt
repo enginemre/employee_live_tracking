@@ -40,8 +40,37 @@ class MainViewModel @Inject constructor(
 
     private val _userState = MutableStateFlow(UserState())
 
-    var isGrantedCameraPermission = false
-    var isGranetedLocaitonPermission = false
+    var isGrantedCameraPermission: Boolean = false
+        get() {
+            val result =
+                runBlocking { dataStoreRepository.intReadKey(AppConstants.CAMERA_PERMISSION) }
+            return result == 1
+        }
+        set(value) {
+            field = value
+            runBlocking {
+                dataStoreRepository.intPutKey(
+                    AppConstants.CAMERA_PERMISSION,
+                    if (value) 1 else 0
+                )
+            }
+        }
+    var isGranetedLocaitonPermission: Boolean = false
+        get() {
+            val result =
+                runBlocking { dataStoreRepository.intReadKey(AppConstants.LOCATION_PERMISSION) }
+                    ?: 0
+            return result == 1
+        }
+        set(value) {
+            field = value
+            runBlocking {
+                dataStoreRepository.intPutKey(
+                    AppConstants.LOCATION_PERMISSION,
+                    if (value) 1 else 0
+                )
+            }
+        }
 
     private var _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()

@@ -16,11 +16,12 @@ fun TaskDto.toTask(): Task {
     )
 }
 
-fun Task.toTaskRequestBodyDto(): TaskRequestBodyDto {
+fun Task.toTaskRequestBodyDto(userId: String): TaskRequestBodyDto {
     return TaskRequestBodyDto(
         title = title,
         description = description,
-        storeCode = storeCode
+        storeCode = storeCode,
+        userId = userId
     )
 }
 
