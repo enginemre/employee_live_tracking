@@ -22,17 +22,28 @@ class TaskRepositoryImpl(
     override fun updateTask(task: Task): Flow<Resource<Task>> {
         return flow {
             try {
-                emit(Resource.Loading())
-                val result = tasksApi.updateTask(task.id.toString(), task.toTaskRequestBodyDto())
-                if (result.response.success) {
-                    emit(Resource.Success(task))
-                } else {
+                val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
+                userId?.let {
+                    emit(Resource.Loading())
+                    val result =
+                        tasksApi.updateTask(task.id.toString(), task.toTaskRequestBodyDto(it))
+                    if (result.response.success) {
+                        emit(Resource.Success(task))
+                    } else {
+                        emit(
+                            Resource.Error(
+                                message = UiText.DynamicString(result.response.message)
+                            )
+                        )
+                    }
+                } ?: kotlin.run {
                     emit(
                         Resource.Error(
-                            message = UiText.DynamicString(result.response.message)
+                            message = UiText.StringResorce(R.string.error_user_info)
                         )
                     )
                 }
+
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
@@ -55,19 +66,29 @@ class TaskRepositoryImpl(
     override fun createTask(task: Task): Flow<Resource<Unit>> {
         return flow {
             try {
-                emit(Resource.Loading())
-                val result = tasksApi.createTask(
-                    task.toTaskRequestBodyDto()
-                )
-                if (result.response.success) {
-                    emit(Resource.Success(Unit))
-                } else {
+                val userId = dataStoreRepository.stringReadKey(AppConstants.USER_ID)
+                userId?.let {
+                    emit(Resource.Loading())
+                    val result = tasksApi.createTask(
+                        task.toTaskRequestBodyDto(it)
+                    )
+                    if (result.response.success) {
+                        emit(Resource.Success(Unit))
+                    } else {
+                        emit(
+                            Resource.Error(
+                                message = UiText.DynamicString(result.response.message)
+                            )
+                        )
+                    }
+                } ?: kotlin.run {
                     emit(
                         Resource.Error(
-                            message = UiText.DynamicString(result.response.message)
+                            message = UiText.StringResorce(R.string.error_user_info)
                         )
                     )
                 }
+
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
                 emit(Resource.Error(UiText.StringResorce(R.string.error_timeout)))
