@@ -9,7 +9,12 @@ import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +32,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.hakmar.employeelivetracking.common.domain.repository.DataStoreRepository
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.EmployeeLiveTrackingTheme
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.Natural110
 import com.hakmar.employeelivetracking.common.presentation.ui.theme.spacing
@@ -34,6 +40,8 @@ import com.hakmar.employeelivetracking.util.AppConstants
 import com.hakmar.employeelivetracking.util.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NFCActivity : ComponentActivity() {
@@ -41,6 +49,9 @@ class NFCActivity : ComponentActivity() {
     private var tag: Tag? = null
 
     private val viewModel: NFCViewModel by viewModels()
+
+    @Inject
+    lateinit var datastoreRepository: DataStoreRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +104,7 @@ class NFCActivity : ComponentActivity() {
                         val resultIntent = Intent().apply {
                             putExtra(AppConstants.NFC_DATA, event.data)
                         }
-                        setResult(RESULT_OK,resultIntent)
+                        setResult(RESULT_OK, resultIntent)
                         finish()
                     }
                     else -> {}
@@ -112,19 +123,26 @@ class NFCActivity : ComponentActivity() {
     @Suppress("DEPRECATION")
     private fun handleIntent(intent: Intent?) {
         val action = intent?.action
-        if (NfcAdapter.ACTION_TAG_DISCOVERED == action
-            || NfcAdapter.ACTION_TECH_DISCOVERED == action
-            || NfcAdapter.ACTION_NDEF_DISCOVERED == action
-        ) {
-            tag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
-            val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-            val msgs = mutableListOf<NdefMessage>()
-            if (rawMsgs != null) {
-                for (i in rawMsgs.indices) {
-                    msgs.add(i, rawMsgs[i] as NdefMessage)
+        val isComingFrom =
+            runBlocking { datastoreRepository.intReadKey(AppConstants.IS_STORE_VALIDATE) }
+        if (isComingFrom != 1) {
+            if (NfcAdapter.ACTION_TAG_DISCOVERED == action
+                || NfcAdapter.ACTION_TECH_DISCOVERED == action
+                || NfcAdapter.ACTION_NDEF_DISCOVERED == action
+            ) {
+                tag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
+                val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
+                val msgs = mutableListOf<NdefMessage>()
+                if (rawMsgs != null) {
+                    for (i in rawMsgs.indices) {
+                        msgs.add(i, rawMsgs[i] as NdefMessage)
+                    }
+                    viewModel.readingIntent(msgs.toTypedArray())
                 }
-                viewModel.readingIntent(msgs.toTypedArray())
             }
+        } else {
+            finish()
         }
+
     }
 }

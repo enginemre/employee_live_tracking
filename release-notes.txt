@@ -1,4 +1,1 @@
-- Private policy and history description edited
-- Password Changes service added
-- Update other screen added
-- Permission check logic added
+- NFC Tag operations edited

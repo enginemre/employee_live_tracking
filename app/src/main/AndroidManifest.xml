@@ -40,7 +40,7 @@
             android:name=".features.nfc_reader.ui.NFCActivity"
             android:exported="true"
             android:label="@string/title_activity_nfcactivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.EmployeeLiveTracking"
             tools:ignore="LockedOrientationActivity">

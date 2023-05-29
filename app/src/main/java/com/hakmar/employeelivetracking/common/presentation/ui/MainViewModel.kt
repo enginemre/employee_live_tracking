@@ -172,15 +172,24 @@ class MainViewModel @Inject constructor(
     private fun getNFCData(nfcCode: String?, storeCode: String) {
         viewModelScope.launch {
             nfcCode?.let {
-                // TODO: Chekc data and then get it
-                _uiEvent.send(
-                    UiEvent.ShowSnackBar(
-                        message = UiText.DynamicString("CODE alındı : $nfcCode"),
-                        SnackBarType.SUCCESS
+                if (nfcCode == storeCode) {
+                    _uiEvent.send(
+                        UiEvent.Navigate(
+                            route = HomeDestination.StoreDetail.base,
+                            data = storeCode
+                        )
                     )
-                )
-                dataStoreRepository.intPutKey(AppConstants.IS_STORE_VALIDATE, 1)
-                dataStoreRepository.stringPutKey(AppConstants.CURRENT_STORE_CODE, storeCode)
+                    dataStoreRepository.intPutKey(AppConstants.IS_STORE_VALIDATE, 1)
+                    dataStoreRepository.stringPutKey(AppConstants.CURRENT_STORE_CODE, storeCode)
+                } else {
+                    _uiEvent.send(
+                        UiEvent.ShowSnackBar(
+                            type = SnackBarType.ERROR,
+                            message = UiText.StringResorce(R.string.nfc_error_wrong_code)
+                        )
+                    )
+                }
+
             } ?: run {
                 _uiEvent.send(
                     UiEvent.ShowSnackBar(

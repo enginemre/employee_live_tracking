@@ -104,4 +104,5 @@
     <string name="succesfully_completed">Successfuly completed</string>
     <string name="location_permission_error">"Please check location permission.\nDo you want to give permission ? "</string>
     <string name="camera_permission_error">"Please check camera permission\nDo you want to give permission ? "</string>
+    <string name="nfc_error_wrong_code">Code not validate</string>
 </resources>
