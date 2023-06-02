@@ -1,3 +1,108 @@
 <resources>
-    <string name="app_name">EmployeeLiveTracking</string>
+    <string name="app_name">Employee Live Tracking</string>
+    <string name="welcome_label">Welcome</string>
+    <string name="welcome_header">Let\'s login and starting to complete our task</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="user_name">Username</string>
+    <string name="user_code_empty">Username is not empty</string>
+    <string name="password_empty">Password is not empty</string>
+    <string name="start">Start</string>
+    <string name="title_hint">Title</string>
+    <string name="code_hint">Store Code</string>
+    <string name="description_hint">Description</string>
+    <string name="task_detail_task">Task Detail</string>
+    <string name="title_activity_qr_scan">Qr Scan</string>
+    <string name="qr_scanned_error">Qr code can not read</string>
+    <string name="nfc_should_be_open">Please open NFC </string>
+    <string name="title_activity_nfcactivity">NFC</string>
+    <string name="error_internet">Check your internet connection</string>
+    <string name="error_timeout">Timeout please try again later</string>
+    <string name="nfc_message_not_found">message can not read</string>
+    <string name="nfc_description">Please bring your phone closer to the card</string>
+    <string name="nfc_success_message">Readed successfully</string>
+    <string name="default_notification_channel_id">notification_channel_id_app</string>
+    <string name="error_login">"Error occurred "</string>
+    <string name="error_shift_not_started">Shift can not started</string>
+    <string name="error_shift_not_paused">Shift can not paused</string>
+    <string name="error_store_list_not_fetched">Stores can not fetched</string>
+    <string name="pause">Pause</string>
+    <string name="profile">Profile</string>
+    <string name="default_name">Name</string>
+    <string name="default_email">blabla@gmail.com</string>
+    <string name="email_label">Email</string>
+    <string name="old_password_label">Old Password</string>
+    <string name="new_password_label">New Password</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save">Save</string>
+    <string name="private_policy_text">Our application does not require users to provide personal information such as their name, email address, or phone number. However, some features of our application may require users to create an account. In such cases, user information will be securely stored in our application and will not be shared with any third parties.
+        Information we may collect during the use of our application includes device information (such as device model and operating system version), data about the usage of our application (such as which pages were viewed and for how long), and information about the users internet connection. This information may be used to improve our applications performance and user experience. However, this information does not contain personally identifiable information and is only used in aggregate.
+        Our application may use cookies and similar technologies to provide users with a better experience. These technologies help us remember the user\'s actions and preferences in our application. Users can disable or delete cookies by changing their device settings.
+        Our application may include links to third-party websites or applications. Please note that we are not responsible for the privacy policies and practices of these websites and applications. Therefore, we recommend that you read the relevant privacy policies before accessing these websites or applications.
+    </string>
+    <string name="our_history">History</string>
+    <string name="our_history_content">
+        We are a leading and innovative application developer in our industry. Our mission is to create applications that will make users lives easier and provide them with a quality experience. Our team consists of experienced and talented professionals in the industry. We work to create products that meet user expectations by using the latest technologies in every stage of our applications.
+        Customer satisfaction is one of our top priorities. Therefore, our customer support team is always ready to provide you with the best service when you have any questions or problems. Our developers are highly committed to data security and privacy. We design our applications using the latest security technologies to protect users\' personal information and ensure their privacy. You can learn more about how our application works by reading our privacy policy.
+        Thank you for continuing to use our application. We are always working to provide you with better service.
+    </string>
+    <string name="private_policy">Private Policy</string>
+    <string name="about_us">About Us</string>
+    <string name="notification">Notification</string>
+    <string name="logout">Logout</string>
+    <string name="update_info_success">Profil updated successfuly</string>
+    <string name="error_old_password_empty">Old password can not be empty</string>
+    <string name="error_new_password_empty">New password can not be empty</string>
+    <string name="error_email_empty">Email can not be empty</string>
+    <string name="error_user_info">User info can not fetched</string>
+    <string name="tasks">Tasks</string>
+    <string name="task_detail_title">Task Detail</string>
+    <string name="delete">Delete</string>
+    <string name="store_detail">Store Detail</string>
+    <string name="qr_scanned_success">QR read successfully</string>
+    <string name="motivation_for_task">\"Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın\"</string>
+    <string name="task_section_title">Tasks</string>
+    <string name="see_all">See All</string>
+    <string name="nfc_error_read">NFC data not read</string>
+    <string name="title_activity_qr">QrActivity</string>
+    <string name="qr_validate_error">QR code can not validate</string>
+    <string name="qr_error_read">QR data not read</string>
+    <string name="error_relogin">Please login again</string>
+    <string name="store_shift_successfully_completed">Store shift completed</string>
+    <string name="error_shift_completed">Store shift has already been completed\n</string>
+    <string name="pos_screen_title">POS Amounts</string>
+    <string name="pos_amount_label">Post Amount</string>
+    <string name="cashier_amount_label">Cashier Amount</string>
+    <string name="difference_amount_label">Difference</string>
+    <string name="okey">Okay</string>
+    <string name="error_store">Unknown error</string>
+    <string name="banknotes">Banknotes</string>
+    <string name="coins">Coins</string>
+    <string name="total_pos_amount_label">Total Pos Amount</string>
+    <string name="total_payment">Total Expenses and Payments</string>
+    <string name="steel_case_amoun_label">Steel Case Amount</string>
+    <string name="error_storeCode">"Error store code not found "</string>
+    <string name="error_cashTotal">Please enter valid cash total</string>
+    <string name="error_coinTotal">Please enter valid coin total</string>
+    <string name="error_posAmountTotal">Please enter valid  pos amount</string>
+    <string name="error_expensesTotal">Please enter valid expenses</string>
+    <string name="error_safeCurrentTotal">Please enter valid steel case amount</string>
+    <string name="error_cashbookBalance">"Please enter valid cashbook "</string>
+    <string name="error_difference">Please enter valid difference</string>
+    <string name="successfully_steel_case_amount">Successfully</string>
+    <string name="error_steel_case_amount">Please try again later</string>
+    <string name="error_cashier_amount">Please enter valid cashier amount</string>
+    <string name="error_authorization">You are not authorized for this action\n</string>
+    <string name="distance_far_away">Your location far away from store</string>
+    <string name="successfully_sent">Successfully sent</string>
+    <string name="error_can_not_send_without_modify">You can not send without modify</string>
+    <string name="store_inside_title">Store Inside Check</string>
+    <string name="store_outside_title">Store Outside Check</string>
+    <string name="do_you_want_to_mark_as_completed">"Do you want to mark as completed ? "</string>
+    <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="succesfully_completed">Successfuly completed</string>
+    <string name="location_permission_error">"Please check location permission.\nDo you want to give permission ? "</string>
+    <string name="camera_permission_error">"Please check camera permission\nDo you want to give permission ? "</string>
+    <string name="nfc_error_wrong_code">Code not validate</string>
 </resources>

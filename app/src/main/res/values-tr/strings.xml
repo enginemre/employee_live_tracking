@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Saha Takip</string>
+    <string name="welcome_label">Hoşgeldiniz</string>
+    <string name="welcome_header">Hemen giriş yapın ve görevlerinizi tamamlamaya başlayın</string>
+    <string name="login">Giriş</string>
+    <string name="password">Şifre</string>
+    <string name="user_name">Kullanıcı Adı</string>
+    <string name="user_code_empty">Kullanıcı adı boş olamaz</string>
+    <string name="password_empty">Şifre boş olamaz</string>
+    <string name="start">Başla</string>
+    <string name="title_hint">Başlık</string>
+    <string name="code_hint">Mağaza Kodu</string>
+    <string name="description_hint">Açıklama</string>
+    <string name="task_detail_task">Görev detay</string>
+    <string name="title_activity_qr_scan">Qr Scan</string>
+    <string name="qr_scanned_error">Qr okuma işlemi başarısız</string>
+    <string name="nfc_should_be_open">Lütfen NFC özelliğini açınız </string>
+    <string name="error_login">"Hata oluştu "</string>
+    <string name="error_internet">İnternet bağlantısını kontrol ediniz</string>
+    <string name="error_timeout">Bağlantı zaman aşımana uğradı tekrar deneyin</string>
+    <string name="title_activity_nfcactivity">NFC</string>
+    <string name="nfc_message_not_found">Message okunamadı</string>
+    <string name="nfc_description">Lütfen cihazı mağazada bulunan cihaza yaklaştırınız</string>
+    <string name="nfc_success_message">İşlem başarılı</string>
+    <string name="default_notification_channel_id">notification_channel_id_app</string>
+    <string name="error_shift_not_started">Mesai başlatılamadı</string>
+    <string name="error_shift_not_paused">Mesai durdurulamadı</string>
+    <string name="error_store_list_not_fetched">Mağazalar alınamadı</string>
+    <string name="pause">Durdur</string>
+    <string name="profile">Profil</string>
+    <string name="default_name">İsim</string>
+    <string name="default_email">blabla@gmail.com</string>
+    <string name="email_label">E posta</string>
+    <string name="old_password_label">Eski Şifre</string>
+    <string name="new_password_label">Yeni Şifre</string>
+    <string name="edit_profile">Profil Düzenle</string>
+    <string name="save">Kaydet</string>
+    <string name="private_policy_text">Uygulamamız, kullanıcıların adı, e-posta adresi veya telefon numarası gibi kişisel bilgileri istememektedir. Ancak, uygulamamızın bazı özelliklerini kullanmak için kullanıcıların hesap oluşturması gerekebilir. Bu durumda, kullanıcıların bilgileri uygulamamızda güvenli bir şekilde saklanacak ve hiçbir şekilde üçüncü taraflarla paylaşılmayacaktır.
+        Uygulamamızın kullanımı sırasında elde ettiğimiz bilgiler arasında, kullanıcının cihaz bilgileri (örneğin, cihaz modeli ve işletim sistemi sürümü), uygulamamızın kullanımı hakkındaki veriler (örneğin, hangi sayfaların görüntülendiği ve ne kadar süreyle görüntülendiği) ve kullanıcının internet bağlantısı hakkında bilgiler bulunabilir. Bu bilgiler, uygulamamızın performansını ve kullanıcı deneyimini iyileştirmek için kullanılabilir. Ancak, bu bilgiler hiçbir şekilde kişisel olarak tanımlanabilir bilgiler içermez ve sadece toplu olarak kullanılır.
+        Uygulamamız, kullanıcılara daha iyi bir deneyim sunmak için çerezler ve benzer teknolojiler kullanabilir. Bu teknolojiler, kullanıcının uygulamamızda yaptığı işlemleri ve tercihlerini hatırlamamıza yardımcı olur. Kullanıcılar, cihazlarının ayarlarını değiştirerek çerezleri devre dışı bırakabilir veya silebilirler.
+        Uygulamamızda, üçüncü taraf sitelere veya uygulamalara bağlantılar içerebiliriz. Bu sitelerin ve uygulamaların gizlilik politikaları ve uygulamalarından sorumlu olmadığımızı lütfen unutmayın. Bu nedenle, bu sitelere veya uygulamalara erişmeden önce, ilgili gizlilik politikalarını okumanızı öneririz.
+    </string>
+    <string name="our_history">Hakkımızda</string>
+    <string name="our_history_content">
+        Sektörümüzde öncü ve yenilikçi bir uygulama geliştiricisiyiz. Misyonumuz, kullanıcıların hayatını kolaylaştıracak ve onlara kaliteli bir deneyim sunacak uygulamalar yaratmaktır.
+        Ekibimiz, sektörde deneyimli ve yetenekli profesyonellerden oluşmaktadır. Uygulamalarımızın her aşamasında, en son teknolojileri kullanarak, kullanıcıların beklentilerine uygun ürünler oluşturmak için çalışıyoruz.
+        Kullanıcı memnuniyeti, şirketimizin öncelikli hedeflerinden biridir. Bu nedenle, müşteri desteği ekibimiz, herhangi bir sorunuz veya sorununuz olduğunda size en iyi hizmeti sunmak için her zaman hazırdır.
+        Geliştiricilerimiz, veri güvenliği ve gizliliğine büyük önem vermektedir. Kullanıcıların kişisel bilgilerini korumak ve gizliliklerini sağlamak için, en son güvenlik teknolojilerini kullanarak uygulamalarımızı tasarlıyoruz. Gizlilik politikamızı okuyarak, uygulamamızın nasıl çalıştığı hakkında daha fazla bilgi edinebilirsiniz.
+        Teşekkür ederiz, uygulamamızı kullanmaya devam ettiğiniz için minnettarız. Sizleri daha iyi hizmet sunabilmek için her zaman çalışıyoruz.
+    </string>
+    <string name="private_policy">Gizlilik Sözleşmesi</string>
+    <string name="about_us">Hakkımızda</string>
+    <string name="notification">Bildirimler</string>
+    <string name="logout">Çıkış</string>
+    <string name="update_info_success">Profil başarıyla güncellendi</string>
+    <string name="error_old_password_empty">Eski şifre boş olamaz</string>
+    <string name="error_new_password_empty">Yeni şifre boş olamaz</string>
+    <string name="error_email_empty">Eposta boş olamaz</string>
+    <string name="error_user_info">Kullanıcı bilgileri alınamadı</string>
+    <string name="nfc_error_read">NFC veriler alınamadı</string>
+    <string name="title_activity_qr">QR Okut</string>
+    <string name="tasks">Görevler</string>
+    <string name="task_detail_title">Görev detay</string>
+    <string name="delete">Sil</string>
+    <string name="store_detail">Mağaza Detay</string>
+    <string name="qr_scanned_success">Qr başarıyla okundu</string>
+    <string name="motivation_for_task">\"Bügünkü görevlerinizi tamamlamaya erkenden başlayın ve hedeflerinize ulaşın\"</string>
+    <string name="task_section_title">Görevler</string>
+    <string name="see_all">Tümünü gör</string>
+    <string name="qr_validate_error">Geçersiz QR kod</string>
+    <string name="qr_error_read">Qr kod okunamadı</string>
+    <string name="error_relogin">Lütfen tekrar giriş yapınız</string>
+    <string name="store_shift_successfully_completed">Mağaza mesaisi tamamlandı</string>
+    <string name="error_shift_completed">Mağaza mesaisi daha önceden tamamlanmış</string>
+    <string name="pos_screen_title">POS Amounts</string>
+    <string name="pos_amount_label">Post Amount</string>
+    <string name="cashier_amount_label">Cashier Amount</string>
+    <string name="difference_amount_label">Difference</string>
+    <string name="okey">Onayla</string>
+    <string name="error_store">Bilinmeyen hata oluştu</string>
+    <string name="banknotes" tools:ignore="Typos">Kağıt para</string>
+    <string name="coins">Madeni para</string>
+    <string name="total_pos_amount_label">Toplam Pos Miktarı</string>
+    <string name="total_payment">Toplam Masraf ve Giderler</string>
+    <string name="steel_case_amoun_label">Mevcut Çelik Kasa</string>
+    <string name="error_storeCode">"Mağaza kodu alınamadı"</string>
+    <string name="error_cashTotal" tools:ignore="Typos">Lütfen geçerli bir kağıt para tutatrı giriniz</string>
+    <string name="error_coinTotal">Lütfen geçerli madeni para tutarı giriniz</string>
+    <string name="error_posAmountTotal">Lütfen geçerli pos tutarı giriniz</string>
+    <string name="error_expensesTotal">Lütfen geçerli masraf tutarı giriniz</string>
+    <string name="error_safeCurrentTotal">Lütfen geçerli mevcut kasa tutarı giriniz</string>
+    <string name="error_cashbookBalance">"Lütfen geçerli kayıt defteri tutarı giriniz"</string>
+    <string name="error_difference">Lütfen geçerli bir fark giriniz</string>
+    <string name="successfully_steel_case_amount">İşlem başarılı</string>
+    <string name="error_steel_case_amount">Lütfen tekrar deneyin</string>
+    <string name="error_cashier_amount">Geçerli kasiyer miktarı giriniz</string>
+    <string name="error_authorization">Bu işlem için yetkiniz bulunmamaktadır\n</string>
+    <string name="distance_far_away">Mağazanın yakınında olduğunuza emin olunuz</string>
+    <string name="successfully_sent">Başarıyla gönderildi</string>
+    <string name="error_can_not_send_without_modify">Hiç bir değişiklik yapmadınız</string>
+    <string name="store_inside_title">Mağaza İçi Kontrol</string>
+    <string name="store_outside_title">Mağaza Önü Kontrol</string>
+    <string name="do_you_want_to_mark_as_completed">"Görevi tamamlandı olarak işaretlemek ister misiniz ? "</string>
+    <string name="cancel">İptal</string>
+    <string name="warning">Uyarı</string>
+    <string name="succesfully_completed">Başarıyla tamamlandı</string>
+    <string name="location_permission_error">"Konum izni vermediniz\nKonum izni vermek ister misiniz ? "</string>
+    <string name="camera_permission_error">"Kamera izni vermediniz\nKamera izni vermek ister misiniz ? "</string>
+    <string name="nfc_error_wrong_code">Kod doğrulanamadı</string>
+</resources>
