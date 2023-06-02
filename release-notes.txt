@@ -1,1 +1,1 @@
-- NFC Tag operations edited
+- Remove NFC tag required permission
