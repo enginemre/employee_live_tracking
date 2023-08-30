@@ -1,6 +1,8 @@
 # Employee Live Tracking Application 
 <img align="right" src="https://github.com/enginemre/employee_live_tracking/blob/91e8d64045ac2d84ef1812b5d227b9858dbc57fc/app/src/main/elt_app_icon-playstore.png" alt="Android" width="15%" />
 
+<img align="right" src="https://github.com/enginemre/employee_live_tracking/blob/0366ae697b5ba771860000691e338ac71203f5b5/play-badge.png" alt="Android" width="200" />
+
 [You can access quick app summary presentation here](https://github.com/enginemre/employee_live_tracking/blob/main/app_summary.pdf
 )
 
